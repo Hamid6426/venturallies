@@ -1,0 +1,24 @@
+# Client-side ignores
+/client/node_modules
+/client/.env
+
+# Server-side ignores
+/express-server/node_modules
+/express-server/.env
+
+/nest-server/node_modules
+/nest-server/.env
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDEs/editors
+.vscode/
+.idea/
+*.sublime-workspace
