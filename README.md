@@ -1,0 +1,2 @@
+# venturallies
+A crowdfunding platform
