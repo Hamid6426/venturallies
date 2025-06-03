@@ -1,13 +1,14 @@
-# Client-side ignores
-/client/node_modules
-/client/.env
+/react/node_modules
+/react/.env
 
-# Server-side ignores
-/express-server/node_modules
-/express-server/.env
+/angular/node_modules
+/angular/.env
 
-/nest-server/node_modules
-/nest-server/.env
+/express/node_modules
+/express/.env
+
+/nest/node_modules
+/nest/.env
 
 # Logs
 *.log
