@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function StyleGuide() {
+export default function Support() {
   return (
     <div>
       
