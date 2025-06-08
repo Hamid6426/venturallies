@@ -18,12 +18,12 @@ if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
   logger.error("Missing SMTP configuration in environment variables");
 }
 
-console.log({
-  SMTP_HOST,
-  SMTP_PORT,
-  SMTP_USER,
-  SMTP_PASS: SMTP_PASS ? "****" : null, // Don't print real pass
-});
+// console.log({
+//   SMTP_HOST,
+//   SMTP_PORT,
+//   SMTP_USER,
+//   SMTP_PASS: SMTP_PASS ? "****" : null, // Don't print real pass
+// });
 
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,

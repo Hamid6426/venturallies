@@ -16,10 +16,7 @@ const connectDB = async () => {
     mongoose.set("strictQuery", false); // Optional: to silence strict warnings
     mongoose.set("debug", process.env.NODE_ENV !== "production"); // Show DB queries in dev
 
-    const conn = await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const conn = await mongoose.connect(MONGO_URI, {});
 
     logger.info(`MongoDB connected: ${conn.connection.host}`);
   } catch (err) {
