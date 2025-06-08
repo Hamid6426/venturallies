@@ -1,15 +1,15 @@
-import User from "../../models/User.js";
+import Career from "../../models/Careers.js";
 import logger from "../../config/logger.js";
 
-const getAllUsers = async (req, res) => {
+const getAllCareers = async (req, res) => {
   try {
-    const users = await User.findAll();
-    res.json(users);
-    logger.info('Fetched all users successfully');
+    const careers = await Career.findAll();
+    res.json(careers);
+    logger.info("Fetched all careers successfully");
   } catch (error) {
-    logger.error('Error fetching users: %o', error);
-    res.status(500).json({ error: "Failed to fetch users" });
+    logger.error("Error fetching careers: %o", error);
+    res.status(500).json({ error: "Failed to fetch careers" });
   }
 };
 
-export default getAllUsers;
+export default getAllCareers;

@@ -3,7 +3,7 @@ import logger from "../../config/logger.js";
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.find();
     res.json(users);
     logger.info('Fetched all users successfully');
   } catch (error) {

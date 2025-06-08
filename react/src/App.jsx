@@ -30,6 +30,7 @@ import AccountInvestments from "./pages/dashboard/AccountInvestments";
 import AccountStatement from "./pages/dashboard/AccountStatement";
 import AccountFunding from "./pages/dashboard/AccountFunding";
 import AccountProfile from "./pages/dashboard/AccountProfile";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -40,6 +41,8 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
+        <Route path="verify-email" element={<VerifyEmail />} />
         <Route path="reset-password" element={<ResetPassword />} />
 
         <Route path="projects" element={<Projects />} />

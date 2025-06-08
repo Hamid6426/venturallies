@@ -1,32 +1,41 @@
 import { useState, useEffect } from "react";
-import { cityData } from "../data/cityData";
+import { locationsData } from "../data/locationsData";
+import { useLoader } from "../contexts/LoaderContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import axiosInstance from "../utils/axiosInstance";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    user_fname: "",
-    user_lname: "",
-    user_email: "",
-    user_phone: "",
-    user_country: "",
-    user_city: "",
-    user_address: "",
-    user_newsletter_freq: "monthly",
-    user_notify_funding: false,
-    user_latest_news: false,
-    user_password: "",
-    user_cpassword: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    country: "",
+    city: "",
+    address: "",
+    newsletterFrequency: "monthly",
+    transactionNotification: false,
+    latestNewsNotification: false,
+    password: "",
+    confirmPassword: "",
   });
 
   const [cities, setCities] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { setLoading } = useLoader();
 
   useEffect(() => {
-    if (formData.user_country && cityData[formData.user_country]) {
-      setCities(cityData[formData.user_country]);
+    const selectedCountry = locationsData.find(
+      (c) => c.countryCode === formData.country
+    );
+    if (selectedCountry) {
+      setCities(selectedCountry.countryCities);
     } else {
       setCities([]);
     }
-  }, [formData.user_country]);
+  }, [formData.country]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -36,118 +45,131 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.user_password !== formData.user_cpassword) {
-      setError("Passwords do not match.");
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match.");
       return;
     }
-    if (!/\S+@\S+\.\S+/.test(formData.user_email)) {
-      setError("Invalid email address.");
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      toast.error("Invalid email address.");
       return;
     }
 
-    // TODO: Submit to backend
-    console.log("Submitted:", formData);
+    setLoading(true);
+    setError("");
+
+    const payload = { ...formData };
+    delete payload.confirmPassword;
+
+    try {
+      await axiosInstance.post("/auth/register", payload);
+
+      toast.success("Registration successful! Please verify your email.");
+      navigate("/login");
+    } catch (error) {
+      console.error("Registration error:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        toast.error(error.response.data.message || "Registration failed.");
+      } else if (error.request) {
+        // request made but no response received
+        console.error("Request error:", error.request);
+        toast.error("No response from server. Please try again later.");
+      } else {
+        // something else happened
+        console.error("Error message:", error.message);
+        toast.error("Network error. Please try again later.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h2 className="text-3xl font-semibold mb-6">Create Account</h2>
+    <div className="mx-auto">
+      <h2 className="text-4xl w-full font-semibold mb-6 text-center py-20 bg-gray-100">
+        Create Account
+      </h2>
 
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-8 text-lg md:text-xl max-w-5xl mx-auto py-8 px-4"
+      >
         {/* Personal Information */}
-        <section className="flex flex-col md:flex-row gap-12">
-          <h4 className="text-xl font-medium mb-2">Personal Information</h4>
-          <div>
+        <section className="flex flex-col md:flex-row gap-6">
+          <h4 className="text-xl font-medium md:mb-0 w-full md:w-64">
+            Personal Information
+          </h4>
+          <div className="w-full space-y-4 ">
             <input
               type="text"
-              name="user_fname"
+              name="firstName"
               placeholder="First Name"
-              value={formData.user_fname}
+              value={formData.firstName}
               onChange={handleChange}
               required
-              className="border-b-2 p-2 rounded w-full focus:ring-2 focus:ring-red-400"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
             />
             <input
               type="text"
-              name="user_lname"
+              name="lastName"
               placeholder="Last Name"
-              value={formData.user_lname}
+              value={formData.lastName}
               onChange={handleChange}
               required
-              className="border p-2 rounded w-full"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
             />
           </div>
         </section>
 
         {/* Contact Information */}
-        <section>
-          <h4 className="text-xl font-medium mb-2">Contact Information</h4>
-          <div>
+        <section className="flex flex-col md:flex-row gap-6">
+          <h4 className="text-xl font-medium mb-2 md:mb-0 w-full md:w-64">
+            Contact Information
+          </h4>
+          <div className="w-full space-y-4">
             <input
               type="email"
-              name="user_email"
+              name="email"
               placeholder="Email"
-              value={formData.user_email}
+              value={formData.email}
               onChange={handleChange}
               required
-              className="border p-2 rounded w-full"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
             />
             <input
               type="tel"
-              name="user_phone"
+              name="phone"
               placeholder="Phone"
-              value={formData.user_phone}
+              value={formData.phone}
               onChange={handleChange}
               required
-              className="border p-2 rounded w-full"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
             />
             <select
-              name="user_country"
-              value={formData.user_country}
+              name="country"
+              value={formData.country}
               onChange={handleChange}
               required
-              className="border p-2 rounded w-full"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
             >
               <option value="">Select a country</option>
-              <option value="at">Austria</option>
-              <option value="be">Belgium</option>
-              <option value="bg">Bulgaria</option>
-              <option value="hr">Croatia</option>
-              <option value="cy">Cyprus</option>
-              <option value="cz">Czech Republic</option>
-              <option value="dk">Denmark</option>
-              <option value="ee">Estonia</option>
-              <option value="fi">Finland</option>
-              <option value="fr">France</option>
-              <option value="de">Germany</option>
-              <option value="gr">Greece</option>
-              <option value="hu">Hungary</option>
-              <option value="ie">Ireland</option>
-              <option value="it">Italy</option>
-              <option value="lv">Latvia</option>
-              <option value="lt">Lithuania</option>
-              <option value="lu">Luxembourg</option>
-              <option value="mt">Malta</option>
-              <option value="nl">Netherlands</option>
-              <option value="pl">Poland</option>
-              <option value="pt">Portugal</option>
-              <option value="ro">Romania</option>
-              <option value="sk">Slovakia</option>
-              <option value="si">Slovenia</option>
-              <option value="es">Spain</option>
-              <option value="se">Sweden</option>
-              <option value="gb">United Kingdom</option>
+              {locationsData.map(({ countryCode, countryName }) => (
+                <option key={countryCode} value={countryCode}>
+                  {countryName}
+                </option>
+              ))}
             </select>
             <select
-              name="user_city"
-              value={formData.user_city}
+              name="city"
+              value={formData.city}
               onChange={handleChange}
               required
-              className="border p-2 rounded w-full"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
             >
               <option value="">Select a city</option>
               {cities.map((city) => (
@@ -158,37 +180,39 @@ const Register = () => {
             </select>
             <input
               type="text"
-              name="user_address"
+              name="address"
               placeholder="Address"
-              value={formData.user_address}
+              value={formData.address}
               onChange={handleChange}
               required
-              className="border p-2 rounded w-full"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
             />
           </div>
         </section>
 
-        {/* Other Information */}
-        <section>
-          <h4 className="text-xl font-medium mb-2">Preferences</h4>
-          <select
-            name="user_newsletter_freq"
-            value={formData.user_newsletter_freq}
-            onChange={handleChange}
-            className="border p-2 rounded w-full md:w-1/2"
-          >
-            <option value="never">Never</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-          </select>
-          <div className="mt-2 space-y-2">
+        {/* Preferences */}
+        <section className="flex flex-col md:flex-row gap-6">
+          <h4 className="text-xl font-medium mb-2 md:mb-0 w-full md:w-64">
+            Preferences
+          </h4>
+          <div className="w-full space-y-4">
+            <select
+              name="newsletterFrequency"
+              value={formData.newsletterFrequency}
+              onChange={handleChange}
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+              <option value="never">Never</option>
+            </select>
             <label className="flex items-center">
               <input
                 type="checkbox"
-                name="user_notify_funding"
-                checked={formData.user_notify_funding}
+                name="transactionNotification"
+                checked={formData.transactionNotification}
                 onChange={handleChange}
                 className="mr-2"
               />
@@ -197,8 +221,8 @@ const Register = () => {
             <label className="flex items-center">
               <input
                 type="checkbox"
-                name="user_latest_news"
-                checked={formData.user_latest_news}
+                name="latestNewsNotification"
+                checked={formData.latestNewsNotification}
                 onChange={handleChange}
                 className="mr-2"
               />
@@ -208,43 +232,45 @@ const Register = () => {
         </section>
 
         {/* Password */}
-        <section>
-          <h4 className="text-xl font-medium mb-2">Password</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <section className="flex flex-col md:flex-row gap-6">
+          <h4 className="text-xl font-medium mb-2 md:mb-0 w-full md:w-64">
+            Password
+          </h4>
+          <div className="w-full space-y-4">
             <input
               type="password"
-              name="user_password"
+              name="password"
               placeholder="Password"
-              value={formData.user_password}
+              value={formData.password}
               onChange={handleChange}
               required
-              className="border p-2 rounded w-full"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
             />
             <input
               type="password"
-              name="user_cpassword"
+              name="confirmPassword"
               placeholder="Confirm Password"
-              value={formData.user_cpassword}
+              value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className="border p-2 rounded w-full"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
             />
           </div>
         </section>
 
         {/* Submit */}
-        <div className="flex gap-4 mt-6">
+        <div className="flex flex-col md:flex-row gap-4 mt-">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+            className="bg-[#00B951] text-white px-12 py-4 rounded hover:bg-blue-700 hover:-translate-y-1"
           >
-            Create Account & Verify Identity
+            Create Account & Verify Account
           </button>
           <a
             href="/login"
-            className="bg-gray-300 text-black px-6 py-2 rounded hover:bg-gray-400"
+            className="bg-gray-800 text-white px-12 py-4 rounded hover:-translate-y-1 text-center"
           >
-            OR Login
+            Login
           </a>
         </div>
       </form>
