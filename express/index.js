@@ -82,13 +82,15 @@ if (NODE_ENV === "production") {
 // Health Check Route
 app.get("/", (req, res) => res.send("Express server is up and running"));
 
-const port = process.env.PORT;
+const port = process.env.PORT || 10000; // Default fallback
 
 if (port) {
   logger.info(`port: ${port}`);
-} else {
+} else if(!port) {
   logger.error("Render environment variable or Local PORT is not defined");
   process.exit(1);
+} else {
+  logger.info("...")
 }
 
 // Start Server
