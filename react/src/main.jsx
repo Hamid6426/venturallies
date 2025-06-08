@@ -5,8 +5,9 @@ import App from "./App.jsx";
 import { BrowserRouter as Router } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { LoaderProvider, useLoader } from "./contexts/LoaderContext";
-import Loader from "./components/shared/Loader.jsx";
+import Loader from "./components/Loader";
 import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
 
 // Create a wrapper component to use useLoader hook inside context
 const AppWrapper = () => {
@@ -35,9 +36,11 @@ const AppWrapper = () => {
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Router>
-      <LoaderProvider>
-        <AppWrapper />
-      </LoaderProvider>
+      <AuthProvider>
+        <LoaderProvider>
+          <AppWrapper />
+        </LoaderProvider>
+      </AuthProvider>
     </Router>
   </StrictMode>
 );

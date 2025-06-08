@@ -88,193 +88,193 @@ const Register = () => {
   };
 
   return (
-    <div className="mx-auto">
-      <h2 className="text-4xl w-full font-semibold mb-6 text-center py-20 bg-gray-100">
-        Create Account
-      </h2>
+      <div className="mx-auto">
+        <h2 className="text-4xl w-full font-semibold mb-6 text-center py-20 bg-gray-100">
+          Create Account
+        </h2>
 
-      {error && <div className="text-red-500 mb-4">{error}</div>}
+        {error && <div className="text-red-500 mb-4">{error}</div>}
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-8 text-lg md:text-xl max-w-5xl mx-auto py-8 px-4"
-      >
-        {/* Personal Information */}
-        <section className="flex flex-col md:flex-row gap-6">
-          <h4 className="text-xl font-medium md:mb-0 w-full md:w-64">
-            Personal Information
-          </h4>
-          <div className="w-full space-y-4 ">
-            <input
-              type="text"
-              name="firstName"
-              placeholder="First Name"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            />
-            <input
-              type="text"
-              name="lastName"
-              placeholder="Last Name"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            />
-          </div>
-        </section>
-
-        {/* Contact Information */}
-        <section className="flex flex-col md:flex-row gap-6">
-          <h4 className="text-xl font-medium mb-2 md:mb-0 w-full md:w-64">
-            Contact Information
-          </h4>
-          <div className="w-full space-y-4">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            />
-            <select
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              required
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            >
-              <option value="">Select a country</option>
-              {locationsData.map(({ countryCode, countryName }) => (
-                <option key={countryCode} value={countryCode}>
-                  {countryName}
-                </option>
-              ))}
-            </select>
-            <select
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              required
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            >
-              <option value="">Select a city</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
-            <input
-              type="text"
-              name="address"
-              placeholder="Address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            />
-          </div>
-        </section>
-
-        {/* Preferences */}
-        <section className="flex flex-col md:flex-row gap-6">
-          <h4 className="text-xl font-medium mb-2 md:mb-0 w-full md:w-64">
-            Preferences
-          </h4>
-          <div className="w-full space-y-4">
-            <select
-              name="newsletterFrequency"
-              value={formData.newsletterFrequency}
-              onChange={handleChange}
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            >
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-              <option value="never">Never</option>
-            </select>
-            <label className="flex items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-8 text-lg md:text-xl max-w-5xl mx-auto py-8 px-4"
+        >
+          {/* Personal Information */}
+          <section className="flex flex-col md:flex-row gap-6">
+            <h4 className="text-xl font-medium md:mb-0 w-full md:w-64">
+              Personal Information
+            </h4>
+            <div className="w-full space-y-4 ">
               <input
-                type="checkbox"
-                name="transactionNotification"
-                checked={formData.transactionNotification}
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                value={formData.firstName}
                 onChange={handleChange}
-                className="mr-2"
+                required
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
               />
-              Notify me about deposits / withdrawals
-            </label>
-            <label className="flex items-center">
               <input
-                type="checkbox"
-                name="latestNewsNotification"
-                checked={formData.latestNewsNotification}
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                value={formData.lastName}
                 onChange={handleChange}
-                className="mr-2"
+                required
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
               />
-              I want to get the latest news
-            </label>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        {/* Password */}
-        <section className="flex flex-col md:flex-row gap-6">
-          <h4 className="text-xl font-medium mb-2 md:mb-0 w-full md:w-64">
-            Password
-          </h4>
-          <div className="w-full space-y-4">
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            />
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
-            />
-          </div>
-        </section>
+          {/* Contact Information */}
+          <section className="flex flex-col md:flex-row gap-6">
+            <h4 className="text-xl font-medium mb-2 md:mb-0 w-full md:w-64">
+              Contact Information
+            </h4>
+            <div className="w-full space-y-4">
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
+              />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
+              />
+              <select
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                required
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
+              >
+                <option value="">Select a country</option>
+                {locationsData.map(({ countryCode, countryName }) => (
+                  <option key={countryCode} value={countryCode}>
+                    {countryName}
+                  </option>
+                ))}
+              </select>
+              <select
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                required
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
+              >
+                <option value="">Select a city</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="text"
+                name="address"
+                placeholder="Address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
+              />
+            </div>
+          </section>
 
-        {/* Submit */}
-        <div className="flex flex-col md:flex-row gap-4 mt-">
-          <button
-            type="submit"
-            className="bg-[#00B951] text-white px-12 py-4 rounded hover:bg-blue-700 hover:-translate-y-1"
-          >
-            Create Account & Verify Account
-          </button>
-          <a
-            href="/login"
-            className="bg-gray-800 text-white px-12 py-4 rounded hover:-translate-y-1 text-center"
-          >
-            Login
-          </a>
-        </div>
-      </form>
-    </div>
+          {/* Preferences */}
+          <section className="flex flex-col md:flex-row gap-6">
+            <h4 className="text-xl font-medium mb-2 md:mb-0 w-full md:w-64">
+              Preferences
+            </h4>
+            <div className="w-full space-y-4">
+              <select
+                name="newsletterFrequency"
+                value={formData.newsletterFrequency}
+                onChange={handleChange}
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
+              >
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="never">Never</option>
+              </select>
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="transactionNotification"
+                  checked={formData.transactionNotification}
+                  onChange={handleChange}
+                  className="mr-2"
+                />
+                Notify me about deposits / withdrawals
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="latestNewsNotification"
+                  checked={formData.latestNewsNotification}
+                  onChange={handleChange}
+                  className="mr-2"
+                />
+                I want to get the latest news
+              </label>
+            </div>
+          </section>
+
+          {/* Password */}
+          <section className="flex flex-col md:flex-row gap-6">
+            <h4 className="text-xl font-medium mb-2 md:mb-0 w-full md:w-64">
+              Password
+            </h4>
+            <div className="w-full space-y-4">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
+              />
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-red-300 focus:border-red-500 focus:outline-2"
+              />
+            </div>
+          </section>
+
+          {/* Submit */}
+          <div className="flex flex-col md:flex-row gap-4 mt-">
+            <button
+              type="submit"
+              className="bg-[#00B951] text-white px-12 py-4 rounded hover:bg-blue-700 hover:-translate-y-1"
+            >
+              Create Account & Verify Account
+            </button>
+            <a
+              href="/login"
+              className="bg-gray-800 text-white px-12 py-4 rounded hover:-translate-y-1 text-center"
+            >
+              Login
+            </a>
+          </div>
+        </form>
+      </div>
   );
 };
 

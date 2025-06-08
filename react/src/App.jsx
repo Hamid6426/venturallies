@@ -2,11 +2,12 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Layouts
-import RootLayout from "./components/layouts/RootLayout";
-import DashboardLayout from "./components/layouts/DashboardLayout";
+import RootLayout from "./layouts/RootLayout";
+import DashboardLayout from "./layouts/DashboardLayout";
 
 // Auth Pages
 import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -30,7 +31,6 @@ import AccountInvestments from "./pages/dashboard/AccountInvestments";
 import AccountStatement from "./pages/dashboard/AccountStatement";
 import AccountFunding from "./pages/dashboard/AccountFunding";
 import AccountProfile from "./pages/dashboard/AccountProfile";
-import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -59,11 +59,11 @@ function App() {
 
       {/* Dashboard Area */}
       <Route path="" element={<DashboardLayout />}>
-        <Route path="overview" element={<AccountOverview />} />
-        <Route path="investments" element={<AccountInvestments />} />
-        <Route path="statement" element={<AccountStatement />} />
-        <Route path="funding" element={<AccountFunding />} />
-        <Route path="profile" element={<AccountProfile />} />
+        <Route path="account-overview" element={<AccountOverview />} />
+        <Route path="account-investments" element={<AccountInvestments />} />
+        <Route path="account-statement" element={<AccountStatement />} />
+        <Route path="account-funding" element={<AccountFunding />} />
+        <Route path="account-profile" element={<AccountProfile />} />
       </Route>
     </Routes>
   );
