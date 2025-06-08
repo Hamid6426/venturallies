@@ -22,7 +22,6 @@ import profileRoutes from "./src/routes/profileRoutes.js";
 const NODE_ENV = process.env.NODE_ENV || "development";
 const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL;
-const port = process.env.PORT;
 
 // Whitelist for CORS (filter removes undefined/null values)
 const whitelist = [FRONTEND_BASE_URL, BACKEND_BASE_URL].filter(Boolean);
@@ -72,9 +71,9 @@ app.use("/api/users", userRoutes); // User management routes
 
 // Serve Frontend in Production
 if (NODE_ENV === "production") {
-  app.use(express.static(path.join(process.cwd(), "dist")));
+  const reactDistPath = path.join(process.cwd(), "dist");
+  app.use(express.static(reactDistPath));
 
-  // Serve index.html for any unknown paths (SPA fallback)
   app.get("*", (req, res) =>
     res.sendFile(path.join(reactDistPath, "index.html"))
   );
@@ -83,10 +82,13 @@ if (NODE_ENV === "production") {
 // Health Check Route
 app.get("/", (req, res) => res.send("Express server is up and running"));
 
-logger.info(port)
+const port = process.env.PORT;
 
-if (!port) {
+if (port) {
+  logger.info(`port: ${port}`);
+} else {
   logger.error("Render environment variable or Local PORT is not defined");
+  process.exit(1);
 }
 
 // Start Server
