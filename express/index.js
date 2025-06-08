@@ -22,6 +22,7 @@ import profileRoutes from "./src/routes/profileRoutes.js";
 const NODE_ENV = process.env.NODE_ENV || "development";
 const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL;
+const PORT = process.env.PORT || 5000;
 
 // Whitelist for CORS (filter removes undefined/null values)
 const whitelist = [FRONTEND_BASE_URL, BACKEND_BASE_URL].filter(Boolean);
@@ -65,9 +66,9 @@ app.use(
 );
 
 // API Routes
-app.use("/api/auth", authRoutes);      // Authentication routes
+app.use("/api/auth", authRoutes); // Authentication routes
 app.use("/api/profile", profileRoutes); // Profile management routes
-app.use("/api/users", userRoutes);      // User management routes
+app.use("/api/users", userRoutes); // User management routes
 
 // Serve Frontend in Production
 if (NODE_ENV === "production") {
@@ -83,9 +84,13 @@ if (NODE_ENV === "production") {
 // Health Check Route
 app.get("/", (req, res) => res.send("Express server is up and running"));
 
+if (!PORT) {
+  throw new Error("Render environment variable or Local PORT is not defined");
+}
+
 // Start Server
-app.listen(process.env.PORT, () => {
-  console.log(`Server listening at http://localhost:${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server listening at http://localhost:${PORT}`);
   console.log(`Environment: ${NODE_ENV}`);
   if (NODE_ENV === "production") {
     console.log(`Serving React app from: ${FRONTEND_BASE_URL}`);
