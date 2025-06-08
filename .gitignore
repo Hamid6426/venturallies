@@ -6,6 +6,7 @@
 
 /express/node_modules
 /express/.env
+/express/.env.production
 
 /nest/node_modules
 /nest/.env
