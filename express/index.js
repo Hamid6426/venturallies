@@ -72,8 +72,7 @@ app.use("/api/users", userRoutes); // User management routes
 
 // Serve Frontend in Production
 if (NODE_ENV === "production") {
-  const reactDistPath = path.join(process.cwd(), "/dist");
-  app.use(express.static(reactDistPath));
+  app.use(express.static(path.join(process.cwd(), "dist")));
 
   // Serve index.html for any unknown paths (SPA fallback)
   app.get("*", (req, res) =>
