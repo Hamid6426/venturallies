@@ -22,7 +22,7 @@ import profileRoutes from "./src/routes/profileRoutes.js";
 const NODE_ENV = process.env.NODE_ENV || "development";
 const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL;
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 
 // Whitelist for CORS (filter removes undefined/null values)
 const whitelist = [FRONTEND_BASE_URL, BACKEND_BASE_URL].filter(Boolean);
