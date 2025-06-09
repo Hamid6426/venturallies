@@ -1,3 +1,6 @@
+// avoid dotenv 
+const port = process.env.PORT || 4000;
+
 // dotenv before everything
 import dotenv from "dotenv";
 dotenv.config();
@@ -93,7 +96,6 @@ if (NODE_ENV === "production") {
 // Health Check Route
 app.get("/", (req, res) => res.send("Express server is up and running"));
 
-const port = process.env.PORT || 4000;
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
