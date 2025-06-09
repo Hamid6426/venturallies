@@ -97,7 +97,7 @@ if (NODE_ENV === "production") {
 
 // 5. Start listening BEFORE any other operations
 app.listen(port, () => {
-  logger.infoF(`Server started on port ${port}`);
+  logger.info(`Server started on port ${port}`);
 });
 
 // Error Handling for Uncaught Exceptions
