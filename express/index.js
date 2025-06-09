@@ -103,12 +103,14 @@ app.get("/", (req, res) => res.send("Express server is up and running"));
 async function startServer() {
   try {
     await connectDB();
-    const port = parseInt(process.env.PORT, 10) || 10000;
+    if (!process.env.PORT) {
+      console.error("PORT not set — required by Render for port binding");
+      process.exit(1);
+    }
+    const port = process.env.PORT;
 
-    app.listen(port, "0.0.0.0", () => {
-      console.log(
-        `Server listening at http://0.0.0.0:${port}/ [${NODE_ENV}]`
-      );
+    app.listen(port, () => {
+      console.log(`Server listening on ${port}`);
       if (NODE_ENV === "development") {
         console.log(`Serving React app from: ${FRONTEND_BASE_URL}`);
       }
