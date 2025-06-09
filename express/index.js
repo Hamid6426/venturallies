@@ -8,6 +8,7 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import path from "path";
+import osu from "node-os-utils";
 
 // Internal modules
 import logger from "./src/config/logger.js";
@@ -50,7 +51,6 @@ const corsOptions = {
 
 // Initialize App and Connect DB
 const app = express();
-connectDB();
 
 // Global Middlewares
 app.use(express.json()); // Parse incoming JSON
@@ -63,6 +63,24 @@ app.use(
     stream: { write: (msg) => logger.info(msg.trim()) },
   })
 );
+
+// const { mem } = osu;
+// setInterval(async () => {
+//   const memory = await mem.info();
+
+//   console.log(
+//     `[RAM] Used: ${memory.usedMemMb} MB / ${memory.totalMemMb} MB (${memory.usedMemPercentage}%)`
+//   );
+// }, 6 * 1000); // Every minute
+
+setInterval(() => {
+  const nodeMemory = process.memoryUsage();
+  console.log(`[PROCESS RAM]
+  RSS: ${(nodeMemory.rss / 1024 / 1024).toFixed(2)} MB
+  Heap Used: ${(nodeMemory.heapUsed / 1024 / 1024).toFixed(2)} MB
+  Heap Total: ${(nodeMemory.heapTotal / 1024 / 1024).toFixed(2)} MB
+  `);
+}, 1000 * 60 * 60);
 
 // API Routes
 app.use("/api/auth", authRoutes); // Authentication routes
@@ -82,22 +100,23 @@ if (NODE_ENV === "production") {
 // Health Check Route
 app.get("/", (req, res) => res.send("Express server is up and running"));
 
-const port = process.env.PORT || 10000; // Default fallback
+async function startServer() {
+  try {
+    await connectDB();
+    const port = parseInt(process.env.PORT, 10) || 10000;
 
-if (port) {
-  logger.info(`port: ${port}`);
-} else if(!port) {
-  logger.error("Render environment variable or Local PORT is not defined");
-  process.exit(1);
-} else {
-  logger.info("...")
+    app.listen(port, "0.0.0.0", () => {
+      console.log(
+        `Server listening at http://0.0.0.0:${port}/ [${NODE_ENV}]`
+      );
+      if (NODE_ENV === "development") {
+        console.log(`Serving React app from: ${FRONTEND_BASE_URL}`);
+      }
+    });
+  } catch (err) {
+    console.error("Failed to connect DB:", err);
+    process.exit(1);
+  }
 }
 
-// Start Server
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
-  console.log(`Environment: ${NODE_ENV}`);
-  if (NODE_ENV === "production") {
-    console.log(`Serving React app from: ${FRONTEND_BASE_URL}`);
-  }
-});
+startServer();
