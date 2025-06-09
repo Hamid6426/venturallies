@@ -42,7 +42,7 @@ export default function Navbar() {
         protected if something goes wrong.
       </div>
 
-      <div className="container mx-auto flex justify-between items-center py-8 px-8">
+      <div className="container w-full mx-auto flex justify-between items-center py-8 px-4">
         <div className="flex items-center space-x-4">
           <Link to="/" className="text-xl font-bold">
             <img src="/logo.png" alt="Logo" className="h-6" />

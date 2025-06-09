@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../../models/User.js";
+import { locationsData } from "../../utils/locationsData.js";
+import { toTitleCase } from "../../helpers/toTitleCase.js";
 
 const updateProfile = async (req, res) => {
   try {
@@ -31,13 +33,13 @@ const updateProfile = async (req, res) => {
     }
 
     // ────────────────────────────────────────
-    // Optional: Update password securely
+    // Handle optional password update
     // ────────────────────────────────────────
     if (currentPassword || newPassword) {
       if (!currentPassword || !newPassword) {
         return res
           .status(400)
-          .json({ message: "Both old and new passwords are required" });
+          .json({ message: "Both current and new passwords are required" });
       }
 
       const isMatch = await bcrypt.compare(currentPassword, user.password);
@@ -51,13 +53,37 @@ const updateProfile = async (req, res) => {
     }
 
     // ────────────────────────────────────────
-    // Update profile fields
+    // Country/City validation & normalization
+    // ────────────────────────────────────────
+    if (country) {
+      const countryObj = locationsData.find(
+        (c) => c.country.toLowerCase() === country.toLowerCase()
+      );
+
+      if (!countryObj) {
+        return res.status(400).json({ message: "Invalid country" });
+      }
+
+      if (city && !countryObj.countryCities.includes(city)) {
+        return res
+          .status(400)
+          .json({ message: "Invalid city for the selected country" });
+      }
+
+      user.country = toTitleCase(countryObj.country);
+      user.countryCode = countryObj.countryCode.toUpperCase();
+    }
+
+    if (city) {
+      user.city = toTitleCase(city);
+    }
+
+    // ────────────────────────────────────────
+    // Update other profile fields
     // ────────────────────────────────────────
     user.firstName = firstName ?? user.firstName;
     user.lastName = lastName ?? user.lastName;
     user.phone = phone ?? user.phone;
-    user.country = country ?? user.country;
-    user.city = city ?? user.city;
     user.address = address ?? user.address;
     user.newsletterFrequency = newsletterFrequency ?? user.newsletterFrequency;
     user.transactionNotification =
@@ -68,34 +94,39 @@ const updateProfile = async (req, res) => {
 
     await user.save();
 
+    // ────────────────────────────────────────
+    // Return updated user profile
+    // ────────────────────────────────────────
     const {
-      firstName: fn,
-      lastName: ln,
+      firstName: updatedFirstName,
+      lastName: updatedLastName,
       email,
-      phone: ph,
-      country: c,
-      city: ct,
-      address: addr,
-      newsletterFrequency: nf,
-      transactionNotification: tn,
-      latestNewsNotification: lnn,
-      preferences: pref,
+      phone: updatedPhone,
+      country: updatedCountry,
+      countryCode,
+      city: updatedCity,
+      address: updatedAddress,
+      newsletterFrequency: updatedNewsletterFrequency,
+      transactionNotification: updatedTransactionNotification,
+      latestNewsNotification: updatedLatestNewsNotification,
+      preferences: updatedPreferences,
       avatarUrl,
       role,
     } = user;
 
     res.status(200).json({
-      firstName: fn,
-      lastName: ln,
+      firstName: updatedFirstName,
+      lastName: updatedLastName,
       email,
-      phone: ph,
-      country: c,
-      city: ct,
-      address: addr,
-      newsletterFrequency: nf,
-      transactionNotification: tn,
-      latestNewsNotification: lnn,
-      preferences: pref,
+      phone: updatedPhone,
+      country: updatedCountry,
+      countryCode,
+      city: updatedCity,
+      address: updatedAddress,
+      newsletterFrequency: updatedNewsletterFrequency,
+      transactionNotification: updatedTransactionNotification,
+      latestNewsNotification: updatedLatestNewsNotification,
+      preferences: updatedPreferences,
       avatarUrl,
       role,
     });

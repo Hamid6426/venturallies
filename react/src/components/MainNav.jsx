@@ -20,7 +20,7 @@ export default function MainNav() {
   };
 
   return (
-    <nav className="hidden md:flex space-x-6">
+    <nav className="hidden lg:flex space-x-6">
       <Link to="/projects" className=" hover:text-green-500">
         Invest
       </Link>

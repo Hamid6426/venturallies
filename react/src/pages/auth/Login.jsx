@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axiosInstance from "../utils/axiosInstance";
-import { useLoader } from "../contexts/LoaderContext";
+import axiosInstance from "../../utils/axiosInstance";
+import { useLoader } from "../../contexts/LoaderContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -36,7 +36,7 @@ const Login = () => {
     try {
       const res = await axiosInstance.post("/auth/login", formData);
       toast.success("Login successful!");
-      navigate("/dashboard"); // or wherever you want to go after login
+      navigate("/account-overview"); // or wherever you want to go after login
     } catch (error) {
       console.error("Login error:", error);
       if (error.response) {
@@ -93,7 +93,12 @@ const Login = () => {
                 />
                 Remember me
               </label>
-              <Link to="/forgot-password" className="text-[#00b951] hover:font-semibold">Forgot Password?</Link>
+              <Link
+                to="/forgot-password"
+                className="text-[#00b951] hover:font-semibold"
+              >
+                Forgot Password?
+              </Link>
             </div>
           </div>
         </section>

@@ -9,7 +9,7 @@ const getProfile = async (req, res) => {
     }
 
     const user = await User.findById(userId).select(
-      "firstName lastName email phone country city address newsletterFrequency transactionNotification latestNewsNotification preferences avatarUrl role"
+      "firstName lastName email phone countryName countryCode city address newsletterFrequency transactionNotification latestNewsNotification preferences avatarUrl role"
     );
 
     if (!user) {

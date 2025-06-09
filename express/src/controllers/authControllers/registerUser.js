@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import sendMail from "../../utils/sendMail.js";
 import { isValidEmail } from "../../helpers/validationHelpers.js";
 import { locationsData } from "../../utils/locationsData.js";
+import { toTitleCase } from "../../helpers/toTitleCase.js";
 
 const registerUser = async (req, res) => {
   try {
@@ -12,7 +13,7 @@ const registerUser = async (req, res) => {
       lastName,
       email,
       phone,
-      country,
+      countryName,
       city,
       address,
       newsletterFrequency,
@@ -57,7 +58,10 @@ const registerUser = async (req, res) => {
 
     const normalizedEmail = email.toLowerCase();
 
-    const countryObj = locationsData.find((c) => c.countryCode === country);
+    // Match by full country name
+    const countryObj = locationsData.find(
+      (c) => c.countryName.toLowerCase() === countryName.toLowerCase()
+    );
 
     if (!countryObj) {
       return res.status(400).json({ message: "Invalid country" });
@@ -69,14 +73,19 @@ const registerUser = async (req, res) => {
         .json({ message: "Invalid city for the selected country" });
     }
 
+    const capitalizedCountryCode = countryObj.countryCode.toUpperCase();
+    const normalizedCountryName = toTitleCase(countryObj.countryName);
+    const normalizedCity = toTitleCase(city);
+
     // Create user object
     const user = new User({
       firstName,
       lastName,
       email: normalizedEmail,
       phone,
-      country,
-      city,
+      countryName: normalizedCountryName,
+      countryCode: capitalizedCountryCode,
+      city: normalizedCity,
       address,
       newsletterFrequency: newsletterFrequency || "weekly",
       transactionNotification: transactionNotification ?? true,

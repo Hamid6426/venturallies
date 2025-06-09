@@ -50,7 +50,9 @@ const corsOptions = {
 // Initialize Express App
 const app = express();
 
+// Configure port - this works on Render because they automatically set PORT environment variable
 const port = process.env.PORT || 4000;
+
 // Connect to Database
 connectDB();
 
@@ -95,7 +97,7 @@ if (NODE_ENV === "production") {
   );
 }
 
-// 5. Start listening BEFORE any other operations
+// Start listening BEFORE any other operations
 app.listen(port, () => {
   logger.info(`Server started on port ${port}`);
 });
