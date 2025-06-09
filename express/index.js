@@ -21,7 +21,6 @@ import profileRoutes from "./src/routes/profileRoutes.js";
 
 // Environment Constants
 const NODE_ENV = process.env.NODE_ENV || "development";
-const port = process.env.PORT || 4000;
 const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL;
 
@@ -51,6 +50,7 @@ const corsOptions = {
 // Initialize Express App
 const app = express();
 
+const port = process.env.PORT || 4000;
 // Connect to Database
 connectDB();
 
@@ -95,9 +95,9 @@ if (NODE_ENV === "production") {
   );
 }
 
-// Start Server
+// 5. Start listening BEFORE any other operations
 app.listen(port, () => {
-  logger.info(`Server started in ${NODE_ENV} mode on port ${port}`);
+  logger.infoF(`Server started on port ${port}`);
 });
 
 // Error Handling for Uncaught Exceptions
