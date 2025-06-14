@@ -2,9 +2,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    // ──────────────────────
     // Basic User Info
-    // ──────────────────────
     firstName: { type: String, maxlength: 100 },
     lastName: { type: String, maxlength: 100 },
     email: {
@@ -23,10 +21,7 @@ const userSchema = new mongoose.Schema(
     address: { type: String },
     avatarUrl: { type: String },
 
-    // ──────────────────────
     // Authentication & Security
-    // ──────────────────────
-
     // A 6 digit OTP code is used for verification
     emailVerifiedAt: { type: Date, default: null },
     emailVerificationToken: { type: Number },
@@ -40,9 +35,7 @@ const userSchema = new mongoose.Schema(
     resetPasswordToken: { type: Number },
     resetPasswordTokenExpiresAt: { type: Date, default: null },
 
-    // ──────────────────────
     // Notifications & Preferences
-    // ──────────────────────
     newsletterFrequency: {
       type: String,
       enum: ["daily", "weekly", "monthly", "yearly", "never"],
@@ -58,9 +51,7 @@ const userSchema = new mongoose.Schema(
       },
     },
 
-    // ──────────────────────
     // Role & Account Status
-    // ──────────────────────
     role: {
       type: String,
       enum: ["user", "admin", "superadmin"],
@@ -69,12 +60,17 @@ const userSchema = new mongoose.Schema(
     isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
 
-    // ──────────────────────
     // Login Metadata
-    // ──────────────────────
     lastLoginAt: { type: Date },
-    loginHistory: [{ ip: String, device: String, timestamp: Date }],
+    loginHistory: [
+      {
+        ip: { type: String },
+        device: { type: String },
+        timestamp: { type: Date },
+      },
+    ],
   },
+
   {
     timestamps: true,
   }

@@ -1,6 +1,6 @@
 import User from "../../models/User.js";
 import sendMail from "../../utils/sendMail.js";
-import generateOTP from "../../helpers/generateOTP.js";
+import generateOTP from "../../utils/generateOTP.js";
 
 const forgotPassword = async (req, res) => {
   try {

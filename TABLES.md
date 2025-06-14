@@ -124,3 +124,240 @@ This document describes the core database schema for the **Debt-Based Crowdfundi
 ---
 
 This schema table is intended for universal reference and can be adapted to any backend or database system.
+
+SCHEMAS WITH MONGOOSE
+
+const userSchema = new mongoose.Schema(
+  {
+    // Basic User Info
+    firstName: { type: String, maxlength: 100 },
+    lastName: { type: String, maxlength: 100 },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      maxlength: 255,
+      lowercase: true,
+      trim: true,
+    },
+    password: { type: String, required: true },
+    phone: { type: String, maxlength: 50 },
+    countryName: { type: String, maxlength: 100 },
+    countryCode: { type: String, maxlength: 2 },
+    city: { type: String, maxlength: 100 },
+    address: { type: String },
+    avatarUrl: { type: String },
+
+    // Authentication & Security
+    // A 6 digit OTP code is used for verification
+    emailVerifiedAt: { type: Date, default: null },
+    emailVerificationToken: { type: Number },
+    emailVerificationTokenExpiresAt: { type: Date, default: null },
+
+    // A 6 digit OTP code is used for verification
+    loginToken: { type: Number }, // OTP password for login
+    loginTokenExpiresAt: { type: Date, default: null },
+
+    // A 6 digit OTP code is used for verification
+    resetPasswordToken: { type: Number },
+    resetPasswordTokenExpiresAt: { type: Date, default: null },
+
+    // Notifications & Preferences
+    newsletterFrequency: {
+      type: String,
+      enum: ["daily", "weekly", "monthly", "yearly", "never"],
+      default: "weekly",
+    },
+    transactionNotification: { type: Boolean, default: true },
+    latestNewsNotification: { type: Boolean, default: true },
+    preferences: {
+      type: Object,
+      default: {
+        darkMode: false,
+        language: "en",
+      },
+    },
+
+    // Role & Account Status
+    role: {
+      type: String,
+      enum: ["user", "admin", "superadmin"],
+      default: "user",
+    },
+    isActive: { type: Boolean, default: true },
+    isDeleted: { type: Boolean, default: false },
+
+    // Login Metadata
+    lastLoginAt: { type: Date },
+    loginHistory: [
+      {
+        ip: { type: String },
+        device: { type: String },
+        timestamp: { type: Date },
+      },
+    ],
+  },
+
+  {
+    timestamps: true,
+  }
+);
+
+const ventureSchema = new mongoose.Schema(
+  {
+    // Basic Info
+    title: { type: String, required: true, maxlength: 255 },
+    slug: { type: String, unique: true, required: true },
+    shortDescription: { type: String },
+    longDescription: { type: String },
+    collateralDescription: { type: String },
+    images: [String], // URLs to image assets
+
+    // Location
+    country: { type: String },
+
+    // Public Status of the Venture
+    status: {
+      type: String,
+      enum: ["new", "coming-soon", "funded", "repaid"],
+      required: true,
+    },
+
+    // Venture Category
+    ventureType: {
+      type: String,
+      enum: ["business", "sme", "leasing", "realestate"],
+      required: true,
+    },
+
+    // Visibility Control
+    visibility: {
+      type: String,
+      enum: ["public", "private", "draft"],
+      default: "draft",
+    },
+
+    // Risk Assessment
+    riskLevel: {
+      type: String,
+      enum: ["low", "medium", "high"],
+      default: "medium",
+    },
+
+    // Investment Configuration
+    minInvestmentAmount: { type: Number, default: 1000 },
+    maxInvestmentAmount: { type: Number },
+    targetAmount: { type: Number, required: true },
+    amountFunded: { type: Number, required: true },
+    expectedReturn: { type: Number, required: true }, // % return expected
+    investmentPeriod: { type: Number, required: true }, // in months
+
+    // Venture Lifecycle
+    dateIssued: { type: Date },
+    closingDate: { type: Date, required: true },
+
+    // Admin Review Status
+    adminStatus: {
+      type: String,
+      enum: ["pending", "under-review", "approved", "rejected"],
+      default: "pending",
+    },
+    adminReviewedAt: { type: Date, default: null },
+    adminNotes: { type: String, default: null },
+
+    // Repayment Schedule (Amortization)
+    schedules: [
+      {
+        scheduleDate: { type: Date },
+        principal: { type: Number },
+        interest: { type: Number },
+        total: { type: Number },
+        status: {
+          type: String,
+          enum: ["pending", "paid", "overdue"],
+          default: "pending",
+        },
+      },
+    ],
+
+    // Financial Fields
+    collateralValue: { type: Number },
+    loanToValue: { type: Number }, // % ratio
+    isConvertible: { type: Boolean, default: false }, // to equity
+
+    // Optional Summary Totals (if needed)
+    principal: { type: Number },
+    interest: { type: Number },
+    total: { type: Number },
+
+    // Soft Delete Flag
+    isDeleted: { type: Boolean, default: false },
+
+    // Audit Fields
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  },
+  {
+    timestamps: true, // createdAt & updatedAt
+  }
+);
+
+const balanceSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: true },
+
+  // Total available balance in-app
+  balance: { type: Number, default: 0 },
+
+  // Locking mechanism for pending investments
+  locked: { type: Number, default: 0 },
+}, {
+  timestamps: true,
+});
+
+const transactionSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+
+    // Amount of the transaction (positive or negative)
+    amount: { type: Number, required: true },
+
+    // Type of transaction
+    type: {
+      type: String,
+      enum: ["top-up", "investment", "refund", "adjustment"],
+      required: true,
+    },
+
+    // Optional references
+    investment: { type: mongoose.Schema.Types.ObjectId, ref: "Investment" },
+    addedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Admin who credited
+
+    // Notes for audit or manual changes
+    note: { type: String },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const investmentSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    venture: { type: mongoose.Schema.Types.ObjectId, ref: "Venture", required: true },
+
+    amount: { type: Number, required: true },
+    returnExpected: { type: Number }, // Optional - you can pre-calculate % based on venture
+
+    status: {
+      type: String,
+      enum: ["active", "cancelled", "refunded", "completed"],
+      default: "active",
+    },
+
+    investedAt: { type: Date, default: Date.now },
+    refundedAt: { type: Date },
+
+    note: { type: String },
+  },
+  { timestamps: true }
+);

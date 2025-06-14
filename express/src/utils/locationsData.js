@@ -1,4 +1,4 @@
-export const locationsData = [
+const locationsData = [
   {
     countryCode: "at",
     countryName: "Austria",
@@ -448,3 +448,5 @@ export const locationsData = [
     ],
   },
 ];
+
+export default locationsData;

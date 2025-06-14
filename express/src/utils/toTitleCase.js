@@ -1,4 +1,4 @@
-export const toTitleCase = (str) =>
+const toTitleCase = (str) =>
   str
     .toLowerCase()
     .replace(/\s+/g, " ") // normalize spaces
@@ -11,3 +11,5 @@ export const toTitleCase = (str) =>
         .join("-")
     )
     .join(" ");
+
+export default toTitleCase;

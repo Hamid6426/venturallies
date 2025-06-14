@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../../models/User.js";
-import { locationsData } from "../../utils/locationsData.js";
-import { toTitleCase } from "../../helpers/toTitleCase.js";
+import locationsData from "../../utils/locationsData.js";
+import toTitleCase from "../../utils/toTitleCase.js";
 
 const updateProfile = async (req, res) => {
   try {

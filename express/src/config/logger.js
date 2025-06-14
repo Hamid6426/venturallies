@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 // Resolve project root directory regardless of where logger.js is located
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const logDir = path.resolve(__dirname, "..", "logs"); // go up one level to project root
+const logDir = path.resolve(__dirname, "..", "..", "logs"); // go up two level to project root
 
 // Ensure logs directory exists
 if (!fs.existsSync(logDir)) {

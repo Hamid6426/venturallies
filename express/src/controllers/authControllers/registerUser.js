@@ -1,10 +1,10 @@
-import generateOTP from "../../helpers/generateOTP.js";
+import generateOTP from "../../utils/generateOTP.js";
 import User from "../../models/User.js";
 import bcrypt from "bcrypt";
 import sendMail from "../../utils/sendMail.js";
-import { isValidEmail } from "../../helpers/validationHelpers.js";
-import { locationsData } from "../../utils/locationsData.js";
-import { toTitleCase } from "../../helpers/toTitleCase.js";
+import { isValidEmail } from "../../utils/validation.js";
+import locationsData from "../../utils/locationsData.js";
+import toTitleCase from "../../utils/toTitleCase.js";
 
 const registerUser = async (req, res) => {
   try {

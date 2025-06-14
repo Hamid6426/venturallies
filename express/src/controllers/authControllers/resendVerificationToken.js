@@ -1,4 +1,4 @@
-import generateOTP from "../../helpers/generateOTP.js";
+import generateOTP from "../../utils/generateOTP.js";
 import User from "../../models/User.js";
 import sendMail from "../../utils/sendMail.js";
 
