@@ -1,6 +1,5 @@
 import Venture from "../../models/Venture.js";
 
-
 const getAllVentures = async (req, res) => {
   try {
     // 🔍 Filters from query

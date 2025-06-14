@@ -10,6 +10,7 @@ import deleteVentureImage from "../controllers/ventureControllers/deleteVentureI
 
 import authMiddleware from "../middlewares/authMiddleware.js";
 import { uploadVentureImages } from "../middlewares/uploadMiddleware.js";
+import updateAdminStatus from "../controllers/ventureControllers/updateAdminStatus.js";
 
 const router = express.Router();
 
@@ -41,5 +42,8 @@ router.get("/id/:ventureId", getVentureById);
 
 // Get venture by slug (less specific - placed last)
 router.get("/slug/:ventureSlug", getVentureBySlug);
+
+
+router.patch("/admin-status", authMiddleware, updateAdminStatus);
 
 export default router;

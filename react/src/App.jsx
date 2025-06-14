@@ -37,6 +37,11 @@ import EditVenture from "./pages/dashboard/EditVenture";
 import VentureImageUploader from "./pages/dashboard/VentureImageUploader";
 import MyVentureDetail from "./pages/dashboard/MyVentureDetail";
 
+import AdminDashboardOverview from "./pages/admin/AdminDashboardOverview";
+import AdminGetAllUsers from "./pages/admin/AdminGetAllUsers";
+import AdminGetAllVentures from "./pages/admin/AdminGetAllVentures";
+import AdminGetAllMails from "./pages/admin/AdminGetAllMails";
+
 function App() {
   return (
     <Routes>
@@ -80,6 +85,14 @@ function App() {
           path="/account/create-venture/:ventureId/upload-images"
           element={<VentureImageUploader />}
         />
+      </Route>
+
+      <Route path="/admin" element={<DashboardLayout />}>
+        {/* <Route path="dashboard" element={<AccountOverview />} /> */}
+        <Route path="dashboard" element={<AdminDashboardOverview />} />
+        <Route path="users" element={<AdminGetAllUsers />} />
+        <Route path="ventures" element={<AdminGetAllVentures />} />
+        <Route path="ventures" element={<AdminGetAllMails />} />
       </Route>
     </Routes>
   );
