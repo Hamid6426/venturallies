@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInstance";
 import { useLoader } from "../../contexts/LoaderContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { setLoading } = useLoader();
+  const { loadUserProfile } = useAuth();
 
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
@@ -35,6 +37,7 @@ const Login = () => {
     setLoading(true);
     try {
       const res = await axiosInstance.post("/api/auth/login", formData);
+      await loadUserProfile();
       toast.success("Login successful!");
       navigate("/account/overview"); // or wherever you want to go after login
     } catch (error) {

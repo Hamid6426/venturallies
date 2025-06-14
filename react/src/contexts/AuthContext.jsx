@@ -27,6 +27,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = async () => {
+    try {
+      await axiosInstance.post("/api/auth/logout", null, {
+        withCredentials: true,
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setCurrentUser(null); // Clear user data
+      hasFetchedProfile.current = false; // Allow re-fetch if needed
+    }
+  };
+
   useEffect(() => {
     if (!hasFetchedProfile.current) {
       hasFetchedProfile.current = true;
@@ -40,6 +53,7 @@ export const AuthProvider = ({ children }) => {
         currentUser,
         setCurrentUser,
         loadUserProfile,
+        logout,
         setIsUserLoading,
         isUserLoading,
       }}

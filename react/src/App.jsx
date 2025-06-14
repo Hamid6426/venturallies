@@ -41,6 +41,9 @@ import AdminDashboardOverview from "./pages/admin/AdminDashboardOverview";
 import AdminGetAllUsers from "./pages/admin/AdminGetAllUsers";
 import AdminGetAllVentures from "./pages/admin/AdminGetAllVentures";
 import AdminGetAllMails from "./pages/admin/AdminGetAllMails";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminGetVentureDetail from "./pages/admin/AdminGetVentureDetail";
 
 function App() {
   return (
@@ -66,7 +69,6 @@ function App() {
         <Route path="support" element={<Support />} />
         <Route path="contact" element={<Contact />} />
       </Route>
-
       {/* Dashboard Area */}
       <Route path="/account" element={<DashboardLayout />}>
         <Route path="overview" element={<AccountOverview />} />
@@ -86,14 +88,17 @@ function App() {
           element={<VentureImageUploader />}
         />
       </Route>
-
-      <Route path="/admin" element={<DashboardLayout />}>
-        {/* <Route path="dashboard" element={<AccountOverview />} /> */}
+      // ADMIN ROUTES
+      <Route path="admin-login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<AdminDashboardOverview />} />
         <Route path="users" element={<AdminGetAllUsers />} />
         <Route path="ventures" element={<AdminGetAllVentures />} />
-        <Route path="ventures" element={<AdminGetAllMails />} />
+        <Route path="mails" element={<AdminGetAllMails />} />
+        <Route path="ventures/:ventureId" element={<AdminGetVentureDetail />} />
       </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
