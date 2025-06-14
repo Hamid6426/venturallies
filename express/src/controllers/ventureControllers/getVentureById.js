@@ -1,10 +1,10 @@
-import Venture from "../models/Venture.js";
+import Venture from "../../models/Venture.js";
 
 const getVentureById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { ventureId } = req.params;
 
-    const venture = await Venture.findById(id).populate(
+    const venture = await Venture.findById(ventureId).populate(
       "createdBy",
       "firstName lastName email"
     );

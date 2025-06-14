@@ -11,11 +11,12 @@ export default function Navbar() {
   const hideTimeoutRef = useRef(null);
 
   const accountLinks = [
-    { label: "Overview", path: "/account-overview", className: "border-t-0" },
-    { label: "Investments", path: "/account-investments", className: "" },
-    { label: "Statement", path: "/account-statement", className: "" },
-    { label: "Funding", path: "/account-funding", className: "" },
-    { label: "Profile", path: "/account-profile", className: "" },
+    { label: "Overview", path: "/account/overview", className: "border-t-0" },
+    { label: "Investments", path: "/account/investments", className: "" },
+    { label: "Statement", path: "/account/statement", className: "" },
+    { label: "Funding", path: "/account/funding", className: "" },
+    { label: "Profile", path: "/account/profile", className: "" },
+    { label: "My Ventures", path: "/account/my-ventures", className: "" },
   ];
 
   // Open dropdown immediately
@@ -65,7 +66,7 @@ export default function Navbar() {
                 <span>Welcome, {currentUser.firstName}</span>
               ) : (
                 <Link to="/login">
-                  <button>Login</button>
+                  <button className="cursor-pointer hover:text-green-500">Login</button>
                 </Link>
               )}
             </button>

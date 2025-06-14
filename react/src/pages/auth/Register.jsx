@@ -75,7 +75,7 @@ const Register = () => {
     delete payload.confirmPassword;
 
     try {
-      await axiosInstance.post("/auth/register", payload);
+      await axiosInstance.post("/api/auth/register", payload);
 
       toast.success("Registration successful! Please verify your email.");
       navigate(`/verify-email?email=${formData.email}`);

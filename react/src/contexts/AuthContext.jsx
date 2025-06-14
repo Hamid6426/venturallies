@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     setIsUserLoading(true);
 
     try {
-      const res = await axiosInstance.get("/profile/get", {
+      const res = await axiosInstance.get("/api/profile/get", {
         withCredentials: true,
       });
       setCurrentUser(res.data);

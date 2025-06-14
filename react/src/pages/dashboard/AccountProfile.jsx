@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 import axiosInstance from "../../utils/axiosInstance";
 import { locationsData } from "../../data/locationsData";
@@ -80,7 +79,7 @@ const AccountProfile = () => {
 
       delete updatePayload.confirmNewPassword;
 
-      await axiosInstance.put("/profile/update", updatePayload);
+      await axiosInstance.put("/api/profile/update", updatePayload);
       setSuccess(true);
     } catch (err) {
       setError("Failed to update profile.");

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function CreateProject() {
+export default function EditVenture() {
   return (
     <div>
       

@@ -24,7 +24,7 @@ export default function VerifyEmail() {
     try {
       setStatus("verifying");
 
-      const response = await axiosInstance.post("/auth/verify-email", {
+      const response = await axiosInstance.post("/api/auth/verify-email", {
         email,
         token: otp,
       });

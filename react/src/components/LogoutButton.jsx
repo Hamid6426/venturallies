@@ -3,7 +3,7 @@ import React from "react";
 export default function LogoutButton() {
   const handleLogout = async () => {
     try {
-      await axiosInstance.post("/auth/logout", null, { withCredentials: true });
+      await axiosInstance.post("/api/auth/logout", null, { withCredentials: true });
       toast.success("Logged out.");
       navigate("/login");
     } catch (err) {

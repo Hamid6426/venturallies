@@ -1,25 +1,45 @@
 import express from "express";
-import createVenture from "../controllers/ventureControllers/createVenture";
-import getAllVentures from "../controllers/ventureControllers/getAllVentures";
-import getVentureById from "../controllers/ventureControllers/getVentureById";
-import getVentureBySlug from "../controllers/ventureControllers/getVentureBySlug";
-import updateVenture from "../controllers/ventureControllers/updateVenture";
+import createVenture from "../controllers/ventureControllers/createVenture.js";
+import getAllVentures from "../controllers/ventureControllers/getAllVentures.js";
+import getVentureById from "../controllers/ventureControllers/getVentureById.js";
+import getVentureBySlug from "../controllers/ventureControllers/getVentureBySlug.js";
+import updateVenture from "../controllers/ventureControllers/updateVenture.js";
+import patchVentureImage from "../controllers/ventureControllers/patchVentureImage.js";
+import getMyVentures from "../controllers/ventureControllers/getMyVentures.js";
+import deleteVentureImage from "../controllers/ventureControllers/deleteVentureImage.js";
+
+import authMiddleware from "../middlewares/authMiddleware.js";
+import { uploadVentureImages } from "../middlewares/uploadMiddleware.js";
 
 const router = express.Router();
 
-// Create
-router.post("/", createVenture);
+// Create Venture
+router.post("/", authMiddleware, createVenture);
 
-// List (with filters + pagination)
+// My Ventures (must come BEFORE any wildcard/dynamic routes)
+router.get("/my-ventures", authMiddleware, getMyVentures);
+
+// All ventures (no auth)
 router.get("/", getAllVentures);
 
-// Get by MongoDB ID
-router.get("/id/:id", getVentureById);
+// Upload image to a venture
+router.patch(
+  "/:ventureId/upload-image",
+  authMiddleware,
+  uploadVentureImages,
+  patchVentureImage
+);
 
-// Get by slug
-router.get("/slug/:slug", getVentureBySlug);
+// Delete image from a venture
+router.patch("/:ventureId/delete-image", authMiddleware, deleteVentureImage);
 
-// Update venture (admin only)
-router.put("/id/:id", updateVenture);   
+// Update venture by ID
+router.put("/:ventureId", authMiddleware, updateVenture);
+
+// Get venture by ID (specific route for ObjectId)
+router.get("/id/:ventureId", getVentureById);
+
+// Get venture by slug (less specific - placed last)
+router.get("/slug/:ventureSlug", getVentureBySlug);
 
 export default router;

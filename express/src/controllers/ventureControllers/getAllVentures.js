@@ -1,4 +1,5 @@
-import Venture from "../models/Venture.js";
+import Venture from "../../models/Venture.js";
+
 
 const getAllVentures = async (req, res) => {
   try {

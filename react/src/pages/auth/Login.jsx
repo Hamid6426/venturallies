@@ -34,9 +34,9 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const res = await axiosInstance.post("/auth/login", formData);
+      const res = await axiosInstance.post("/api/auth/login", formData);
       toast.success("Login successful!");
-      navigate("/account-overview"); // or wherever you want to go after login
+      navigate("/account/overview"); // or wherever you want to go after login
     } catch (error) {
       console.error("Login error:", error);
       if (error.response) {

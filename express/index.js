@@ -8,7 +8,6 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import path from "path";
-import osu from "node-os-utils";
 
 // Internal Modules
 import logger from "./src/config/logger.js";
@@ -18,6 +17,7 @@ import connectDB from "./src/config/mongoose.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
 import profileRoutes from "./src/routes/profileRoutes.js";
+import ventureRoutes from "./src/routes/ventureRoutes.js";
 
 // Environment Constants
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -81,10 +81,14 @@ setInterval(() => {
 // Health Check Route (Keep this before API routes for quick monitoring)
 app.get("/health", (req, res) => res.send("Express server is up and running"));
 
+// uploaded images folder
+app.use("/uploads", express.static("uploads"));
+
 // API Routes
 app.use("/api/auth", authRoutes); // Authentication routes
 app.use("/api/users", userRoutes); // User management routes
 app.use("/api/profile", profileRoutes); // Profile management routes
+app.use("/api/ventures", ventureRoutes);
 
 // Production Frontend Serving
 if (NODE_ENV === "production") {
@@ -99,7 +103,7 @@ if (NODE_ENV === "production") {
 
 // Start listening BEFORE any other operations
 app.listen(port, () => {
-  logger.info(`Server started on port ${port}`);
+  console.log(`Server started on port ${port}`);
 });
 
 // Error Handling for Uncaught Exceptions
