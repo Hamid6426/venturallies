@@ -1,7 +1,8 @@
-SCHEMAS WITH MONGOOSE
+# Mongoose Schemas
 
-// src/models/User.js
-import mongoose from "mongoose";
+These are the mongoose schemas of this venture - investment website controlled mostly by admin
+
+## List of Schemas
 
 const userSchema = new mongoose.Schema(
   {
@@ -81,9 +82,6 @@ const userSchema = new mongoose.Schema(
 
 export default mongoose.model("User", userSchema);
 
-// src/models/Balance.js
-import mongoose from "mongoose";
-
 const balanceSchema = new mongoose.Schema(
   {
     user: {
@@ -141,9 +139,6 @@ const balanceHistorySchema = new Schema(
 );
 
 export default mongoose.model("BalanceHistory", balanceHistorySchema);
-
-// src/models/Venture.js
-import mongoose from "mongoose";
 
 const ventureSchema = new mongoose.Schema(
   {
@@ -246,10 +241,6 @@ const ventureSchema = new mongoose.Schema(
 
 export default mongoose.model("Venture", ventureSchema);
 
-// src/models/Investment.js
-import mongoose from "mongoose";
-const { Schema, model, Types } = mongoose;
-
 const investmentSchema = new Schema(
   {
     venture: {
@@ -294,9 +285,6 @@ const investmentSchema = new Schema(
 
 export default model("Investment", investmentSchema);
 
-// src/models/Repayment.js
-import mongoose from "mongoose";
-
 const repaymentSchema = new mongoose.Schema(
   {
     investment: {
@@ -334,3 +322,18 @@ const repaymentSchema = new mongoose.Schema(
 );
 
 export default mongoose.model("Repayment", repaymentSchema);
+
+## Relationships Summary
+
+User
+ ├── Balance (1:1)
+ ├── BalanceHistory (1:N)
+ ├── Investment (1:N)
+ ├── Repayment (1:N)
+ ├── Created/Updated Ventures, Repayments, etc.
+Venture
+ ├── Investment (1:N)
+ ├── CreatedBy / UpdatedBy
+Investment
+ ├── Repayment (1:N)
+ └── Linked to Venture and User

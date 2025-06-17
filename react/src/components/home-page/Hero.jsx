@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { MdPlayCircle } from "react-icons/md";
 export default function Hero() {
   return (
-    <div className="flex flex-col justify-center items-center w-full aspect-auto py-24 md:py-0 md:aspect-video px-6">
+    <div className="flex flex-col justify-center items-center w-full aspect-auto py-32 px-6">
       <div className="flex flex-col gap-1 md:gap-4 justify-center items-center">
         <h1 className="text-4xl lg:text-5xl font-bold text-center">
           Leading business
@@ -25,7 +25,7 @@ export default function Hero() {
           </a>
           <p>
             Want to start?{" "}
-            <Link to="projects" className="text-green-500 bg-amber-200">
+            <Link to="projects" className="text-green-600 hover:bg-amber-50">
               Invest Now
             </Link>
           </p>

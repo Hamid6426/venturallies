@@ -88,6 +88,17 @@ const ventureSchema = new mongoose.Schema(
     interest: { type: Number },
     total: { type: Number },
 
+    // Launch Scheduling
+    launchDate: { type: Date, default: null }, // for UI marketing
+    goesLiveAt: { type: Date, default: null }, // for actual visibility logic
+
+    // Tags
+    tags: [{ type: String, maxlength: 50 }], // for category filters
+
+    // Homepage Feature
+    isFeatured: { type: Boolean, default: false },
+    featuredUntil: { type: Date, default: null },
+
     // Soft Delete Flag
     isDeleted: { type: Boolean, default: false },
 

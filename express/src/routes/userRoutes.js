@@ -1,12 +1,15 @@
 import express from "express";
 import getAllUsers from "../controllers/user/getAllUsers.js";
+import updateUser from "../controllers/user/updateUser.js";
+import deleteUser from "../controllers/user/deleteUser.js";
+import getUserById from "../controllers/user/getUserById.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
-// Optionally import other user-related controllers here
 
 const router = express.Router();
 
-// GET /api/users?role=&status=&search=&page=&limit=
 router.get("/", authMiddleware, getAllUsers);
+router.patch("/", authMiddleware, updateUser);
+router.delete("/", authMiddleware, deleteUser);
+router.get("/:id", authMiddleware, getUserById);
 
-// Placeholder for more routes (e.g. getSingleUser, updateUser, deleteUser)
 export default router;

@@ -4,13 +4,13 @@ import logger from "../../config/logger.js";
 
 const getAllUsers = async (req, res) => {
   try {
-    const {
-      page = 1,
-      limit = 10,
-      role,
-      status,
-      search,
-    } = req.query;
+    const adminRole = req.user.role;
+
+    if (adminRole !== "admin") {
+      return res.status(403).json({ error: "Forbidden: Admins only" });
+    }
+
+    const { page = 1, limit = 10, role, status, search } = req.query;
 
     const filter = {};
 
@@ -27,10 +27,7 @@ const getAllUsers = async (req, res) => {
     const skip = (Number(page) - 1) * Number(limit);
 
     const [users, total] = await Promise.all([
-      User.find(filter)
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(Number(limit)),
+      User.find(filter).sort({ createdAt: -1 }).skip(skip).limit(Number(limit)),
       User.countDocuments(filter),
     ]);
 

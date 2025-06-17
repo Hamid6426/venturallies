@@ -1,8 +1,8 @@
-// routes/profileRoutes.js
 import express from "express";
 import getProfile from "../controllers/profile/getProfile.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
 import updateProfile from "../controllers/profile/updateProfile.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
+
 const router = express.Router();
 
 router.get("/get", authMiddleware, getProfile);
