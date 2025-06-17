@@ -1,8 +1,9 @@
+// src/models/Venture.js
 import mongoose from "mongoose";
 
 const ventureSchema = new mongoose.Schema(
   {
-    // 📌 Basic Info
+    // Basic Info
     title: { type: String, required: true, maxlength: 255 },
     slug: { type: String, unique: true, required: true },
     shortDescription: { type: String },
@@ -10,38 +11,38 @@ const ventureSchema = new mongoose.Schema(
     collateralDescription: { type: String },
     images: [String], // URLs to image assets
 
-    // 🌍 Location
+    // Location
     country: { type: String },
 
-    // 📊 Public Status of the Venture
+    // Public Status of the Venture
     status: {
       type: String,
       enum: ["new", "coming-soon", "funded", "repaid"],
       required: true,
     },
 
-    // 📂 Venture Category
+    // Venture Category
     ventureType: {
       type: String,
       enum: ["business", "sme", "leasing", "realestate"],
       required: true,
     },
 
-    // 🔐 Visibility Control
+    // Visibility Control
     visibility: {
       type: String,
       enum: ["public", "private", "draft"],
       default: "draft",
     },
 
-    // ⚠️ Risk Assessment
+    // Risk Assessment
     riskLevel: {
       type: String,
       enum: ["low", "medium", "high"],
       default: "medium",
     },
 
-    // 💰 Investment Configuration
+    // Investment Configuration
     minInvestmentAmount: { type: Number, default: 1000 },
     maxInvestmentAmount: { type: Number },
     targetAmount: { type: Number, required: true },
@@ -49,11 +50,11 @@ const ventureSchema = new mongoose.Schema(
     expectedReturn: { type: Number, required: true }, // % return expected
     investmentPeriod: { type: Number, required: true }, // in months
 
-    // 📅 Venture Lifecycle
+    // Venture Lifecycle
     dateIssued: { type: Date },
     closingDate: { type: Date, required: true },
 
-    // 🔐 Admin Review Status
+    // Admin Review Status
     adminStatus: {
       type: String,
       enum: ["pending", "under-review", "approved", "rejected"],
@@ -62,7 +63,7 @@ const ventureSchema = new mongoose.Schema(
     adminReviewedAt: { type: Date, default: null },
     adminNotes: { type: String, default: null },
 
-    // 🧾 Repayment Schedule (Amortization)
+    // Repayment Schedule (Amortization)
     schedules: [
       {
         scheduleDate: { type: Date },
@@ -77,20 +78,20 @@ const ventureSchema = new mongoose.Schema(
       },
     ],
 
-    // 🏦 Financial Fields
+    // Financial Fields
     collateralValue: { type: Number },
     loanToValue: { type: Number }, // % ratio
     isConvertible: { type: Boolean, default: false }, // to equity
 
-    // 📊 Optional Summary Totals (if needed)
+    // Optional Summary Totals (if needed)
     principal: { type: Number },
     interest: { type: Number },
     total: { type: Number },
 
-    // 🧹 Soft Delete Flag
+    // Soft Delete Flag
     isDeleted: { type: Boolean, default: false },
 
-    // 👤 Audit Fields
+    // Audit Fields
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },

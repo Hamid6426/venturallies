@@ -60,7 +60,7 @@ const Login = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-8 text-lg md:text-xl max-w-3xl mx-auto py-8 px-4"
+        className="space-y-8 text-lg md:text-xl max-w-3xl mx-auto py-24 px-4"
       >
         <section className="flex flex-col md:flex-row gap-6">
           <h4 className="text-xl font-medium md:mb-0 w-full md:w-64">

@@ -24,7 +24,12 @@ const createVenture = async (req, res) => {
       isConvertible,
     } = req.body;
 
-    // Check for required fields
+    // Normalize title
+    if (title) {
+      title = title.trim().replace(/\s+/g, " ");
+    }
+
+    // Required fields check
     const missingFields = [];
     if (!title) missingFields.push("title");
     if (!ventureType) missingFields.push("ventureType");
@@ -77,6 +82,29 @@ const createVenture = async (req, res) => {
       }
     }
 
+    // Validate min ≤ max (if both are present)
+    if (
+      minInvestmentAmount &&
+      maxInvestmentAmount &&
+      Number(minInvestmentAmount) > Number(maxInvestmentAmount)
+    ) {
+      return res.status(400).json({
+        message:
+          "minInvestmentAmount cannot be greater than maxInvestmentAmount.",
+      });
+    }
+
+    // Validate loanToValue as percentage
+    if (
+      loanToValue !== undefined &&
+      loanToValue !== "" &&
+      Number(loanToValue) > 100
+    ) {
+      return res.status(400).json({
+        message: "Loan to value cannot exceed 100%.",
+      });
+    }
+
     // Ensure user is authenticated
     const userId = req.user?.id;
     if (!userId) {
@@ -116,10 +144,9 @@ const createVenture = async (req, res) => {
       closingDate: new Date(closingDate),
       collateralValue: collateralValue ? Number(collateralValue) : undefined,
       loanToValue: loanToValue ? Number(loanToValue) : undefined,
-      isConvertible: !!isConvertible,
+      isConvertible: Boolean(isConvertible), // clearer conversion
       createdBy: userId,
     });
-
 
     return res
       .status(201)

@@ -108,7 +108,7 @@ const Register = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-8 text-lg md:text-xl max-w-5xl mx-auto py-8 px-4"
+        className="space-y-8 text-lg md:text-xl max-w-5xl mx-auto py-24 px-4"
       >
         {/* Personal Information */}
         <section className="flex flex-col md:flex-row gap-6">

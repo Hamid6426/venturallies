@@ -1,12 +1,12 @@
 import express from "express";
-import registerUser from "../controllers/authControllers/registerUser.js";
-import verifyEmail from "../controllers/authControllers/verifyEmail.js";
-import resendVerificationToken from "../controllers/authControllers/resendVerificationToken.js";
-import loginUser from "../controllers/authControllers/loginUser.js";
-import forgotPassword from "../controllers/authControllers/forgotPassword.js";
-import resetPassword from "../controllers/authControllers/resetPassword.js";
-import logoutUser from "../controllers/authControllers/logoutUser.js";
-import loginAdmin from "../controllers/authControllers/loginAdmin.js";
+import registerUser from "../controllers/auth/registerUser.js";
+import verifyEmail from "../controllers/auth/verifyEmail.js";
+import resendVerificationToken from "../controllers/auth/resendVerificationToken.js";
+import loginUser from "../controllers/auth/loginUser.js";
+import forgotPassword from "../controllers/auth/forgotPassword.js";
+import resetPassword from "../controllers/auth/resetPassword.js";
+import logoutUser from "../controllers/auth/logoutUser.js";
+import loginAdmin from "../controllers/auth/loginAdmin.js";
 
 const router = express.Router();
 

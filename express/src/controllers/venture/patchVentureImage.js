@@ -48,6 +48,10 @@ const patchVentureImage = async (req, res) => {
       (f) => `/uploads/ventures/${f.filename}`
     );
 
+    if (!newPaths.every((p) => p.startsWith("/uploads/ventures/"))) {
+      return res.status(400).json({ message: "Invalid image path detected." });
+    }
+
     // Atomically append and return the updated doc
     const updated = await Venture.findByIdAndUpdate(
       ventureId,

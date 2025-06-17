@@ -1,5 +1,5 @@
 import express from "express";
-import getAllUsers from "../controllers/userControllers/getAllUsers.js";
+import getAllUsers from "../controllers/user/getAllUsers.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 // Optionally import other user-related controllers here
 

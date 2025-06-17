@@ -78,7 +78,7 @@ export default function ResetPassword() {
 
       <form
         onSubmit={handleReset}
-        className="space-y-8 text-lg md:text-xl max-w-3xl mx-auto py-8 px-4"
+        className="space-y-8 text-lg md:text-xl max-w-3xl mx-auto py-24 px-4"
       >
         {/* OTP Input */}
         <section className="flex flex-col md:flex-row gap-6">

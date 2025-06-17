@@ -22,6 +22,10 @@ export default function MainNav() {
   return (
     <nav className="hidden lg:flex space-x-6">
       <Link to="/projects" className=" hover:text-green-500">
+        Home
+      </Link>
+
+      <Link to="/projects" className=" hover:text-green-500">
         Invest
       </Link>
 
@@ -31,9 +35,7 @@ export default function MainNav() {
         onMouseEnter={() => handleMouseEnter("about")}
         onMouseLeave={handleMouseLeave}
       >
-        <button className=" hover:text-green-500">
-          About
-        </button>
+        <button className=" hover:text-green-500">About</button>
 
         {openDropdown === "about" && (
           <div className="absolute border-2 border-gray-600 left-1/2 -translate-x-1/2 top-full mt-2 bg-[#001E0E] text-white rounded shadow z-50 min-w-[9rem] transition-opacity duration-200 ease-in-out opacity-100 text-center">
@@ -52,9 +54,7 @@ export default function MainNav() {
         )}
       </div>
 
-      <button className=" hover:text-green-500">
-        News
-      </button>
+      <button className=" hover:text-green-500">News</button>
 
       <Link to="/styleguide" className=" hover:text-green-500">
         Styleguide

@@ -1,16 +1,16 @@
 import express from "express";
-import createVenture from "../controllers/ventureControllers/createVenture.js";
-import getAllVentures from "../controllers/ventureControllers/getAllVentures.js";
-import getVentureById from "../controllers/ventureControllers/getVentureById.js";
-import getVentureBySlug from "../controllers/ventureControllers/getVentureBySlug.js";
-import updateVenture from "../controllers/ventureControllers/updateVenture.js";
-import patchVentureImage from "../controllers/ventureControllers/patchVentureImage.js";
-import getMyVentures from "../controllers/ventureControllers/getMyVentures.js";
-import deleteVentureImage from "../controllers/ventureControllers/deleteVentureImage.js";
+import createVenture from "../controllers/venture/createVenture.js";
+import getAllVentures from "../controllers/venture/getAllVentures.js";
+import getVentureById from "../controllers/venture/getVentureById.js";
+import getVentureBySlug from "../controllers/venture/getVentureBySlug.js";
+import updateVenture from "../controllers/venture/updateVenture.js";
+import patchVentureImage from "../controllers/venture/patchVentureImage.js";
+import getMyVentures from "../controllers/venture/getMyVentures.js";
+import deleteVentureImage from "../controllers/venture/deleteVentureImage.js";
 
 import authMiddleware from "../middlewares/authMiddleware.js";
 import { uploadVentureImages } from "../middlewares/uploadMiddleware.js";
-import updateAdminStatus from "../controllers/ventureControllers/updateAdminStatus.js";
+import updateAdminStatus from "../controllers/venture/updateAdminStatus.js";
 
 const router = express.Router();
 

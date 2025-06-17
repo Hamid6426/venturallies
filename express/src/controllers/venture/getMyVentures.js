@@ -5,12 +5,11 @@ const getMyVentures = async (req, res) => {
   try {
     const userId = req.user?.id;
 
-    // Validate ObjectId
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(401).json({ error: "Unauthorized or Invalid User ID" });
     }
 
-    // Query Parameters
+    // Query params
     const {
       page = 1,
       limit = 10,
@@ -18,13 +17,20 @@ const getMyVentures = async (req, res) => {
       ventureType,
       visibility,
       search,
+      sortBy = "createdAt",
+      order = "desc",
     } = req.query;
 
     const numericPage = parseInt(page, 10);
     const numericLimit = parseInt(limit, 10);
     const skip = (numericPage - 1) * numericLimit;
 
-    // Query filter
+    // Validate sort order
+    const sortOrder = order === "asc" ? 1 : -1;
+    const sortableFields = ["createdAt", "title", "status", "targetAmount"];
+    const sortField = sortableFields.includes(sortBy) ? sortBy : "createdAt";
+
+    // Filters
     const filter = {
       createdBy: userId,
       isDeleted: false,
@@ -34,26 +40,27 @@ const getMyVentures = async (req, res) => {
     if (ventureType) filter.ventureType = ventureType;
     if (visibility) filter.visibility = visibility;
     if (search) {
-      filter.title = { $regex: search, $options: "i" }; // case-insensitive search
+      filter.title = { $regex: search, $options: "i" };
     }
 
     // Fetch data
     const [ventures, total] = await Promise.all([
       Venture.find(filter)
-        .sort({ createdAt: -1 })
+        .sort({ [sortField]: sortOrder })
         .skip(skip)
         .limit(numericLimit),
       Venture.countDocuments(filter),
     ]);
 
-    // Success Response
+    const totalPages = total === 0 ? 0 : Math.ceil(total / numericLimit);
+
     res.status(200).json({
       ventures,
       pagination: {
         total,
         page: numericPage,
         limit: numericLimit,
-        totalPages: Math.ceil(total / numericLimit),
+        totalPages,
       },
     });
   } catch (err) {

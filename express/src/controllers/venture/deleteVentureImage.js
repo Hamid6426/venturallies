@@ -1,6 +1,5 @@
-// controllers/venture/ventureImageDelete.js
 import Venture from "../../models/Venture.js";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 
 const deleteVentureImage = async (req, res) => {
@@ -17,16 +16,22 @@ const deleteVentureImage = async (req, res) => {
       return res.status(404).json({ message: "Venture not found." });
     }
 
-    // Remove from DB
+    // Remove image reference from DB
     venture.images = venture.images.filter((img) => img !== imageUrl);
     await venture.save();
 
-    // Optionally remove from disk
-    const fullPath = path.resolve(`./${imageUrl}`);
-    if (fs.existsSync(fullPath)) {
-      fs.unlink(fullPath, (err) => {
-        if (err) console.error("Failed to delete image from disk:", err);
-      });
+    // Always delete from disk safely
+    try {
+      const uploadsDir = path.resolve("public/uploads");
+      const fullPath = path.resolve(imageUrl);
+
+      if (!fullPath.startsWith(uploadsDir)) {
+        console.warn("Skipped deletion: unsafe path", fullPath);
+      } else {
+        await fs.unlink(fullPath);
+      }
+    } catch (err) {
+      console.warn("Disk deletion failed or file missing:", err.message);
     }
 
     res.status(200).json({

@@ -5,6 +5,7 @@ import sendMail from "../../utils/sendMail.js";
 import { isValidEmail } from "../../utils/validation.js";
 import locationsData from "../../utils/locationsData.js";
 import toTitleCase from "../../utils/toTitleCase.js";
+import Balance from "../../models/Balance.js";
 
 const registerUser = async (req, res) => {
   try {
@@ -97,6 +98,19 @@ const registerUser = async (req, res) => {
 
     // Save user
     await user.save();
+
+    try {
+      await Balance.create({
+        user: user._id,
+        balance: 0,
+      });
+    } catch (balanceErr) {
+      console.error("Balance creation failed:", balanceErr);
+      // Optional: rollback user creation if this is critical
+      return res
+        .status(500)
+        .json({ message: "User created but failed to initialize balance." });
+    }
 
     const emailVerificationUrl = `${
       process.env.FRONTEND_BASE_URL

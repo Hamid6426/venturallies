@@ -18,6 +18,8 @@ import authRoutes from "./src/routes/authRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
 import profileRoutes from "./src/routes/profileRoutes.js";
 import ventureRoutes from "./src/routes/ventureRoutes.js";
+import investmentRoutes from "./src/routes/investmentRoutes.js";
+import balanceRoutes from "./src/routes/balanceRoutes.js";
 
 // Environment Constants
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -89,6 +91,8 @@ app.use("/api/auth", authRoutes); // Authentication routes
 app.use("/api/users", userRoutes); // User management routes
 app.use("/api/profile", profileRoutes); // Profile management routes
 app.use("/api/ventures", ventureRoutes);
+app.use("/api/investments", investmentRoutes);
+app.use("/api/balances", balanceRoutes);
 
 // Production Frontend Serving
 if (NODE_ENV === "production") {

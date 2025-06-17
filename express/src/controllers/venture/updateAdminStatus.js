@@ -6,7 +6,7 @@ const updateAdminStatus = async (req, res) => {
   const { ventureId, adminStatus } = req.body;
 
   // Validate inputs
-  if (!ventureId || !adminStatus) {
+  if (!ventureId || adminStatus === undefined) {
     return res
       .status(400)
       .json({ message: "ventureId and adminStatus are required" });
