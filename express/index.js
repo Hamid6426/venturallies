@@ -5,7 +5,6 @@ dotenv.config();
 // External Packages
 import express from "express";
 import cors from "cors";
-import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import path from "path";
 
@@ -20,6 +19,8 @@ import profileRoutes from "./src/routes/profileRoutes.js";
 import ventureRoutes from "./src/routes/ventureRoutes.js";
 import investmentRoutes from "./src/routes/investmentRoutes.js";
 import balanceRoutes from "./src/routes/balanceRoutes.js";
+
+import requestLogger from "./src/middleware/requestLogger.js";
 
 // Environment Constants
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -64,11 +65,7 @@ app.use(cors(corsOptions)); // Enable CORS with custom options
 app.use(cookieParser()); // Parse cookies from incoming requests
 
 // Logging Configuration
-app.use(
-  morgan("combined", {
-    stream: { write: (msg) => logger.info(msg.trim()) },
-  })
-);
+app.use(requestLogger);
 
 // System Monitoring
 setInterval(() => {

@@ -12,6 +12,8 @@ const connectDB = async () => {
     process.exit(1);
   }
 
+
+
   try {
     mongoose.set("strictQuery", false); // Optional: to silence strict warnings
     mongoose.set("debug", process.env.NODE_ENV !== "production"); // Show DB queries in dev

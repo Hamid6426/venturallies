@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import authMiddleware from "../middleware/isAuthenticated.js";
 import createInvestment from "../controllers/investment/createInvestment.js";
 import getMyInvestments from "../controllers/investment/getMyInvestments.js";
 import getMyInvestmentById from "../controllers/investment/getMyInvestmentById.js";

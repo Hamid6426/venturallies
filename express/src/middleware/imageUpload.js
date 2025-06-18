@@ -1,3 +1,5 @@
+// middleware/imageUpload.js
+
 import multer from "multer";
 import sharp from "sharp";
 import path from "path";
@@ -5,7 +7,7 @@ import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 
 // Generic image upload + processing middleware factory
-const imageUploadMiddleware = ({
+const imageUpload = ({
   folder,
   fieldName,
   maxCount = 1,
@@ -74,7 +76,7 @@ const imageUploadMiddleware = ({
 //
 
 // Avatar Upload (1:1 ratio thumbnail)
-export const uploadAvatar = imageUploadMiddleware({
+export const uploadAvatar = imageUpload({
   folder: "avatars",
   fieldName: "avatar",
   resizeWidth: 128,
@@ -83,9 +85,16 @@ export const uploadAvatar = imageUploadMiddleware({
 });
 
 // Venture Images Upload (landscape)
-export const uploadVentureImages = imageUploadMiddleware({
+export const uploadVentureImages = imageUpload({
   folder: "ventures",
   fieldName: "images",
   resizeWidth: 1000,
   maxCount: 1, // 1 image per request
+});
+
+export const uploadTicketAttachments = imageUpload({
+  folder: "tickets",
+  fieldName: "attachments",
+  resizeWidth: 800,
+  maxCount: 5,
 });

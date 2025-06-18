@@ -4,7 +4,7 @@ import getBalanceByUserId from "../controllers/balance/getBalanceByUserId.js";
 import updateBalance from "../controllers/balance/updateBalance.js";
 import getMyBalance from "../controllers/balance/getMyBalance.js";
 import getMyBalanceHistory from "../controllers/balance/getMyBalanceHistory.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import authMiddleware from "../middleware/isAuthenticated.js";
 
 const router = express.Router();
 

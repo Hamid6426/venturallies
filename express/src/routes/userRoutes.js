@@ -3,7 +3,7 @@ import getAllUsers from "../controllers/user/getAllUsers.js";
 import updateUser from "../controllers/user/updateUser.js";
 import deleteUser from "../controllers/user/deleteUser.js";
 import getUserById from "../controllers/user/getUserById.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import authMiddleware from "../middleware/isAuthenticated.js";
 
 const router = express.Router();
 

@@ -8,8 +8,8 @@ import patchVentureImage from "../controllers/venture/patchVentureImage.js";
 import getMyVentures from "../controllers/venture/getMyVentures.js";
 import deleteVentureImage from "../controllers/venture/deleteVentureImage.js";
 
-import authMiddleware from "../middlewares/authMiddleware.js";
-import { uploadVentureImages } from "../middlewares/uploadMiddleware.js";
+import authMiddleware from "../middleware/isAuthenticated.js";
+import { uploadVentureImages } from "../middleware/imageUpload.js";
 import updateAdminStatus from "../controllers/venture/updateAdminStatus.js";
 
 const router = express.Router();
