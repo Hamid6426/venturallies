@@ -1,6 +1,13 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 
+// const aboutLinks = [
+// { label: "About Us", to: "/about" },
+// { label: "Careers", to: "/careers" },
+// { label: "Statistics", to: "/statistics" },
+// { label: "Affiliate Programs", to: "/affiliate" },
+// ];
+
 export default function MainNav() {
   const [openDropdown, setOpenDropdown] = useState(null); // "about" | "help" | null
   const hideTimeoutRef = useRef(null);
@@ -30,35 +37,37 @@ export default function MainNav() {
       </Link>
 
       {/* About Dropdown */}
-      <div
+      {/* <div
         className="relative"
         onMouseEnter={() => handleMouseEnter("about")}
         onMouseLeave={handleMouseLeave}
       >
-        <button className=" hover:text-green-500">About</button>
+        <button className="hover:text-green-500">About</button>
 
         {openDropdown === "about" && (
           <div className="absolute border-2 border-gray-600 left-1/2 -translate-x-1/2 top-full mt-2 bg-[#001E0E] text-white rounded shadow z-50 min-w-[9rem] transition-opacity duration-200 ease-in-out opacity-100 text-center">
-            {["About Us", "Careers", "Statistics", "Affiliate Programs"].map(
-              (item) => (
-                <Link
-                  key={item}
-                  to="/about"
-                  className="block px-4 text-nowrap py-3 border-t border-gray-600 hover:text-green-500"
-                >
-                  {item}
-                </Link>
-              )
-            )}
+            {aboutLinks.map(({ label, to }) => (
+              <Link
+                key={label}
+                to={to}
+                className="block px-4 text-nowrap py-3 border-t border-gray-600 hover:text-green-500"
+              >
+                {label}
+              </Link>
+            ))}
           </div>
         )}
-      </div>
-
-      <button className=" hover:text-green-500">News</button>
-
-      <Link to="/styleguide" className=" hover:text-green-500">
-        Styleguide
+      </div> */}
+      <Link to="/about" className=" hover:text-green-500">
+        About
       </Link>
+      {/* <Link to="/news" className=" hover:text-green-500">
+        News
+      </Link> */}
+
+      {/* <Link to="/styleguide" className=" hover:text-green-500">
+        Styleguide
+      </Link> */}
 
       {/* Help Dropdown */}
       <div
@@ -71,7 +80,8 @@ export default function MainNav() {
         </Link>
 
         {openDropdown === "help" && (
-          <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-[#001E0E] text-white rounded shadow z-50 min-w-[9rem] transition-opacity duration-200 ease-in-out opacity-100 text-center">
+          <div className="absolute left-1/2 -translate-x-1/2 top-full mt-4 bg-[#001E0E] text-white rounded shadow z-50 min-w-40 transition-opacity duration-200 ease-in-out opacity-100 text-center">
+            <div className="bg-[#001E0E] z-[60] w-4 h-4 rotate-45 -top-2 left-20 absolute "/>
             <Link
               to="/help"
               className="block px-4 py-3 border-t border-gray-600 hover:text-green-500"

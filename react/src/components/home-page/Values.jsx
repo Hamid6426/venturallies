@@ -1,11 +1,10 @@
-import React from "react";
 import { FaBalanceScale } from "react-icons/fa";
 import { AiOutlineEye } from "react-icons/ai";
 import { RiTeamLine } from "react-icons/ri";
 import { HiShieldCheck } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
-const values = [
+export const values = [
   {
     icon: <FaBalanceScale />,
     title: "Integrity",
