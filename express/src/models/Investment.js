@@ -1,47 +1,39 @@
 // src/models/Investment.js
 import mongoose from "mongoose";
-const { Schema, model, Types } = mongoose;
+import HistorySubSchema from "./HistorySubSchema.js";
 
-const investmentSchema = new Schema(
+const investmentSchema = new mongoose.Schema(
   {
     venture: {
-      type: Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Venture",
-      required: true,
-      index: true,
+      required: true,          // Which venture was invested in
+    },
+    investedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,          // Who made the investment
     },
 
-    // Amount invested by the user
-    amount: { type: Number, required: true },
+    amount:             { type: Number, required: true }, // Principal
+    investmentDate:     { type: Date, default: Date.now }, // Timestamp
+    profitPaid:         { type: Number, default: 0 },      // Profit returned so far
+    principalReturned:  { type: Boolean, default: false }, // Principal fully returned?
+    totalExpectedReturn:{ type: Number },                  // Sum principal+profit
 
-    // Date of investment
-    investmentDate: { type: Date, default: Date.now },
-
-    // Total profit paid to the investor so far
-    profitPaid: { type: Number, default: 0 },
-
-    // True if the original principal amount has been fully returned
-    principalReturned: { type: Boolean, default: false },
-
-    // expected return from this investment
-    totalExpectedReturn: { type: Number },
-
-    // Investment lifecycle status
-    // - "invested" => Active investment (ongoing)
-    // - "completed" => Maturity reached (awaiting full repayment)
-    // - "repaid" => Profit and principal fully returned
     status: {
       type: String,
       enum: ["invested", "completed", "repaid"],
       default: "invested",
-      index: true,
+      index: true,             // Enables fast filtering by stage
     },
 
-    // Who made or last updated this investment
-    investedBy: { type: Types.ObjectId, ref: "User", index: true },
-    updatedBy: { type: Types.ObjectId, ref: "User" },
+    // ─── Change History ─────────────────────────────────────────────────────
+    history: [HistorySubSchema], // Record state changes & notes over time
+
   },
-  { timestamps: true }
+  { timestamps: true }           // createdAt, updatedAt
 );
 
-export default model("Investment", investmentSchema);
+export default mongoose.model("Investment", investmentSchema);
+  

@@ -104,13 +104,14 @@ export default function ProjectsTeaser() {
           </div>
         );
       })}
-
-      <Link
-        to="/projects"
-        className="w-full py-4 bg-gray-800 mt-12 hover:-translate-y-1 transition-all text-white text-center font-bold rounded"
-      >
-        BROWSE MORE PROJECTS
-      </Link>
+      <div className="mx-auto">
+        <Link
+          to="/projects"
+          className="w-full py-4 px-8 bg-gray-800 mt-12 hover:-translate-y-1 transition-all text-white text-center font-bold rounded"
+        >
+          BROWSE MORE PROJECTS
+        </Link>
+      </div>
     </div>
   );
 }

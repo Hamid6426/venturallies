@@ -11,7 +11,7 @@ export default function MyVentures() {
     const fetchVentures = async () => {
       try {
         const res = await axiosInstance.get("/ventures/my-ventures");
-        setVentures(res.data.ventures || []);
+        setVentures(res.data.data || []);
       } catch (err) {
         console.error(err);
         setError("Failed to load ventures");

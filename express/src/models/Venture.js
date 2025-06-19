@@ -1,76 +1,59 @@
 // src/models/Venture.js
 import mongoose from "mongoose";
+import HistorySubSchema from "./HistorySubSchema.js";
 
 const ventureSchema = new mongoose.Schema(
   {
-    // Basic Info
-    title: { type: String, required: true, maxlength: 255 },
-    slug: { type: String, unique: true, required: true },
-    shortDescription: { type: String, required: true },
-    longDescription: { type: String, required: true },
-    collateralDescription: { type: String, required: true }, // if applicable
+    // ─── Basic Info ───────────────────────────────────────────────────────────
+    title:          { type: String, required: true, maxlength: 255 }, // Headline
+    slug:           { type: String, unique: true, required: true },    // SEO & routing
+    shortDescription: { type: String, required: true },                // List view
+    longDescription:  { type: String, required: true },                // Full details
+    collateralDescription: { type: String, required: true },           // Risk info
+    images:         [String],                                          // Media assets
+    country:        { type: String, required: true },                  // Location
 
-    images: [String], // URLs to image assets
-
-    // Location
-    country: { type: String, required: true },
-
-    // Public Status of the Venture
+    // ─── Status & Visibility ───────────────────────────────────────────────
     lifecycleStatus: {
       type: String,
       enum: ["new", "coming-soon", "funded", "repaid"],
-      required: true,
+      required: true,       // Public funding stage
     },
-
-    // Venture Category
-    ventureType: {
-      type: String,
-      enum: ["business", "sme", "leasing", "realestate"],
-      required: true,
-    },
-
-    // Visibility Control
     visibility: {
       type: String,
       enum: ["public", "private", "draft"],
-      default: "draft",
+      default: "draft",     // Draft vs live
     },
-
-    // Risk Assessment
     riskLevel: {
       type: String,
       enum: ["low", "medium", "high"],
-      default: "medium",
+      default: "medium",    // For investor risk filter
     },
-
-    // Investment Configuration
-    minInvestmentAmount: { type: Number, required: true, default: 30 }, // €30 i.e. 30 euros
-    maxInvestmentAmount: { type: Number, required: true },
-    targetAmount: { type: Number, required: true },
-    amountFunded: { type: Number, required: true, default: 0 },
-    expectedReturn: { type: Number, required: true }, // % return expected
-    investmentPeriod: { type: Number, required: true }, // in months
-
-    // Venture Lifecycle
-    dateIssued: { type: Date, required: true },
-    closingDate: { type: Date, required: true },
-
-    // Admin Review Status
-    adminStatus: {
+    ventureType: {
       type: String,
-      enum: ["pending", "under-review", "approved", "rejected"],
-      default: "pending",
+      enum: ["business", "sme", "leasing", "realestate"],
+      required: true,       // Category for filtering
     },
-    adminReviewedAt: { type: Date, default: null },
-    adminNotes: { type: String, default: null },
 
-    // Repayment Schedule (Amortization)
+    // ─── Investment Terms ────────────────────────────────────────────────────
+    minInvestmentAmount: { type: Number, required: true, default: 30 }, // €30 min
+    maxInvestmentAmount: { type: Number, required: true },              // € cap
+    targetAmount:        { type: Number, required: true },              // Goal
+    amountFunded:        { type: Number, default: 0 },                  // Progress
+    expectedReturn:      { type: Number, required: true },              // % for ROI
+    investmentPeriod:    { type: Number, required: true },              // In months
+
+    // ─── Timeline ───────────────────────────────────────────────────────────
+    dateIssued:  { type: Date, required: true }, // When funding started
+    closingDate: { type: Date, required: true }, // Funding deadline
+
+    // ─── Repayment Schedule ─────────────────────────────────────────────────
     schedules: [
       {
-        scheduleDate: { type: Date },
-        principal: { type: Number },
-        interest: { type: Number },
-        total: { type: Number },
+        scheduleDate: Date,                   // When installment is due
+        principal:    Number,                 // Principal portion
+        interest:     Number,                 // Interest portion
+        total:        Number,                 // Sum of principal+interest
         status: {
           type: String,
           enum: ["pending", "paid", "overdue"],
@@ -79,41 +62,33 @@ const ventureSchema = new mongoose.Schema(
       },
     ],
 
-    // Financial Fields
-    collateralValue: { type: Number, required: true },
-    loanToValue: { type: Number, required: true }, // % ratio
-    isConvertible: { type: Boolean, default: false }, // to equity
+    // ─── Financial Summaries ────────────────────────────────────────────────
+    collateralValue: { type: Number, required: true }, // Security value
+    loanToValue:      { type: Number, required: true }, // Ratio %
+    isConvertible:    { type: Boolean, default: false },// Equity option
+    principal:        Number,  // Optional summary
+    interest:         Number,  // Optional summary
+    total:            Number,  // Optional summary
 
-    // Optional Summary Totals (if needed)
-    principal: { type: Number },
-    interest: { type: Number },
-    total: { type: Number },
+    // ─── Feature Flags & Metadata ──────────────────────────────────────────
+    launchDate:   Date,         // Marketing
+    goesLiveAt:   Date,         // Actual publish time
+    tags:         [{ type: String, maxlength: 50 }], // Filters
+    isFeatured:   { type: Boolean, default: false },// Homepage spotlight
+    featuredUntil: Date,        // Expiry of feature
+    isDeleted:    { type: Boolean, default: false },// Soft delete
 
-    // Launch Scheduling
-    launchDate: { type: Date, default: null }, // for UI marketing
-    goesLiveAt: { type: Date, default: null }, // for actual visibility logic
-
-    // Tags
-    tags: [{ type: String, maxlength: 50 }], // for category filters
-
-    // Homepage Feature
-    isFeatured: { type: Boolean, default: false },
-    featuredUntil: { type: Date, default: null },
-
-    // Soft Delete Flag
-    isDeleted: { type: Boolean, default: false },
-
-    // Audit Fields
+    // ─── Ownership & Audit ──────────────────────────────────────────────────
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: true,           // Who created this venture
     },
-    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+
+    // ─── Change History ─────────────────────────────────────────────────────
+    history: [HistorySubSchema], // Audit trail of all major events
   },
-  {
-    timestamps: true, // createdAt & updatedAt
-  }
+  { timestamps: true }           // createdAt, updatedAt
 );
 
 export default mongoose.model("Venture", ventureSchema);

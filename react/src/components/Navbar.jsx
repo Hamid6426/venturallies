@@ -1,47 +1,61 @@
-import { useState, useRef } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import LanguageSwitcher from "./LanguageSwitcher";
-import MainNav from "./MainNav";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import LogoutButton from "./LogoutButton";
+import { useAuth } from "../contexts/AuthContext";
 import { useBalance } from "../contexts/BalanceContext";
+import LanguageSwitcher from "./LanguageSwitcher";
+import LogoutButton from "./LogoutButton";
+import { MdChevronRight } from "react-icons/md";
 
 export default function Navbar() {
   const { currentUser, isUserLoading } = useAuth();
-  const { balance, fetchBalance, history, loading } = useBalance();
+  const { balance, loading } = useBalance();
 
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const hideTimeoutRef = useRef(null);
+  const [openDropdown, setOpenDropdown] = useState(null); // 'help' | 'account' | null
+  const dropdownRefs = {
+    help: useRef(null),
+    account: useRef(null),
+  };
+
+  // Toggle dropdown on click
+  const handleDropdownToggle = (name) => {
+    setOpenDropdown((prev) => (prev === name ? null : name));
+  };
+
+  // Close dropdown after mouse leaves the panel
+  const handlePanelMouseLeave = (name) => {
+    if (openDropdown === name) {
+      setOpenDropdown(null);
+    }
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const isOutside = !Object.values(dropdownRefs).some(
+        (ref) => ref.current && ref.current.contains(event.target)
+      );
+      if (isOutside) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const accountLinks = [
     { label: "Overview", path: "/account/overview", className: "border-t-0" },
-    { label: "Investments", path: "/account/investments", className: "" },
-    { label: "Statement", path: "/account/statement", className: "" },
-    { label: "Funding", path: "/account/funding", className: "" },
-    { label: "Profile", path: "/account/profile", className: "" },
-    { label: "My Ventures", path: "/account/my-ventures", className: "" },
+    { label: "Investments", path: "/account/investments" },
+    { label: "Statement", path: "/account/statement" },
+    { label: "Funding", path: "/account/funding" },
+    { label: "Profile", path: "/account/profile" },
+    { label: "My Ventures", path: "/account/my-ventures" },
   ];
-
-  // Open dropdown immediately
-  const handleMouseEnter = () => {
-    if (hideTimeoutRef.current) {
-      clearTimeout(hideTimeoutRef.current);
-      hideTimeoutRef.current = null;
-    }
-    setDropdownOpen(true);
-  };
-
-  // Hide dropdown after 200ms delay
-  const handleMouseLeave = () => {
-    hideTimeoutRef.current = setTimeout(() => {
-      setDropdownOpen(false);
-    }, 200);
-  };
 
   if (loading) return <p>Loading balance...</p>;
 
   return (
     <header className="bg-white shadow sticky top-0 z-50">
+      {/* Risk banner */}
       <div className="bg-black text-white text-center py-8 text-sm px-8">
         Don&apos;t invest unless you&apos;re prepared to lose all the money you
         invest. This is a high-risk investment, and you are unlikely to be
@@ -49,17 +63,58 @@ export default function Navbar() {
       </div>
 
       <div className="container w-full mx-auto flex justify-between items-center py-4 px-8">
-        <div className="flex items-center space-x-4">
-          <Link to="/" className="text-xl font-bold">
-            <img src="/logo.png" alt="Logo" className="h-6" />
-          </Link>
-        </div>
+        {/* Logo */}
+        <Link to="/" className="text-xl font-bold">
+          <img src="/logo.png" alt="Logo" className="h-6" />
+        </Link>
 
         <div className="flex items-center space-x-6">
           <LanguageSwitcher />
-          <MainNav />
 
-          <div className="relative flex items-center gap-4">
+          {/* Main nav links */}
+          <nav className="hidden lg:flex space-x-6">
+            <Link to="/" className="hover:text-green-500">Home</Link>
+            <Link to="/projects" className="hover:text-green-500">Invest</Link>
+            <Link to="/about" className="hover:text-green-500">About</Link>
+
+            {/* Help dropdown */}
+            <div className="relative" ref={dropdownRefs.help}>
+              <button
+                onClick={() => handleDropdownToggle("help")}
+                className="hover:text-green-500 cursor-pointer flex items-center gap-1"
+              >
+                <span>Help</span>
+                <MdChevronRight
+                  className={`transition-transform duration-200 ${
+                    openDropdown === "help" ? "rotate-90" : "rotate-0"
+                  }`}
+                />
+              </button>
+
+              {openDropdown === "help" && (
+                <div
+                  className="absolute top-full right-0 mt-2 bg-[#001E0E] text-white rounded shadow z-50 min-w-40 text-center"
+                  onMouseLeave={() => handlePanelMouseLeave("help")}
+                >
+                  <Link
+                    to="/help"
+                    className="block px-4 py-3 border-t border-gray-600 hover:text-green-500"
+                  >
+                    Support
+                  </Link>
+                  <Link
+                    to="/contact"
+                    className="block px-4 py-3 border-t border-gray-600 hover:text-green-500"
+                  >
+                    Contact
+                  </Link>
+                </div>
+              )}
+            </div>
+          </nav>
+
+          {/* Balance & account */}
+          <div className="relative flex items-center gap-4" ref={dropdownRefs.account}>
             {balance ? (
               <p className="text-green-700 font-semibold">
                 € {balance.balance.toFixed(2)}
@@ -68,33 +123,38 @@ export default function Navbar() {
               <p className="text-xs text-red-500"></p>
             )}
 
-            <button
-              className="flex items-center justify-center"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              {isUserLoading ? (
-                <span>Loading...</span>
-              ) : currentUser ? (
+            {isUserLoading ? (
+              <span>Loading...</span>
+            ) : currentUser ? (
+              <button
+                onClick={() => handleDropdownToggle("account")}
+                className="cursor-pointer flex items-center gap-1 hover:text-green-500"
+              >
                 <span>Welcome, {currentUser.firstName}</span>
-              ) : (
-                <Link to="/login">
-                  <button className="cursor-pointer bg-green-500 text-white hover:-translate-y-1 px-6 py-2">
-                    Login
-                  </button>
-                </Link>
-              )}
-            </button>
+                <MdChevronRight
+                  className={`transition-transform duration-200 ${
+                    openDropdown === "account" ? "rotate-90" : "rotate-0"
+                  }`}
+                />
+              </button>
+            ) : (
+              <Link to="/login">
+                <button className="bg-green-500 text-white hover:-translate-y-1 px-6 py-2">
+                  Login
+                </button>
+              </Link>
+            )}
 
-            {currentUser && isDropdownOpen && (
-              <div className="absolute border-2 border-gray-600 left-1/2 -translate-x-1/2 top-full mt-2 bg-[#001E0E] text-white rounded shadow text-center z-50 min-w-[9rem] transition-opacity duration-200 ease-in-out opacity-100">
+            {currentUser && openDropdown === "account" && (
+              <div
+                className="absolute top-full right-0 mt-2 bg-[#001E0E] text-white rounded shadow z-50 min-w-40 text-center"
+                onMouseLeave={() => handlePanelMouseLeave("account")}
+              >
                 {accountLinks.map(({ label, path, className }) => (
                   <Link
                     key={path}
                     to={path}
-                    className={`block px-4 py-3 border-t border-gray-600 hover:text-green-500 ${
-                      className || ""
-                    }`}
+                    className={`block px-4 py-3 border-t border-gray-600 hover:text-green-500 ${className || ""}`}
                   >
                     {label}
                   </Link>
