@@ -1,4 +1,4 @@
-// PUT /api/ventures/:id/schedule
+import Venture from "../../models/Venture";
 
 export const scheduleVenture = async (req, res) => {
   const { launchDate, goesLiveAt } = req.body;

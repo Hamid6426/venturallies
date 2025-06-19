@@ -79,7 +79,7 @@ const AccountProfile = () => {
 
       delete updatePayload.confirmNewPassword;
 
-      await axiosInstance.put("/api/profile/update", updatePayload);
+      await axiosInstance.put("/profile/update", updatePayload);
       setSuccess(true);
     } catch (err) {
       setError("Failed to update profile.");

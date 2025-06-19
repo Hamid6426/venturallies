@@ -1,4 +1,4 @@
-// PUT /api/ventures/:id/feature
+import Venture from "../../models/Venture";
 
 export const setVentureFeatured = async (req, res) => {
   const { isFeatured, featuredUntil } = req.body;

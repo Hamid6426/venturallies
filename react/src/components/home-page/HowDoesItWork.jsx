@@ -42,7 +42,7 @@ export default function HowDoesItWork() {
       <div className="space-y-6">
         <h2 className="text-2xl font-bold mb-4">How does it work?</h2>
         {investmentSteps.map((step, index) => (
-          <div key={index} className="border-l-4 border-green-500 pl-4">
+          <div key={index} className="border-l-4 border-green-500 pl-4 pr-12">
             <h3 className="text-xl font-semibold text-green-600">
               {step.step}. {step.title}
             </h3>
@@ -52,33 +52,33 @@ export default function HowDoesItWork() {
       </div>
 
       {/* Right side: Who can invest section */}
-      <div className="p-0 lg:p-8">
-      <div className="flex flex-col justify-center items-center space-y-6 text-center p-8 border-2 border-gray-300 rounded-lg bg-gray-100">
-        <h2 className="text-2xl font-bold">Who can Invest?</h2>
-        <p>
-          Individuals and companies can become investors by completing a short
-          registration form and activating the investor account by depositing
-          initial funds. Keep in mind that you must be at least 18 years old,
-          and that we only accept deposits from credit, payment or electronic
-          money institutions within the European Union.
-        </p>
-        <div className="flex justify-center items-center gap-8">
-          <Link
-            to="/projects"
-            className=" hover:-translate-y-1 bg-green-500 py-4 px-6 text-white text-bold flex items-center gap-3 text-lg font-bold"
-          >
-            <MdWork />
-            INVEST NOW
-          </Link>
-          <Link
-            to="/projects"
-            className=" hover:-translate-y-1 bg-gray-800 py-4 px-6 text-white text-bold flex items-center gap-3 text-lg font-bold"
-          >
-            <MdHelpCenter />
-           GET HELP
-          </Link>
+      <div className="p-0 mt-8 lg:mt-0 lg:p-8">
+        <div className="flex flex-col justify-center items-center space-y-6 text-center p-8 border-2 border-gray-300 rounded-lg bg-gray-100">
+          <h2 className="text-2xl font-bold">Who can Invest?</h2>
+          <p>
+            Individuals and companies can become investors by completing a short
+            registration form and activating the investor account by depositing
+            initial funds. Keep in mind that you must be at least 18 years old,
+            and that we only accept deposits from credit, payment or electronic
+            money institutions within the European Union.
+          </p>
+          <div className="flex justify-center items-center flex-wrap gap-8">
+            <Link
+              to="/projects"
+              className=" hover:-translate-y-1 w-5/12 text-center bg-green-500 py-4 px-6 text-white text-bold flex items-center gap-3 text-lg font-bold"
+            >
+              <MdWork />
+              INVEST NOW
+            </Link>
+            <Link
+              to="/projects"
+              className=" hover:-translate-y-1 w-5/12 text-center bg-gray-800 py-4 px-6 text-white text-bold flex items-center gap-3 text-lg font-bold"
+            >
+              <MdHelpCenter />
+              GET HELP
+            </Link>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );

@@ -6,22 +6,22 @@ const getVentureById = async (req, res) => {
     const { ventureId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(ventureId)) {
-      return res.status(400).json({ error: "Invalid Venture ID." });
+      return res.status(400).json({ message: "Invalid Venture ID." });
     }
 
-    const venture = await Venture.findById(ventureId).populate(
-      "createdBy",
-      "firstName lastName email"
-    );
+    const venture = await Venture.findOne({
+      _id: ventureId,
+      isDeleted: false,
+    }).populate("createdBy", "firstName lastName email");
 
     if (!venture) {
-      return res.status(404).json({ error: "Venture not found" });
+      return res.status(404).json({ message: "Venture not found." });
     }
 
-    res.status(200).json(venture);
+    return res.status(200).json({ data: venture });
   } catch (err) {
     console.error("getVentureById error:", err);
-    res.status(500).json({ error: "Failed to retrieve venture by ID." });
+    return res.status(500).json({ message: "Failed to retrieve venture by ID." });
   }
 };
 

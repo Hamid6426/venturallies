@@ -2,20 +2,21 @@ import Venture from "../../models/Venture.js";
 
 const getVentureBySlug = async (req, res) => {
   try {
-    const { slug } = req.params;
+    const { slug: ventureSlug } = req.params;
 
     const venture = await Venture.findOne({
-      slug: slug.toLowerCase(),
+      slug: ventureSlug.toLowerCase(),
+      isDeleted: false,
     }).populate("createdBy", "firstName lastName email");
 
     if (!venture) {
-      return res.status(404).json({ error: "Venture not found" });
+      return res.status(404).json({ message: "Venture not found." });
     }
 
-    res.status(200).json(venture);
+    return res.status(200).json({ data: venture });
   } catch (err) {
     console.error("getVentureBySlug error:", err);
-    res.status(500).json({ error: "Failed to retrieve venture by slug." });
+    return res.status(500).json({ message: "Failed to retrieve venture by slug." });
   }
 };
 

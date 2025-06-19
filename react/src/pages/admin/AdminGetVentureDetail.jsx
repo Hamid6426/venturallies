@@ -17,7 +17,7 @@ export default function AdminGetVentureDetail() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axiosInstance.get(`/api/ventures/${ventureId}`);
+        const res = await axiosInstance.get(`/ventures/${ventureId}`);
         setVenture(res.data.venture);
         setForm({
           adminStatus: res.data.venture.adminStatus,
@@ -39,9 +39,9 @@ export default function AdminGetVentureDetail() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await axios.patch(`/api/admin/ventures/${ventureId}`, form);
+      await axiosInstance.patch(`/admin/ventures/${ventureId}`, form);
       // refetch to get updated timestamps
-      const { data } = await axios.get(`/api/ventures/${ventureId}`);
+      const { data } = await axiosInstance.get(`/ventures/${ventureId}`);
       setVenture(data.venture);
       alert("Updated successfully");
     } catch (err) {

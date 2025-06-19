@@ -15,9 +15,7 @@ export const AuthProvider = ({ children }) => {
     setIsUserLoading(true);
 
     try {
-      const res = await axiosInstance.get("/api/profile/get", {
-        withCredentials: true,
-      });
+      const res = await axiosInstance.get("/profile/get");
       setCurrentUser(res.data);
     } catch (error) {
       console.error("Failed to load user profile:", error);
@@ -29,9 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axiosInstance.post("/api/auth/logout", null, {
-        withCredentials: true,
-      });
+      await axiosInstance.post("/auth/logout", null);
     } catch (error) {
       console.error("Logout error:", error);
     } finally {

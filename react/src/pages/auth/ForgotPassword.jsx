@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import axiosInstance from "../../utils/axiosInstance";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -19,7 +19,7 @@ export default function ForgotPassword() {
 
     try {
       setStatus("sending");
-      await axiosInstance.post("/api/auth/forgot-password", { email });
+      await axiosInstance.post("/auth/forgot-password", { email });
       toast.success("Reset link sent. Check your email.");
       setStatus("success");
       setEmail("");

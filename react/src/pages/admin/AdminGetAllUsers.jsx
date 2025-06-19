@@ -23,7 +23,7 @@ const AdminGetAllUsers = () => {
         limit: pagination.limit,
       };
 
-      const res = await axiosInstance.get("/api/users", { params });
+      const res = await axiosInstance.get("/users", { params });
 
       setUsers(res.data.users || []);
       const { totalPages, total } = res.data.pagination || {};

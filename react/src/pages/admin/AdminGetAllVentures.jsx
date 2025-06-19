@@ -27,7 +27,7 @@ export default function AdminGetAllVentures() {
         page: pagination.page,
         limit: pagination.limit,
       };
-      const res = await axios.get("/api/ventures", { params });
+      const res = await axiosInstance.get("/ventures", { params });
       setVentures(res.data.ventures || []);
       setPagination((prev) => ({
         ...prev,
@@ -53,7 +53,7 @@ export default function AdminGetAllVentures() {
 
   const handleAction = async (id, action) => {
     try {
-      await axios.post(`/api/admin/ventures/${id}/${action}`);
+      await axiosInstance.post(`/admin/ventures/${id}/${action}`);
       fetchVentures();
     } catch (err) {
       console.error(`${action} failed:`, err);

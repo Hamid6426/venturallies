@@ -1,9 +1,9 @@
-import React from "react";
+import axiosInstance from "../utils/axiosInstance";
 
 export default function LogoutButton() {
   const handleLogout = async () => {
     try {
-      await axiosInstance.post("/api/auth/logout", null, { withCredentials: true });
+      await axiosInstance.post("/auth/logout", null);
       toast.success("Logged out.");
       navigate("/login");
     } catch (err) {

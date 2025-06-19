@@ -49,15 +49,15 @@ export default function ProjectsTeaser() {
         return (
           <div
             key={project.id}
-            className="grid grid-cols-1 md:grid-cols-2 w-full h-full mb-12 border border-gray-200 rounded-lg overflow-hidden"
+            className="flex flex-col lg:flex-row w-full h-full mb-12 border border-gray-200 rounded-lg overflow-hidden"
           >
             <img
               src={project.image}
               alt={project.title}
-              className="border-r border-gray-200 object-cover w-full h-64 md:h-full"
+              className="border-r border-gray-200 object-cover w-full lg:w-5/12 aspect-video"
             />
-            <div className="p-8 w-full h-full flex flex-col justify-between">
-              <div>
+            <div className="p-8 w-full lg:w-7/12 h-full flex flex-col justify-between items-center">
+              <div className="w-full">
                 <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
                 <p className="text-gray-700 mb-4">{project.description}</p>
                 <table className="w-full text-left mb-4">

@@ -14,7 +14,7 @@ export default function VentureImageUploader() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const res = await axiosInstance.get(`/api/ventures/id/${ventureId}`);
+        const res = await axiosInstance.get(`/ventures/id/${ventureId}`);
         const images = res?.data?.images;
 
         if (Array.isArray(images)) {
@@ -52,7 +52,7 @@ export default function VentureImageUploader() {
 
     try {
       const res = await axiosInstance.patch(
-        `/api/ventures/${ventureId}/upload-image`,
+        `/ventures/id/${ventureId}/upload-image`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -102,7 +102,7 @@ export default function VentureImageUploader() {
               onDelete={async (fullUrl) => {
                 try {
                   const res = await axiosInstance.patch(
-                    `/api/ventures/${ventureId}/delete-image`,
+                    `/ventures/${ventureId}/delete-image`,
                     { imageUrl: fullUrl.replace("http://localhost:5000", "") }
                   );
                   setUploadedUrls(res.data.images);

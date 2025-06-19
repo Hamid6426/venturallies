@@ -5,29 +5,51 @@ const getAllVentures = async (req, res) => {
     const {
       page = 1,
       limit = 10,
-      status,
+      lifecycleStatus,
       ventureType,
       adminStatus,
       visibility,
+      riskLevel,
+      country,
+      tags,
       search,
       sortBy = "createdAt",
       order = "desc",
     } = req.query;
 
-    const numericPage = parseInt(page, 10);
-    const numericLimit = parseInt(limit, 10);
+    // Parse and sanitize
+    const numericPage = Math.max(parseInt(page, 10), 1);
+    const numericLimit = Math.max(parseInt(limit, 10), 1);
     const skip = (numericPage - 1) * numericLimit;
-
     const sortOrder = order === "asc" ? 1 : -1;
-    const sortableFields = ["createdAt", "title", "status", "targetAmount"];
+
+    const sortableFields = [
+      "createdAt",
+      "title",
+      "lifecycleStatus",
+      "targetAmount",
+    ];
     const sortField = sortableFields.includes(sortBy) ? sortBy : "createdAt";
 
-    // Filters
-    const filter = {};
-    if (status) filter.status = status;
+    // Build filter
+    const filter = {
+      isDeleted: false, // Always exclude soft-deleted
+    };
+
+    if (lifecycleStatus) filter.lifecycleStatus = lifecycleStatus;
     if (ventureType) filter.ventureType = ventureType;
     if (adminStatus) filter.adminStatus = adminStatus;
     if (visibility) filter.visibility = visibility;
+    if (riskLevel) filter.riskLevel = riskLevel;
+    if (country) filter.country = country;
+
+    if (tags) {
+      const tagArray = Array.isArray(tags)
+        ? tags
+        : tags.split(",").map((tag) => tag.trim());
+      filter.tags = { $in: tagArray };
+    }
+
     if (search) {
       filter.title = { $regex: search, $options: "i" };
     }
@@ -42,8 +64,8 @@ const getAllVentures = async (req, res) => {
 
     const totalPages = total === 0 ? 0 : Math.ceil(total / numericLimit);
 
-    res.status(200).json({
-      ventures,
+    return res.status(200).json({
+      data: ventures,
       pagination: {
         total,
         page: numericPage,
@@ -53,7 +75,7 @@ const getAllVentures = async (req, res) => {
     });
   } catch (err) {
     console.error("getAllVentures error:", err);
-    res.status(500).json({ error: "Failed to fetch ventures." });
+    return res.status(500).json({ message: "Failed to fetch ventures." });
   }
 };
 

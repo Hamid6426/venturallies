@@ -36,7 +36,7 @@ const AdminLogin = () => {
 
     setLoading(true);
     try {
-      const res = await axiosInstance.post("/api/auth/login-admin", formData);
+      const res = await axiosInstance.post("/auth/login-admin", formData);
       await loadUserProfile();
       toast.success("Login successful!");
       navigate("/admin/dashboard");

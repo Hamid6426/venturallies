@@ -2,7 +2,7 @@
 
 ---
 
-## Base URL: `/api/auth`
+## Base URL: `/auth`
 
 ---
 
@@ -48,7 +48,7 @@
 
 ---
 
-## Base URL: `/api/user` (Admin-only)
+## Base URL: `/user` (Admin-only)
 
 ---
 
@@ -74,7 +74,7 @@
 
 ---
 
-## Base URL: `/api/profile` (User-only)
+## Base URL: `/profile` (User-only)
 
 ---
 
@@ -90,7 +90,7 @@
 
 ---
 
-## Base URL: `/api/venture`
+## Base URL: `/venture`
 
 ---
 
@@ -141,7 +141,7 @@
 
 ---
 
-## Base URL: `/api/balance`
+## Base URL: `/balance`
 
 ---
 
@@ -173,7 +173,7 @@
 
 ---
 
-## Base URL: `/api/investments`
+## Base URL: `/investments`
 
 ---
 
@@ -199,7 +199,7 @@
 
 ---
 
-## Base URL: `/api/admin/investments`
+## Base URL: `/admin/investments`
 
 ---
 

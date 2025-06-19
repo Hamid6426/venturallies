@@ -22,7 +22,7 @@ const AdminGetAllMails = () => {
         limit: pagination.limit,
       };
 
-      const res = await axios.get("/api/admin/mails", { params });
+      const res = await axiosInstance.get("/admin/mails", { params });
 
       setMails(res.data.mails);
       setPagination((prev) => ({

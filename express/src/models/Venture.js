@@ -6,16 +6,17 @@ const ventureSchema = new mongoose.Schema(
     // Basic Info
     title: { type: String, required: true, maxlength: 255 },
     slug: { type: String, unique: true, required: true },
-    shortDescription: { type: String },
-    longDescription: { type: String },
-    collateralDescription: { type: String },
+    shortDescription: { type: String, required: true },
+    longDescription: { type: String, required: true },
+    collateralDescription: { type: String, required: true }, // if applicable
+
     images: [String], // URLs to image assets
 
     // Location
-    country: { type: String },
+    country: { type: String, required: true },
 
     // Public Status of the Venture
-    status: {
+    lifecycleStatus: {
       type: String,
       enum: ["new", "coming-soon", "funded", "repaid"],
       required: true,
@@ -43,15 +44,15 @@ const ventureSchema = new mongoose.Schema(
     },
 
     // Investment Configuration
-    minInvestmentAmount: { type: Number, default: 1000 },
-    maxInvestmentAmount: { type: Number },
+    minInvestmentAmount: { type: Number, required: true, default: 30 }, // €30 i.e. 30 euros
+    maxInvestmentAmount: { type: Number, required: true },
     targetAmount: { type: Number, required: true },
     amountFunded: { type: Number, required: true, default: 0 },
     expectedReturn: { type: Number, required: true }, // % return expected
     investmentPeriod: { type: Number, required: true }, // in months
 
     // Venture Lifecycle
-    dateIssued: { type: Date },
+    dateIssued: { type: Date, required: true },
     closingDate: { type: Date, required: true },
 
     // Admin Review Status
@@ -79,8 +80,8 @@ const ventureSchema = new mongoose.Schema(
     ],
 
     // Financial Fields
-    collateralValue: { type: Number },
-    loanToValue: { type: Number }, // % ratio
+    collateralValue: { type: Number, required: true },
+    loanToValue: { type: Number, required: true }, // % ratio
     isConvertible: { type: Boolean, default: false }, // to equity
 
     // Optional Summary Totals (if needed)
@@ -103,7 +104,11 @@ const ventureSchema = new mongoose.Schema(
     isDeleted: { type: Boolean, default: false },
 
     // Audit Fields
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {

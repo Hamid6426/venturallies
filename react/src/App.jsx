@@ -33,7 +33,7 @@ import AccountFunding from "./pages/dashboard/AccountFunding";
 import AccountProfile from "./pages/dashboard/AccountProfile";
 import MyVentures from "./pages/dashboard/MyVentures";
 import CreateVenture from "./pages/dashboard/CreateVenture";
-import EditVenture from "./pages/dashboard/EditVenture";
+import EditVentureByUser from "./pages/dashboard/EditVentureByUser";
 import VentureImageUploader from "./pages/dashboard/VentureImageUploader";
 import MyVentureDetail from "./pages/dashboard/MyVentureDetail";
 
@@ -69,6 +69,7 @@ function App() {
         <Route path="support" element={<Support />} />
         <Route path="contact" element={<Contact />} />
       </Route>
+
       {/* Dashboard Area */}
       <Route path="/account" element={<DashboardLayout />}>
         <Route path="overview" element={<AccountOverview />} />
@@ -82,13 +83,14 @@ function App() {
           element={<MyVentureDetail />}
         />
         <Route path="create-venture" element={<CreateVenture />} />
-        <Route path="edit-venture" element={<EditVenture />} />
+        <Route path="/account/my-ventures/:ventureId/edit" element={<EditVentureByUser />} />
         <Route
           path="/account/create-venture/:ventureId/upload-images"
           element={<VentureImageUploader />}
         />
       </Route>
-      // ADMIN ROUTES
+
+      {/* ADMIN ROUTES */}
       <Route path="admin-login" element={<AdminLogin />} />
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 
+// Constants
 const statuses = ["new", "coming-soon", "funded", "repaid"];
 const ventureTypes = ["business", "sme", "leasing", "realestate"];
 const visibilities = ["public", "private", "draft"];
@@ -46,12 +47,9 @@ export default function CreateVenture() {
     if (!form.title) newErrors.title = "Title is required";
     if (!form.status) newErrors.status = "Status is required";
     if (!form.ventureType) newErrors.ventureType = "Venture type is required";
-    if (!form.targetAmount)
-      newErrors.targetAmount = "Target amount is required";
-    if (!form.expectedReturn)
-      newErrors.expectedReturn = "Expected return is required";
-    if (!form.investmentPeriod)
-      newErrors.investmentPeriod = "Investment period is required";
+    if (!form.targetAmount) newErrors.targetAmount = "Target amount is required";
+    if (!form.expectedReturn) newErrors.expectedReturn = "Expected return is required";
+    if (!form.investmentPeriod) newErrors.investmentPeriod = "Investment period is required";
     if (!form.closingDate) newErrors.closingDate = "Closing date is required";
     return newErrors;
   };
@@ -66,8 +64,7 @@ export default function CreateVenture() {
 
     try {
       const payload = { ...form };
-
-      const res = await axiosInstance.post("/api/ventures", payload);
+      const res = await axiosInstance.post("/ventures", payload);
       const { venture } = res.data;
       const ventureId = venture._id || venture.id;
 
@@ -82,206 +79,163 @@ export default function CreateVenture() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md">
-      <h1 className="text-2xl font-bold mb-4">Create New Venture</h1>
+    <div className="mx-auto">
+      <h2 className="text-4xl font-semibold mb-6 text-center py-20 bg-gray-100">
+        Create New Venture
+      </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          placeholder="Title"
-          className="w-full input input-bordered"
-        />
-        {errors.title && <p className="text-red-500">{errors.title}</p>}
-
-        <textarea
-          name="shortDescription"
-          value={form.shortDescription}
-          onChange={handleChange}
-          placeholder="Short Description"
-          className="w-full textarea textarea-bordered"
-        />
-
-        <textarea
-          name="longDescription"
-          value={form.longDescription}
-          onChange={handleChange}
-          placeholder="Long Description"
-          className="w-full textarea textarea-bordered"
-        />
-
-        <textarea
-          name="collateralDescription"
-          value={form.collateralDescription}
-          onChange={handleChange}
-          placeholder="Collateral Description"
-          className="w-full textarea textarea-bordered"
-        />
-
-        <input
-          type="text"
-          name="country"
-          value={form.country}
-          onChange={handleChange}
-          placeholder="Country"
-          className="w-full input input-bordered"
-        />
-
-        {/* Select fields */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <select
-            name="status"
-            value={form.status}
-            onChange={handleChange}
-            className="select select-bordered"
-          >
-            <option value="">Select Status</option>
-            {statuses.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-10 text-lg md:text-xl max-w-4xl mx-auto py-16 px-4"
+      >
+        {/* Venture Basic Info */}
+        <section className="flex flex-col md:flex-row gap-6">
+          <h4 className="text-xl font-medium md:mb-0 w-full md:w-64">Basic Info</h4>
+          <div className="w-full space-y-4">
+            {["title", "country"].map((name) => (
+              <div key={name}>
+                <input
+                  name={name}
+                  value={form[name]}
+                  onChange={handleChange}
+                  placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
+                  className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-[#00B951] focus:border-[#00B951]"
+                />
+                {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
+              </div>
             ))}
-          </select>
-          {errors.status && <p className="text-red-500">{errors.status}</p>}
+          </div>
+        </section>
 
-          <select
-            name="ventureType"
-            value={form.ventureType}
-            onChange={handleChange}
-            className="select select-bordered"
-          >
-            <option value="">Select Venture Type</option>
-            {ventureTypes.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
+        {/* Descriptions */}
+        {[
+          ["Short Description", "shortDescription"],
+          ["Long Description", "longDescription"],
+          ["Collateral Description", "collateralDescription"],
+        ].map(([label, name]) => (
+          <section key={name} className="flex flex-col md:flex-row gap-6">
+            <h4 className="text-xl font-medium md:mb-0 w-full md:w-64">{label}</h4>
+            <textarea
+              name={name}
+              value={form[name]}
+              onChange={handleChange}
+              className="w-full border-b-2 border-gray-400 px-2 py-2 focus:outline-[#00B951] focus:border-[#00B951]"
+              placeholder={label}
+              rows={3}
+            />
+          </section>
+        ))}
+
+        {/* Select Dropdowns */}
+        <section className="flex flex-col md:flex-row gap-6">
+          <h4 className="text-xl font-medium w-full md:w-64">Selections</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            {[["status", statuses], ["ventureType", ventureTypes], ["visibility", visibilities], ["riskLevel", riskLevels]].map(
+              ([name, options]) => (
+                <div key={name}>
+                  <select
+                    name={name}
+                    value={form[name]}
+                    onChange={handleChange}
+                    className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-[#00B951] focus:border-[#00B951]"
+                  >
+                    <option value="">Select {name}</option>
+                    {options.map((o) => (
+                      <option key={o} value={o}>
+                        {o}
+                      </option>
+                    ))}
+                  </select>
+                  {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
+                </div>
+              )
+            )}
+          </div>
+        </section>
+
+        {/* Investment Info */}
+        <section className="flex flex-col md:flex-row gap-6">
+          <h4 className="text-xl font-medium w-full md:w-64">Investment Details</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+            {[
+              "minInvestmentAmount",
+              "maxInvestmentAmount",
+              "targetAmount",
+              "expectedReturn",
+              "investmentPeriod",
+            ].map((name) => (
+              <div key={name}>
+                <input
+                  type="number"
+                  name={name}
+                  value={form[name]}
+                  onChange={handleChange}
+                  placeholder={name.replace(/([A-Z])/g, " $1")}
+                  className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-[#00B951] focus:border-[#00B951]"
+                />
+                {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
+              </div>
             ))}
-          </select>
-          {errors.ventureType && (
-            <p className="text-red-500">{errors.ventureType}</p>
-          )}
+          </div>
+        </section>
 
-          <select
-            name="visibility"
-            value={form.visibility}
-            onChange={handleChange}
-            className="select select-bordered"
-          >
-            <option value="">Select Visibility</option>
-            {visibilities.map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="riskLevel"
-            value={form.riskLevel}
-            onChange={handleChange}
-            className="select select-bordered"
-          >
-            <option value="">Select Risk Level</option>
-            {riskLevels.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Investment fields */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <input
-            type="number"
-            name="minInvestmentAmount"
-            value={form.minInvestmentAmount}
-            onChange={handleChange}
-            placeholder="Min Investment"
-            className="input input-bordered"
-          />
-          <input
-            type="number"
-            name="maxInvestmentAmount"
-            value={form.maxInvestmentAmount}
-            onChange={handleChange}
-            placeholder="Max Investment"
-            className="input input-bordered"
-          />
-          <input
-            type="number"
-            name="targetAmount"
-            value={form.targetAmount}
-            onChange={handleChange}
-            placeholder="Target Amount"
-            className="input input-bordered"
-          />
-          {errors.targetAmount && (
-            <p className="text-red-500">{errors.targetAmount}</p>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <input
-            type="number"
-            name="expectedReturn"
-            value={form.expectedReturn}
-            onChange={handleChange}
-            placeholder="Expected Return (%)"
-            className="input input-bordered"
-          />
-          <input
-            type="number"
-            name="investmentPeriod"
-            value={form.investmentPeriod}
-            onChange={handleChange}
-            placeholder="Investment Period (months)"
-            className="input input-bordered"
-          />
-          <input
-            type="date"
-            name="closingDate"
-            value={form.closingDate}
-            onChange={handleChange}
-            className="input input-bordered"
-          />
-        </div>
+        {/* Closing Date */}
+        <section className="flex flex-col md:flex-row gap-6">
+          <h4 className="text-xl font-medium w-full md:w-64">Closing Date</h4>
+          <div className="w-full">
+            <input
+              type="date"
+              name="closingDate"
+              value={form.closingDate}
+              onChange={handleChange}
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-[#00B951] focus:border-[#00B951]"
+            />
+            {errors.closingDate && <p className="text-red-500 text-sm">{errors.closingDate}</p>}
+          </div>
+        </section>
 
         {/* Collateral Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <input
-            type="number"
-            name="collateralValue"
-            value={form.collateralValue}
-            onChange={handleChange}
-            placeholder="Collateral Value"
-            className="input input-bordered"
-          />
-          <input
-            type="number"
-            name="loanToValue"
-            value={form.loanToValue}
-            onChange={handleChange}
-            placeholder="Loan-to-Value (%)"
-            className="input input-bordered"
-          />
-          <label className="flex items-center space-x-2">
+        <section className="flex flex-col md:flex-row gap-6">
+          <h4 className="text-xl font-medium w-full md:w-64">Collateral Info</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
             <input
-              type="checkbox"
-              name="isConvertible"
-              checked={form.isConvertible}
+              type="number"
+              name="collateralValue"
+              value={form.collateralValue}
               onChange={handleChange}
+              placeholder="Collateral Value"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-[#00B951] focus:border-[#00B951]"
             />
-            <span>Convertible to Equity?</span>
-          </label>
-        </div>
+            <input
+              type="number"
+              name="loanToValue"
+              value={form.loanToValue}
+              onChange={handleChange}
+              placeholder="Loan-to-Value (%)"
+              className="border-b-2 border-gray-400 px-2 py-2 w-full focus:outline-[#00B951] focus:border-[#00B951]"
+            />
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="isConvertible"
+                checked={form.isConvertible}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              Convertible to Equity
+            </label>
+          </div>
+        </section>
 
         {/* Submit Button */}
-        <button type="submit" className="btn btn-primary mt-4">
-          Create Venture
-        </button>
+        <div className="flex justify-center mt-10">
+          <button
+            type="submit"
+            className="bg-[#00B951] text-white px-12 py-4 rounded hover:bg-green-700 hover:-translate-y-1 transition-transform"
+          >
+            Create Venture
+          </button>
+        </div>
       </form>
     </div>
   );

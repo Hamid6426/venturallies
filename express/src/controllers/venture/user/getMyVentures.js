@@ -1,49 +1,69 @@
 import mongoose from "mongoose";
-import Venture from "../../models/Venture.js";
+import Venture from "../../../models/Venture.js";
 
 const getMyVentures = async (req, res) => {
   try {
     const userId = req.user?.id;
 
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(401).json({ error: "Unauthorized or Invalid User ID" });
+      return res
+        .status(401)
+        .json({ message: "Unauthorized or Invalid User ID" });
     }
 
     // Query params
     const {
       page = 1,
       limit = 10,
-      status,
+      lifecycleStatus,
       ventureType,
       visibility,
+      riskLevel,
+      adminStatus,
+      country,
+      tags,
       search,
       sortBy = "createdAt",
       order = "desc",
     } = req.query;
 
-    const numericPage = parseInt(page, 10);
-    const numericLimit = parseInt(limit, 10);
+    const numericPage = Math.max(parseInt(page, 10), 1);
+    const numericLimit = Math.max(parseInt(limit, 10), 1);
     const skip = (numericPage - 1) * numericLimit;
-
-    // Validate sort order
     const sortOrder = order === "asc" ? 1 : -1;
-    const sortableFields = ["createdAt", "title", "status", "targetAmount"];
+
+    const sortableFields = [
+      "createdAt",
+      "title",
+      "lifecycleStatus",
+      "targetAmount",
+    ];
     const sortField = sortableFields.includes(sortBy) ? sortBy : "createdAt";
 
-    // Filters
+    // Filter logic
     const filter = {
       createdBy: userId,
       isDeleted: false,
     };
 
-    if (status) filter.status = status;
+    if (lifecycleStatus) filter.lifecycleStatus = lifecycleStatus;
     if (ventureType) filter.ventureType = ventureType;
     if (visibility) filter.visibility = visibility;
+    if (riskLevel) filter.riskLevel = riskLevel;
+    if (adminStatus) filter.adminStatus = adminStatus;
+    if (country) filter.country = country;
+
+    if (tags) {
+      const tagArray = Array.isArray(tags)
+        ? tags
+        : tags.split(",").map((tag) => tag.trim());
+      filter.tags = { $in: tagArray };
+    }
+
     if (search) {
       filter.title = { $regex: search, $options: "i" };
     }
 
-    // Fetch data
     const [ventures, total] = await Promise.all([
       Venture.find(filter)
         .sort({ [sortField]: sortOrder })
@@ -54,8 +74,8 @@ const getMyVentures = async (req, res) => {
 
     const totalPages = total === 0 ? 0 : Math.ceil(total / numericLimit);
 
-    res.status(200).json({
-      ventures,
+    return res.status(200).json({
+      data: ventures,
       pagination: {
         total,
         page: numericPage,
@@ -64,8 +84,8 @@ const getMyVentures = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("getMyVentures error:", err.message, err.stack);
-    res.status(500).json({ error: "Failed to fetch your ventures." });
+    console.error("getMyVentures error:", err);
+    return res.status(500).json({ message: "Failed to fetch your ventures." });
   }
 };
 

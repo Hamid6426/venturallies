@@ -10,9 +10,7 @@ export default function MyVentures() {
   useEffect(() => {
     const fetchVentures = async () => {
       try {
-        const res = await axiosInstance.get("/api/ventures/my-ventures", {
-          withCredentials: true,
-        });
+        const res = await axiosInstance.get("/ventures/my-ventures");
         setVentures(res.data.ventures || []);
       } catch (err) {
         console.error(err);

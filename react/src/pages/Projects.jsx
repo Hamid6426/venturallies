@@ -15,7 +15,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     const qs = new URLSearchParams(filters).toString();
-    fetch(`/api/projects?${qs}`)
+    fetch(`/projects?${qs}`)
       .then((res) => res.json())
       .then(setProjects);
   }, [filters]);

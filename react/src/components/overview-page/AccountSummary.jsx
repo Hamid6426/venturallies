@@ -1,5 +1,3 @@
-import React from "react";
-
 const AccountSummary = () => {
   return (
     <main className="py-10  ">
