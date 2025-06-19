@@ -12,13 +12,13 @@ const router = express.Router();
 router.get("/", authMiddleware, getAllUsersBalanceDetails);
   
 //  Admin: Get balance by userId (from param)
-router.get("/:userId", authMiddleware, getBalanceByUserId);
+router.get("/id/:userId", authMiddleware, getBalanceByUserId);
 
 //  Admin: Update balance for a user (top-up or deduct)
 router.put("/:userId", authMiddleware, updateBalance);
 
 //  Authenticated user: Get own balance
-router.get("/my/self", authMiddleware, getMyBalance);
+router.get("/my-balance", authMiddleware, getMyBalance);
 
 //  Admin/User: Get balance history
 router.get("/:userId/history", authMiddleware, getMyBalanceHistory);

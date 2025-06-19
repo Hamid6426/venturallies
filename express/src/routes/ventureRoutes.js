@@ -11,14 +11,20 @@ import deleteVentureImage from "../controllers/venture/user/deleteVentureImage.j
 
 import authMiddleware from "../middleware/isAuthenticated.js";
 import { uploadVentureImages } from "../middleware/imageUpload.js";
-import ventureStatusUpdateByAdmin from "../controllers/venture/admin/adminStatusUpdate.js";
+import adminStatusUpdate from "../controllers/venture/admin/adminStatusUpdate.js";
 
 const router = express.Router();
 
+// By User only
 router.post("/", authMiddleware, createVenture);
+
+// Public
 router.get("/", getAllVentures);
+
+// current user veutures
 router.get("/my-ventures", authMiddleware, getMyVentures);
 
+// add image to venture by current user
 router.patch(
   "/:ventureId/upload-image",
   authMiddleware,
@@ -26,11 +32,26 @@ router.patch(
   addVentureImage
 );
 
-router.patch("/id/:ventureId/delete-image", authMiddleware, deleteVentureImage);
-router.put("/id/:ventureId", authMiddleware, ventureUpdateByUser);
-router.put("/id/:ventureId", authMiddleware, ventureUpdateByAdmin);
+// delete image from venture by current user
+router.patch("/:ventureId/delete-image", authMiddleware, deleteVentureImage);
+
+// update of venture by current user
+router.put("/:ventureId", authMiddleware, ventureUpdateByUser);
+
+// fetch by id (due to dynamic route error /id is important)
 router.get("/id/:ventureId", getVentureById);
+
+// fetch by slug (due to dynamic route error /slug is important)
 router.get("/slug/:ventureSlug", getVentureBySlug);
-router.patch("/admin-status", authMiddleware, ventureStatusUpdateByAdmin);
+
+// update of venture by admin
+router.put("/admin/:ventureId", authMiddleware, ventureUpdateByAdmin);
+
+// admin update status
+router.patch(
+  "/admin/:ventureId/admin-status-update",
+  authMiddleware,
+  adminStatusUpdate
+);
 
 export default router;

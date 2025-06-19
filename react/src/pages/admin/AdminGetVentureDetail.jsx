@@ -1,7 +1,5 @@
-// src/pages/admin/AdminVentureDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "../../utils/axiosInstance";
 import axiosInstance from "../../utils/axiosInstance";
 
 export default function AdminGetVentureDetail() {
@@ -13,15 +11,15 @@ export default function AdminGetVentureDetail() {
   const [form, setForm] = useState({ adminStatus: "", adminNotes: "" });
   const [saving, setSaving] = useState(false);
 
-  // Fetch detail
   useEffect(() => {
     (async () => {
       try {
-        const res = await axiosInstance.get(`/ventures/${ventureId}`);
-        setVenture(res.data.venture);
+        const res = await axiosInstance.get(`/ventures/id/${ventureId}`);
+        const data = res.data.data; // ✅ fixed
+        setVenture(data);
         setForm({
-          adminStatus: res.data.venture.adminStatus,
-          adminNotes: res.data.venture.adminNotes || "",
+          adminStatus: data.adminStatus,
+          adminNotes: data.adminNotes || "",
         });
       } catch (err) {
         console.error(err);
@@ -33,16 +31,15 @@ export default function AdminGetVentureDetail() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      await axiosInstance.patch(`/admin/ventures/${ventureId}`, form);
-      // refetch to get updated timestamps
-      const { data } = await axiosInstance.get(`/ventures/${ventureId}`);
-      setVenture(data.venture);
+      await axiosInstance.patch(`/ventures/admin/${ventureId}/admin-status-update`, form);
+      const { data } = await axiosInstance.get(`/ventures/id/${ventureId}`);
+      setVenture(data.data);
       alert("Updated successfully");
     } catch (err) {
       console.error(err);
@@ -63,33 +60,58 @@ export default function AdminGetVentureDetail() {
 
       <h1 className="text-3xl font-bold mb-2">{venture.title}</h1>
       <p className="italic mb-4">
-        Type: {venture.ventureType}, Status: {venture.status}
+        Type: {venture.ventureType}, Status: {venture.lifecycleStatus}
       </p>
 
+      {/* User Info */}
+      {venture.createdBy && (
+        <p className="mb-4 text-sm text-gray-600">
+          Created by: {venture.createdBy.firstName} {venture.createdBy.lastName} (
+          {venture.createdBy.email})
+        </p>
+      )}
+
+      {/* Main Info */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        {/* Descriptions */}
         <div>
           <h2 className="font-semibold">Short Description</h2>
           <p>{venture.shortDescription}</p>
           <h2 className="font-semibold mt-4">Long Description</h2>
           <p>{venture.longDescription}</p>
+          <h2 className="font-semibold mt-4">Collateral Description</h2>
+          <p>{venture.collateralDescription}</p>
         </div>
-        {/* Financials */}
+
         <div>
           <p>
-            <strong>Target:</strong> {venture.targetAmount}
+            <strong>Target:</strong> €{venture.targetAmount}
           </p>
           <p>
-            <strong>Funded:</strong> {venture.amountFunded}
+            <strong>Funded:</strong> €{venture.amountFunded}
           </p>
           <p>
-            <strong>Min Invest:</strong> {venture.minInvestmentAmount}
+            <strong>Min Investment:</strong> €{venture.minInvestmentAmount}
+          </p>
+          <p>
+            <strong>Max Investment:</strong> €{venture.maxInvestmentAmount}
           </p>
           <p>
             <strong>Expected Return:</strong> {venture.expectedReturn}%
           </p>
           <p>
-            <strong>Period:</strong> {venture.investmentPeriod} months
+            <strong>Investment Period:</strong> {venture.investmentPeriod} months
+          </p>
+          <p>
+            <strong>Collateral Value:</strong> €{venture.collateralValue}
+          </p>
+          <p>
+            <strong>Loan to Value:</strong> {venture.loanToValue}%
+          </p>
+          <p>
+            <strong>Risk Level:</strong> {venture.riskLevel}
+          </p>
+          <p>
+            <strong>Country:</strong> {venture.country}
           </p>
         </div>
       </div>
@@ -99,19 +121,19 @@ export default function AdminGetVentureDetail() {
         <div className="mb-6">
           <h2 className="font-semibold mb-2">Images</h2>
           <div className="flex flex-wrap gap-2">
-            {venture.images.map((url, i) => (
+            {venture.images.map((url, idx) => (
               <img
-                key={i}
+                key={idx}
                 src={url}
-                alt=""
-                className="w-32 h-20 object-cover rounded"
+                alt={`venture-${idx}`}
+                className="w-32 h-20 object-cover rounded border"
               />
             ))}
           </div>
         </div>
       )}
 
-      {/* Admin Review Form */}
+      {/* Admin Review */}
       <div className="max-w-md border p-4 rounded">
         <h2 className="text-xl font-semibold mb-2">Admin Review</h2>
         <label className="block mb-2">

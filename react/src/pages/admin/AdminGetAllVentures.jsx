@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
-import axios from "../../utils/axiosInstance";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axiosInstance from "../../utils/axiosInstance";
 
 export default function AdminGetAllVentures() {
   const [ventures, setVentures] = useState([]);
   const [filters, setFilters] = useState({
     search: "",
-    status: "",
+    lifecycleStatus: "",
     ventureType: "",
     adminStatus: "",
     visibility: "",
+    riskLevel: "",
+    country: "",
   });
   const [pagination, setPagination] = useState({
     page: 1,
@@ -27,8 +29,10 @@ export default function AdminGetAllVentures() {
         page: pagination.page,
         limit: pagination.limit,
       };
+
       const res = await axiosInstance.get("/ventures", { params });
-      setVentures(res.data.ventures || []);
+
+      setVentures(res.data.data || []);
       setPagination((prev) => ({
         ...prev,
         totalPages: res.data.pagination?.totalPages || 1,
@@ -51,15 +55,6 @@ export default function AdminGetAllVentures() {
     setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
-  const handleAction = async (id, action) => {
-    try {
-      await axiosInstance.post(`/admin/ventures/${id}/${action}`);
-      fetchVentures();
-    } catch (err) {
-      console.error(`${action} failed:`, err);
-    }
-  };
-
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-4">All Ventures</h2>
@@ -75,8 +70,8 @@ export default function AdminGetAllVentures() {
           className="border px-3 py-2 rounded flex-1 min-w-[200px]"
         />
         <select
-          name="status"
-          value={filters.status}
+          name="lifecycleStatus"
+          value={filters.lifecycleStatus}
           onChange={handleFilterChange}
           className="border px-3 py-2 rounded"
         >
@@ -121,6 +116,25 @@ export default function AdminGetAllVentures() {
           <option value="private">Private</option>
           <option value="draft">Draft</option>
         </select>
+        <select
+          name="riskLevel"
+          value={filters.riskLevel}
+          onChange={handleFilterChange}
+          className="border px-3 py-2 rounded"
+        >
+          <option value="">Risk Level</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <input
+          type="text"
+          name="country"
+          value={filters.country}
+          onChange={handleFilterChange}
+          placeholder="Country"
+          className="border px-3 py-2 rounded"
+        />
       </div>
 
       {/* Table */}
@@ -160,7 +174,7 @@ export default function AdminGetAllVentures() {
                   </td>
                   <td className="p-2 border">{v.title}</td>
                   <td className="p-2 border capitalize">{v.ventureType}</td>
-                  <td className="p-2 border capitalize">{v.status}</td>
+                  <td className="p-2 border capitalize">{v.lifecycleStatus}</td>
                   <td className="p-2 border capitalize">{v.visibility}</td>
                   <td className="p-2 border capitalize">{v.adminStatus}</td>
                   <td className="p-2 border">
@@ -172,22 +186,6 @@ export default function AdminGetAllVentures() {
                     {new Date(v.closingDate).toLocaleDateString()}
                   </td>
                   <td className="p-2 border space-x-1 text-center">
-                    {v.adminStatus === "pending" && (
-                      <>
-                        <button
-                          onClick={() => handleAction(v._id, "approve")}
-                          className="px-2 py-1 rounded bg-green-600 text-white hover:bg-green-700 text-xs"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleAction(v._id, "reject")}
-                          className="px-2 py-1 rounded bg-red-600 text-white hover:bg-red-700 text-xs"
-                        >
-                          Reject
-                        </button>
-                      </>
-                    )}
                     <Link
                       to={`/admin/ventures/${v._id}`}
                       className="px-2 py-1 rounded border hover:bg-gray-100 text-xs"

@@ -8,6 +8,7 @@ import { LoaderProvider, useLoader } from "./contexts/LoaderContext";
 import Loader from "./components/Loader";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { BalanceProvider } from "./contexts/BalanceContext.jsx";
 
 // Create a wrapper component to use useLoader hook inside context
 const AppWrapper = () => {
@@ -37,9 +38,11 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Router>
       <AuthProvider>
-        <LoaderProvider>
-          <AppWrapper />
-        </LoaderProvider>
+        <BalanceProvider>
+          <LoaderProvider>
+            <AppWrapper />
+          </LoaderProvider>
+        </BalanceProvider>
       </AuthProvider>
     </Router>
   </StrictMode>
