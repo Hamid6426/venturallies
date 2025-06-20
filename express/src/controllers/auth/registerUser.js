@@ -100,13 +100,13 @@ const registerUser = async (req, res) => {
     await user.save();
 
     try {
-      await Balance.create({
+      const balance = new Balance({
         user: user._id,
         balance: 0,
       });
+      await balance.save();
     } catch (balanceErr) {
       console.error("Balance creation failed:", balanceErr);
-      // Optional: rollback user creation if this is critical
       return res
         .status(500)
         .json({ message: "User created but failed to initialize balance." });

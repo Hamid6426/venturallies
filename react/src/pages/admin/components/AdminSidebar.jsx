@@ -1,6 +1,6 @@
 // src/components/AdminSidebar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import { useState } from "react";
 
 export default function AdminSidebar() {
@@ -12,6 +12,8 @@ export default function AdminSidebar() {
     { to: "/admin/dashboard", label: "Dashboard" },
     { to: "/admin/users", label: "Users" },
     { to: "/admin/ventures", label: "Ventures" },
+    { to: "/admin/balances", label: "Balances" },
+    { to: "/admin/balance-histories", label: "Balance Histories" },
     { to: "/admin/mails", label: "Mails" },
   ];
 
@@ -21,7 +23,11 @@ export default function AdminSidebar() {
   };
 
   return (
-    <div className={`h-screen bg-gray-800 text-white flex flex-col ${open ? "w-64" : "w-20"} transition-all duration-300`}>
+    <div
+      className={`h-screen bg-gray-800 text-white flex flex-col ${
+        open ? "w-64" : "w-20"
+      } transition-all duration-300`}
+    >
       {/* Toggle */}
       <div className="p-4">
         <button onClick={() => setOpen(!open)} className="text-sm">

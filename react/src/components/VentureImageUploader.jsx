@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
-import DeleteVentureImage from "../../components/DeleteVentureImage";
+import axiosInstance from "../utils/axiosInstance";
+import DeleteVentureImage from "./DeleteVentureImage";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 

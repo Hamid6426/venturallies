@@ -26,7 +26,6 @@ const getAllUsersBalanceDetails = async (req, res) => {
   const filters = {};
   const sort = { [sortBy]: sortOrder === "asc" ? 1 : -1 };
 
-  // Balance filters
   if (minBalance !== undefined) filters.balance = { $gte: Number(minBalance) };
   if (maxBalance !== undefined) {
     filters.balance = {
@@ -42,21 +41,21 @@ const getAllUsersBalanceDetails = async (req, res) => {
       .populate({
         path: "user",
         match: {
-          $or: [
-            { firstName: regex },
-            { lastName: regex },
-            { email: regex },
-          ],
+          $or: [{ firstName: regex }, { lastName: regex }, { email: regex }],
         },
-        select: "firstName lastName email",
+        select: "firstName lastName email role",
       })
       .sort(sort)
       .skip((page - 1) * limit)
       .limit(Number(limit))
       .lean();
 
-    // Remove balances where user is null (no match in populate)
     const filtered = balances.filter((b) => b.user);
+
+    // Debug log
+    if (filtered.length > 0) {
+      console.log("Sample balance record:", filtered[0]);
+    }
 
     res.status(200).json({
       data: filtered,

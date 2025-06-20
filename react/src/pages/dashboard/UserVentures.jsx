@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 
-export default function MyVentures() {
+export default function UserVentures() {
   const [ventures, setVentures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -28,7 +28,7 @@ export default function MyVentures() {
       <div className="flex justify-between items-center w-full">
         <h1 className="text-3xl font-semibold mb-6">My Ventures</h1>
         <Link
-          to="/account/create-venture"
+          to="/dashboard/create-venture"
           className="py-4 px-8 bg-green-500 text-white hover:-translate-y-1"
         >
           Create Venture

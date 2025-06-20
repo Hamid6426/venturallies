@@ -42,16 +42,19 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const accountLinks = [
-    { label: "Overview", path: "/account/overview", className: "border-t-0" },
-    { label: "Investments", path: "/account/investments" },
-    { label: "Statement", path: "/account/statement" },
-    { label: "Funding", path: "/account/funding" },
-    { label: "Profile", path: "/account/profile" },
-    { label: "My Ventures", path: "/account/my-ventures" },
+  const dashboardLinks = [
+    {
+      label: "Dashboard",
+      path: "/dashboard/overview",
+      className: "border-t-0",
+    },
+    { label: "Wallet", path: "/dashboard/wallet" },
+    { label: "Investments", path: "/dashboard/investments" },
+    { label: "Repayments", path: "/dashboard/repayments" },
+    { label: "Ventures", path: "/dashboard/ventures" },
+    { label: "Verification", path: "/dashboard/verification" },
+    { label: "Profile", path: "/dashboard/profile" },
   ];
-
-  if (loading) return <p>Loading balance...</p>;
 
   return (
     <header className="bg-white shadow sticky top-0 z-50">
@@ -73,9 +76,15 @@ export default function Navbar() {
 
           {/* Main nav links */}
           <nav className="hidden lg:flex space-x-6">
-            <Link to="/" className="hover:text-green-500">Home</Link>
-            <Link to="/projects" className="hover:text-green-500">Invest</Link>
-            <Link to="/about" className="hover:text-green-500">About</Link>
+            <Link to="/" className="hover:text-green-500">
+              Home
+            </Link>
+            <Link to="/projects" className="hover:text-green-500">
+              Invest
+            </Link>
+            <Link to="/about" className="hover:text-green-500">
+              About
+            </Link>
 
             {/* Help dropdown */}
             <div className="relative" ref={dropdownRefs.help}>
@@ -114,15 +123,19 @@ export default function Navbar() {
           </nav>
 
           {/* Balance & account */}
-          <div className="relative flex items-center gap-4" ref={dropdownRefs.account}>
-            {balance ? (
+          <div
+            className="relative flex items-center gap-4"
+            ref={dropdownRefs.account}
+          >
+            {loading ? (
+              <p>Loading balance...</p>
+            ) : balance ? (
               <p className="text-green-700 font-semibold">
                 € {balance.balance.toFixed(2)}
               </p>
             ) : (
               <p className="text-xs text-red-500"></p>
             )}
-
             {isUserLoading ? (
               <span>Loading...</span>
             ) : currentUser ? (
@@ -144,17 +157,18 @@ export default function Navbar() {
                 </button>
               </Link>
             )}
-
             {currentUser && openDropdown === "account" && (
               <div
-                className="absolute top-full right-0 mt-2 bg-[#001E0E] text-white rounded shadow z-50 min-w-40 text-center"
+                className="absolute top-full right-0 mt-2 bg-[#001E0E] text-white rounded shadow z-50 min-w-40 text-left"
                 onMouseLeave={() => handlePanelMouseLeave("account")}
               >
-                {accountLinks.map(({ label, path, className }) => (
+                {dashboardLinks.map(({ label, path, className }) => (
                   <Link
                     key={path}
                     to={path}
-                    className={`block px-4 py-3 border-t border-gray-600 hover:text-green-500 ${className || ""}`}
+                    className={`block px-4 py-3 border-t border-gray-600 hover:text-green-500 ${
+                      className || ""
+                    }`}
                   >
                     {label}
                   </Link>

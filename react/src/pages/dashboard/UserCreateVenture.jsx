@@ -25,7 +25,7 @@ const defaultValues = {
   isConvertible: false,
 };
 
-export default function CreateVenture() {
+export default function UserCreateVenture() {
   const [form, setForm] = useState(defaultValues);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -113,7 +113,7 @@ export default function CreateVenture() {
       setForm(defaultValues);
       setErrors({});
       setIsSubmitting(false);
-      navigate(`/account/create-venture/${ventureId}/upload-images`);
+      navigate(`/dashboard/${ventureId}/edit-venture-images`);
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Error creating venture");

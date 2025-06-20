@@ -3,7 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import axiosInstance from "../../utils/axiosInstance";
 import { locationsData } from "../../data/locationsData";
 
-const AccountProfile = () => {
+const UserProfile = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -284,4 +284,4 @@ const AccountProfile = () => {
   );
 };
 
-export default AccountProfile;
+export default UserProfile;

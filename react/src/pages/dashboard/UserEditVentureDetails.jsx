@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 
-export default function EditVentureByUser() {
+export default function UserEditVentureDetails() {
   const { ventureId } = useParams();
   const navigate = useNavigate();
 
@@ -112,7 +112,7 @@ export default function EditVentureByUser() {
     try {
       await axiosInstance.patch(`/ventures/id/${ventureId}`, payload);
       // On success, redirect back to detail
-      navigate(`/account/my-ventures/${ventureId}`, { replace: true });
+      navigate(`/dashboard/ventures/${ventureId}`, { replace: true });
     } catch (err) {
       console.error(err);
       setError("Failed to save changes.");
@@ -295,7 +295,7 @@ export default function EditVentureByUser() {
             {saving ? "Saving…" : "Save Changes"}
           </button>
           <Link
-            to={`/account/my-ventures/${ventureId}`}
+            to={`/dashboard/ventures/${ventureId}`}
             className="bg-gray-800 text-white px-12 py-4 rounded text-center hover:-translate-y-1 transition"
           >
             Cancel

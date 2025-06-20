@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function AccountInvestments() {
+export default function UserKYCVerification() {
   return (
     <div>
       

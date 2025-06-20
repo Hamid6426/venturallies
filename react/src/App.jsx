@@ -26,16 +26,16 @@ import Support from "./pages/Support";
 import Contact from "./pages/Contact";
 
 // Dashboard Pages
-import AccountOverview from "./pages/dashboard/AccountOverview";
-import AccountInvestments from "./pages/dashboard/AccountInvestments";
-import AccountStatement from "./pages/dashboard/AccountStatement";
-import AccountFunding from "./pages/dashboard/AccountFunding";
-import AccountProfile from "./pages/dashboard/AccountProfile";
-import MyVentures from "./pages/dashboard/MyVentures";
-import CreateVenture from "./pages/dashboard/CreateVenture";
-import EditVentureByUser from "./pages/dashboard/EditVentureByUser";
-import VentureImageUploader from "./pages/dashboard/VentureImageUploader";
-import MyVentureDetail from "./pages/dashboard/MyVentureDetail";
+import UserDashboardOverview from "./pages/dashboard/UserDashboardOverview";
+import UserInvestments from "./pages/dashboard/UserInvestments";
+import AccountStatement from "./pages/dashboard/UserRepayments";
+import UserWallet from "./pages/dashboard/UserWallet";
+import UserProfile from "./pages/dashboard/UserProfile";
+import UserVentures from "./pages/dashboard/UserVentures";
+import UserCreateVenture from "./pages/dashboard/UserCreateVenture";
+import UserEditVentureDetails from "./pages/dashboard/UserEditVentureDetails";
+import VentureImageUploader from "./components/VentureImageUploader";
+import UserVentureDetails from "./pages/dashboard/UserVentureDetail";
 
 import AdminDashboardOverview from "./pages/admin/AdminDashboardOverview";
 import AdminGetAllUsers from "./pages/admin/AdminGetAllUsers";
@@ -44,6 +44,11 @@ import AdminGetAllMails from "./pages/admin/AdminGetAllMails";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminGetVentureDetail from "./pages/admin/AdminGetVentureDetail";
+import UserRepayments from "./pages/dashboard/UserRepayments";
+import UserKYCVerification from "./pages/dashboard/UserKYCVerification";
+import AdminGetAllBalances from "./pages/admin/AdminGetAllBalances";
+import AdminGetAllBalanceHistories from "./pages/admin/AdminGetAllBalanceHistories";
+import AdminAddBalance from "./pages/admin/AdminAddBalance";
 
 function App() {
   return (
@@ -71,23 +76,28 @@ function App() {
       </Route>
 
       {/* Dashboard Area */}
-      <Route path="/account" element={<DashboardLayout />}>
-        <Route path="overview" element={<AccountOverview />} />
-        <Route path="investments" element={<AccountInvestments />} />
-        <Route path="statement" element={<AccountStatement />} />
-        <Route path="funding" element={<AccountFunding />} />
-        <Route path="profile" element={<AccountProfile />} />
-        <Route path="my-ventures" element={<MyVentures />} />
+      <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route path="overview" element={<UserDashboardOverview />} />
+        <Route path="wallet" element={<UserWallet />} />
+        <Route path="investments" element={<UserInvestments />} />
+        <Route path="repayments" element={<UserRepayments />} />
+
+        {/* Venture pages */}
+        <Route path="ventures" element={<UserVentures />} />
+        <Route path="ventures/:ventureId" element={<UserVentureDetails />} />
+        <Route path="create-venture" element={<UserCreateVenture />} />
         <Route
-          path="/account/my-ventures/:ventureId"
-          element={<MyVentureDetail />}
+          path="ventures/:ventureId/edit-venture-details"
+          element={<UserEditVentureDetails />}
         />
-        <Route path="create-venture" element={<CreateVenture />} />
-        <Route path="/account/my-ventures/:ventureId/edit" element={<EditVentureByUser />} />
         <Route
-          path="/account/create-venture/:ventureId/upload-images"
+          path="ventures/:ventureId/edit-venture-images"
           element={<VentureImageUploader />}
         />
+        <Route path="kyc-verification" element={<UserKYCVerification />} />
+
+        {/* Profile */}
+        <Route path="profile" element={<UserProfile />} />
       </Route>
 
       {/* ADMIN ROUTES */}
@@ -97,9 +107,16 @@ function App() {
         <Route path="dashboard" element={<AdminDashboardOverview />} />
         <Route path="users" element={<AdminGetAllUsers />} />
         <Route path="ventures" element={<AdminGetAllVentures />} />
+        <Route path="balances" element={<AdminGetAllBalances />} />
+        <Route path="balances/add-balance/:userId" element={<AdminAddBalance />} />
+        <Route
+          path="balance-histories"
+          element={<AdminGetAllBalanceHistories />}
+        />
         <Route path="mails" element={<AdminGetAllMails />} />
         <Route path="ventures/:ventureId" element={<AdminGetVentureDetail />} />
       </Route>
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

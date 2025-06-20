@@ -1,9 +1,9 @@
 // src/pages/AccountOverview.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import AccountSummary from "../../components/overview-page/AccountSummary";
+import AccountSummary from "./components/AccountSummary";
 
-// ✅ Dummy data placeholders (replace with props/context/API)
+// Dummy data placeholders (replace with props/context/API)
 const user = {
   firstName: "Mian Hamid",
   email: "mianhamid6426@gmail.com",
@@ -84,7 +84,7 @@ const formatDate = (dateStr) =>
     year: "numeric",
   });
 
-export default function AccountOverview() {
+export default function UserDashboardOverview() {
   const activeInvestments = investments.filter(
     (inv) => inv.status === "invested"
   );
@@ -110,12 +110,12 @@ export default function AccountOverview() {
         <SummaryCard
           title="Balance"
           value={`€ ${balance.toFixed(2)}`}
-          link="/account/funding"
+          link="/dashboard/funding"
         />
         <SummaryCard
           title="Active Investments"
           value={activeInvestments.length}
-          link="/account/investments"
+          link="/dashboard/investments"
         />
         <SummaryCard
           title="Expected Returns"
@@ -128,7 +128,7 @@ export default function AccountOverview() {
         <SummaryCard
           title="Repaid Ventures"
           value={repaidInvestments.length}
-          link="/account/investments"
+          link="/dashboard/investments"
         />
         <SummaryCard
           title="Open Tickets"
