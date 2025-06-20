@@ -5,10 +5,9 @@ import AccountSummary from "../../components/overview-page/AccountSummary";
 
 // ✅ Dummy data placeholders (replace with props/context/API)
 const user = {
-  firstName: "Hamid",
-  email: "hamid@example.com",
+  firstName: "Mian Hamid",
+  email: "mianhamid6426@gmail.com",
   lastLoginAt: "2025-06-18T12:45:00Z",
-  preferences: { darkMode: true, language: "en" },
   newsletterFrequency: "weekly",
 };
 
@@ -272,25 +271,6 @@ export default function AccountOverview() {
           )}
         </div>
       </Section>
-
-      {/* Preferences */}
-      {/* <Section title="Preferences">
-        <div className="text-sm">
-          <p>
-            Email: <span className="font-medium">{user.email}</span>
-          </p>
-          <p>
-            Language:{" "}
-            <span className="font-medium">{user.preferences.language}</span>
-          </p>
-          <p>
-            Dark Mode:{" "}
-            <span className="font-medium">
-              {user.preferences.darkMode ? "Enabled" : "Disabled"}
-            </span>
-          </p>
-        </div>
-      </Section> */}
 
       {/* Account Summary */}
       <AccountSummary />

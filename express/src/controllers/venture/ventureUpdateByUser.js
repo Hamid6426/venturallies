@@ -1,5 +1,5 @@
 // src/controllers/ventureUpdateByUser.js
-import Venture from "../../../models/Venture.js";
+import Venture from "../../models/Venture.js";
 
 const ventureUpdateByUser = async (req, res) => {
   try {

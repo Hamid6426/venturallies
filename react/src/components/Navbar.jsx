@@ -56,7 +56,7 @@ export default function Navbar() {
   return (
     <header className="bg-white shadow sticky top-0 z-50">
       {/* Risk banner */}
-      <div className="bg-black text-white text-center py-8 text-sm px-8">
+      <div className="bg-black text-white text-center py-3 text-sm px-6">
         Don&apos;t invest unless you&apos;re prepared to lose all the money you
         invest. This is a high-risk investment, and you are unlikely to be
         protected if something goes wrong.

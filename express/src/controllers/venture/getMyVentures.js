@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Venture from "../../../models/Venture.js";
+import Venture from "../../models/Venture.js";
 
 const getMyVentures = async (req, res) => {
   try {

@@ -8,6 +8,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
 // Internal Modules
 import logger from "./src/config/logger.js";
 import connectDB from "./src/config/mongoose.js";
@@ -67,6 +70,13 @@ app.use(cookieParser()); // Parse cookies from incoming requests
 // Logging Configuration
 app.use(requestLogger);
 
+// This is needed for __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Serve static files from the "uploads" directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // System Monitoring
 setInterval(() => {
   const nodeMemory = process.memoryUsage();
@@ -79,9 +89,6 @@ setInterval(() => {
 
 // Health Check Route (Keep this before API routes for quick monitoring)
 app.get("/health", (req, res) => res.send("Express server is up and running"));
-
-// uploaded images folder
-app.use("/uploads", express.static("uploads"));
 
 // API Routes
 app.use("/api/auth", authRoutes); // Authentication routes

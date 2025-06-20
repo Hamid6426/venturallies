@@ -1,8 +1,9 @@
 // controllers/ventureController.js
-import Venture from "../../../models/Venture.js";
+import Venture from "../../models/Venture.js";
 
 /**
- * Updates the lifecycleStatus of a venture (e.g., new → funded).
+ * Updates the lifecycleStatus of a venture (e.g., new → funded),
+ * and automatically sets visibility to 'public' when appropriate.
  * Only accessible by admin users.
  */
 const lifecycleStatusUpdate = async (req, res) => {
@@ -22,16 +23,36 @@ const lifecycleStatusUpdate = async (req, res) => {
   }
 
   // Define allowed lifecycle statuses
-  const allowedStatuses = ["new", "coming-soon", "funded", "repaid"];
+  const allowedStatuses = ["coming-soon", "new", "funded", "repaid"];
   if (!allowedStatuses.includes(lifecycleStatus)) {
     return res.status(400).json({ message: "Invalid lifecycle status." });
   }
 
   try {
+    // Build update object
+    const updatedFields = {
+      lifecycleStatus,
+      history: {
+        action: "status-update",
+        field: "lifecycleStatus",
+        newValue: lifecycleStatus,
+        changedBy: req.user.id,
+        changedAt: new Date(),
+      },
+    };
+
+    // Auto-set visibility to 'public' for visible lifecycle stages
+    if (["coming-soon", "new", "funded"].includes(lifecycleStatus)) {
+      updatedFields.visibility = "public";
+    }
+
     // Perform atomic update
     const updatedVenture = await Venture.findByIdAndUpdate(
       ventureId,
-      { $set: { lifecycleStatus } },
+      {
+        $set: updatedFields,
+        $push: { history: updatedFields.history },
+      },
       { new: true }
     );
 

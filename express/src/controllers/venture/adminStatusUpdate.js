@@ -1,4 +1,4 @@
-import Venture from "../../../models/Venture.js";
+import Venture from "../../models/Venture.js";
 
 /**
  * Admin-only: Updates the adminStatus and optionally adminNote.
@@ -28,6 +28,13 @@ const adminStatusUpdate = async (req, res) => {
       adminStatus,
       adminNote: adminNote || "",
       updatedBy: req.user._id,
+      history: {
+        action: "status-update",
+        field: "adminStatus",
+        newValue: adminStatus,
+        changedBy: req.user._id,
+        changedAt: new Date(),
+      },
     };
 
     if (adminStatus !== "pending") {
@@ -39,12 +46,15 @@ const adminStatusUpdate = async (req, res) => {
       updates.visibility = "public";
     } else if (adminStatus === "rejected") {
       updates.visibility = "draft";
-      updates.goesLiveAt = null; // clear it if already set
+      updates.goesLiveAt = null;
     }
 
     const updatedVenture = await Venture.findByIdAndUpdate(
       ventureId,
-      { $set: updates },
+      {
+        $set: updates,
+        $push: { history: updates.history },
+      },
       { new: true }
     );
 

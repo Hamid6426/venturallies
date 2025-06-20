@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import fs from "fs/promises";
 import path from "path";
-import Venture from "../../../models/Venture.js";
+import Venture from "../../models/Venture.js";
 
 const deleteVentureImage = async (req, res) => {
   try {
