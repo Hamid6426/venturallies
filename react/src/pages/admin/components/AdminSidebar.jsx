@@ -14,6 +14,7 @@ export default function AdminSidebar() {
     { to: "/admin/ventures", label: "Ventures" },
     { to: "/admin/balances", label: "Balances" },
     { to: "/admin/balance-histories", label: "Balance Histories" },
+    { to: "/admin/investments", label: "Investments" },
     { to: "/admin/mails", label: "Mails" },
   ];
 

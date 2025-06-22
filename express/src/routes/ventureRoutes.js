@@ -12,11 +12,13 @@ import deleteVentureImage from "../controllers/venture/deleteVentureImage.js";
 import authMiddleware from "../middleware/isAuthenticated.js";
 import { uploadVentureImages } from "../middleware/imageUpload.js";
 import adminStatusUpdate from "../controllers/venture/adminStatusUpdate.js";
+import adminGetAllVentures from "../controllers/venture/adminGetAllVentures.js";
 
 const router = express.Router();
 
 // By User only
 router.post("/", authMiddleware, createVenture);
+router.get("/admin-get-all", authMiddleware, adminGetAllVentures);
 
 // add image to venture by current user
 router.patch(

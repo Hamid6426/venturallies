@@ -24,17 +24,18 @@ const adminStatusUpdate = async (req, res) => {
   }
 
   try {
+    const historyEntry = {
+      action: "status-update",
+      field: "adminStatus",
+      newValue: adminStatus,
+      changedBy: req.user._id,
+      changedAt: new Date(),
+    };
+
     const updates = {
       adminStatus,
       adminNote: adminNote || "",
       updatedBy: req.user._id,
-      history: {
-        action: "status-update",
-        field: "adminStatus",
-        newValue: adminStatus,
-        changedBy: req.user._id,
-        changedAt: new Date(),
-      },
     };
 
     if (adminStatus !== "pending") {
@@ -53,7 +54,7 @@ const adminStatusUpdate = async (req, res) => {
       ventureId,
       {
         $set: updates,
-        $push: { history: updates.history },
+        $push: { history: historyEntry },
       },
       { new: true }
     );

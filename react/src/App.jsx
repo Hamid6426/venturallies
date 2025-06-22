@@ -49,6 +49,9 @@ import UserKYCVerification from "./pages/dashboard/UserKYCVerification";
 import AdminGetAllBalances from "./pages/admin/AdminGetAllBalances";
 import AdminGetAllBalanceHistories from "./pages/admin/AdminGetAllBalanceHistories";
 import AdminAddBalance from "./pages/admin/AdminAddBalance";
+import ProjectDetails from "./pages/ProjectDetails";
+import ProjectInvest from "./pages/ProjectInvest";
+import AdminGetAllInvestments from "./pages/admin/AdminGetAllInvestments";
 
 function App() {
   return (
@@ -64,6 +67,8 @@ function App() {
         <Route path="reset-password" element={<ResetPassword />} />
 
         <Route path="projects" element={<Projects />} />
+        <Route path="projects/:ventureId" element={<ProjectDetails />} />
+        <Route path="projects/:ventureId/invest" element={<ProjectInvest />} />
         <Route path="about" element={<About />} />
         <Route path="careers" element={<Careers />} />
         <Route path="statistics" element={<Statistics />} />
@@ -108,11 +113,15 @@ function App() {
         <Route path="users" element={<AdminGetAllUsers />} />
         <Route path="ventures" element={<AdminGetAllVentures />} />
         <Route path="balances" element={<AdminGetAllBalances />} />
-        <Route path="balances/add-balance/:userId" element={<AdminAddBalance />} />
+        <Route
+          path="balances/add-balance/:userId"
+          element={<AdminAddBalance />}
+        />
         <Route
           path="balance-histories"
           element={<AdminGetAllBalanceHistories />}
         />
+        <Route path="investments" element={<AdminGetAllInvestments />} />
         <Route path="mails" element={<AdminGetAllMails />} />
         <Route path="ventures/:ventureId" element={<AdminGetVentureDetail />} />
       </Route>

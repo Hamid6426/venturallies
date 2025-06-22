@@ -98,3 +98,11 @@ export const uploadTicketAttachments = imageUpload({
   resizeWidth: 800,
   maxCount: 5,
 });
+
+// Add Balance Proof Upload (e.g., bank receipt or screenshot)
+export const uploadAddBalanceProof = imageUpload({
+  folder: "balance_proofs",
+  fieldName: "proof",
+  resizeWidth: 800, // adjust size if needed
+  maxCount: 1,
+});

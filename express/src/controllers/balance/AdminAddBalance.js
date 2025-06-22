@@ -2,7 +2,7 @@ import Balance from "../../models/Balance.js";
 import BalanceHistory from "../../models/BalanceHistory.js";
 import mongoose from "mongoose";
 
-const AdminAddBalance = async (req, res) => {
+const adminAddBalance = async (req, res) => {
   const adminId = req.user?.id;
   const role = req.user?.role;
 
@@ -14,14 +14,15 @@ const AdminAddBalance = async (req, res) => {
     return res.status(403).json({ message: "Admins only." });
   }
 
-  const { amount, note, proofImage } = req.body;
+  const { note } = req.body;
   const { userId } = req.params;
 
+  const parsedAmount = parseFloat(req.body.amount);
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ message: "Invalid user ID." });
   }
 
-  if (typeof amount !== "number" || amount === 0) {
+  if (isNaN(parsedAmount) || parsedAmount === 0) {
     return res.status(400).json({ message: "Amount must be a non-zero number." });
   }
 
@@ -32,29 +33,49 @@ const AdminAddBalance = async (req, res) => {
     }
 
     const oldBalance = balanceDoc.balance;
-    const newBalance = oldBalance + amount;
+    const newBalance = oldBalance + parsedAmount;
 
     if (newBalance < 0) {
       return res.status(400).json({ message: "Balance cannot go negative." });
     }
 
+    // Optional proof image
+    let proofImagePath = null;
+
+    if (req.processedFiles?.length) {
+      if (req.processedFiles.length > 1) {
+        return res.status(400).json({ message: "Only 1 image is allowed." });
+      }
+
+      const file = req.processedFiles[0];
+      const fullPath = `/uploads/balance_proofs/${file.filename}`;
+
+      if (!fullPath.startsWith("/uploads/balance_proofs/")) {
+        return res.status(400).json({ message: "Invalid image path detected." });
+      }
+
+      proofImagePath = fullPath;
+    }
+
+    // Update user balance
     balanceDoc.balance = newBalance;
     await balanceDoc.save();
 
+    // Add balance history entry
     await BalanceHistory.create({
       user: userId,
       balanceId: balanceDoc._id,
-      amount,
+      amount: parsedAmount,
       balanceBefore: oldBalance,
       balanceAfter: newBalance,
       note: note || "Manual balance adjustment by admin.",
-      proofImage,
+      proofImage: proofImagePath,
       history: [
         {
-          action: "admin_balance_update", // or "manual_topup"
+          action: "admin_balance_update",
           by: adminId,
           changes: {
-            amount,
+            amount: parsedAmount,
             balanceBefore: oldBalance,
             balanceAfter: newBalance,
             reason: note,
@@ -73,4 +94,4 @@ const AdminAddBalance = async (req, res) => {
   }
 };
 
-export default AdminAddBalance;
+export default adminAddBalance;

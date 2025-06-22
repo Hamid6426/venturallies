@@ -30,7 +30,7 @@ export default function AdminGetAllVentures() {
         limit: pagination.limit,
       };
 
-      const res = await axiosInstance.get("/ventures", { params });
+      const res = await axiosInstance.get("/ventures/admin-get-all", { params });
 
       setVentures(res.data.data || []);
       setPagination((prev) => ({

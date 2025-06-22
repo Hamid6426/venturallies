@@ -1,7 +1,14 @@
+// src/controllers/venture/adminGetAllVentures.js
 import Venture from "../../models/Venture.js";
+import mongoose from "mongoose";
 
-const getAllVentures = async (req, res) => {
+const adminGetAllVentures = async (req, res) => {
   try {
+    const user = req.user;
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({ message: "Admins only." });
+    }
+
     const {
       page = 1,
       limit = 10,
@@ -17,7 +24,6 @@ const getAllVentures = async (req, res) => {
       order = "desc",
     } = req.query;
 
-    // Parse and sanitize
     const numericPage = Math.max(parseInt(page, 10), 1);
     const numericLimit = Math.max(parseInt(limit, 10), 1);
     const skip = (numericPage - 1) * numericLimit;
@@ -31,12 +37,7 @@ const getAllVentures = async (req, res) => {
     ];
     const sortField = sortableFields.includes(sortBy) ? sortBy : "createdAt";
 
-    // Build filter
-    const filter = {
-      isDeleted: false,
-      adminStatus: "approved",
-      visibility: "public",
-    };
+    const filter = { isDeleted: false };
 
     if (lifecycleStatus && lifecycleStatus !== "all") {
       filter.lifecycleStatus = lifecycleStatus;
@@ -88,9 +89,9 @@ const getAllVentures = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("getAllVentures error:", err);
+    console.error("adminGetAllVentures error:", err);
     return res.status(500).json({ message: "Failed to fetch ventures." });
   }
 };
 
-export default getAllVentures;
+export default adminGetAllVentures;

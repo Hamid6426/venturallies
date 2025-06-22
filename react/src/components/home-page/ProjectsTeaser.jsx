@@ -1,5 +1,5 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { MdInfoOutline } from "react-icons/md";
 
 // Sample project data
 const projects = [
@@ -12,6 +12,7 @@ const projects = [
     timeLeft: "5 days",
     invested: 60, // percent
     minimumGoal: 20, // percent
+    isConvertible: true,
     image: "/solar.jpg",
   },
   {
@@ -23,6 +24,7 @@ const projects = [
     timeLeft: "2 days",
     invested: 45,
     minimumGoal: 25,
+    isConvertible: false,
     image: "/housing.jpg",
   },
   {
@@ -34,6 +36,7 @@ const projects = [
     timeLeft: "7 days",
     invested: 30,
     minimumGoal: 15,
+    isConvertible: true,
     image: "/agri.jpg",
   },
 ];
@@ -58,7 +61,38 @@ export default function ProjectsTeaser() {
             />
             <div className="p-8 w-full lg:w-7/12 h-full flex flex-col justify-between items-center">
               <div className="w-full">
-                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                <div className="flex items-center justify-between w-full">
+                  <h3 className="text-xl font-semibold mb-2">
+                    {project.title}
+                  </h3>
+                  {project.isConvertible === true ? (
+                    <>
+                      <div className="relative text-nowrap">
+                        <MdInfoOutline />
+                        &nbsp;Convertible
+                      </div>
+                      <div className="p-2 absolute mt-2 bg-gray-700 text-white text-xs">
+                        Investors have the opportunity to convert their loan
+                        either partially or fully at a specified time into
+                        equity, allowing them to share in the company's future
+                        growth and success.
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="relative text-nowrap">
+                        <MdInfoOutline />
+                        &nbsp;Non-Convertible
+                      </div>
+
+                      <div className="p-2 absolute mt-2 bg-gray-700 text-white text-xs">
+                        Do not offer the option to convert into equity shares at
+                        any point in time. Consequently, they generally carry
+                        higher interest rates compared to convertible loans.
+                      </div>
+                    </>
+                  )}
+                </div>
                 <p className="text-gray-700 mb-4">{project.description}</p>
                 <table className="w-full text-left mb-4">
                   <thead>

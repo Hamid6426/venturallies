@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 
 export default function AdminAddBalance() {
-  const { userId } = useParams(); // get from route
+  const { userId } = useParams();
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
-  const [proofImage, setProofImage] = useState("");
+  const [proofImage, setProofImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
@@ -16,16 +16,22 @@ export default function AdminAddBalance() {
     setMessage({});
 
     try {
-      const res = await axiosInstance.post(`/balances/admin/add/${userId}`, {
-        amount: parseFloat(amount),
-        note,
-        proofImage,
-      });
+      const formData = new FormData();
+      formData.append("amount", parseFloat(amount));
+      formData.append("note", note);
+      if (proofImage) {
+        formData.append("proof", proofImage); // field name must match middleware
+      }
+
+      const res = await axiosInstance.post(
+        `/balances/add-balance/${userId}`,
+        formData
+      );
 
       setMessage({ type: "success", text: res.data.message });
       setAmount("");
       setNote("");
-      setProofImage("");
+      setProofImage(null);
     } catch (err) {
       const msg = err?.response?.data?.message || "Something went wrong.";
       setMessage({ type: "error", text: msg });
@@ -41,7 +47,9 @@ export default function AdminAddBalance() {
       {message.text && (
         <div
           className={`mb-4 p-3 rounded ${
-            message.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-700"
+            message.type === "success"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-700"
           }`}
         >
           {message.text}
@@ -85,12 +93,12 @@ export default function AdminAddBalance() {
         </div>
 
         <div>
-          <label className="block font-medium mb-1">Proof Image URL (optional)</label>
+          <label className="block font-medium mb-1">Upload Proof Image (optional)</label>
           <input
-            type="url"
-            value={proofImage}
-            onChange={(e) => setProofImage(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setProofImage(e.target.files[0])}
+            className="w-full"
           />
         </div>
 
