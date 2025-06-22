@@ -1,12 +1,19 @@
 /react/node_modules
 /react/.env
 
+/frontend/node_modules
+/frontend/.env
+
 /angular/node_modules
 /angular/.env
 
 /express/node_modules
 /express/.env
 /express/.env.production
+
+/backend/node_modules
+/backend/.env
+/backend/.env.production
 
 /nest/node_modules
 /nest/.env
