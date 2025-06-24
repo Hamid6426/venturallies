@@ -26,9 +26,9 @@ const kycVerificationSchema = new mongoose.Schema(
     lemverifyBalanceAtCheck: { type: Number, default: null },
     lemverifyReferMessage: { type: String, default: null },
     lemverifyExtractedPerson: { type: Object, default: null },
-    lemverifyExtractedDocuments: { type: [Object], default: null },
     lemverifyExtractedLivePerson: { type: Object, default: null },
-    lemverifyAlerts: { type: [Object], default: null },
+    lemverifyExtractedDocuments: { type: [Object], default: [] },
+    lemverifyAlerts: { type: [Object], default: [] },
 
     clientRefSent: { type: String, required: true, maxlength: 255 },
     statusInOurSystem: {
