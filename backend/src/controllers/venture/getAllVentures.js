@@ -1,5 +1,8 @@
 import Venture from "../../models/Venture.js";
 
+// GET api/ventures
+// open to any role and public
+// Desc: Get All Ventures with filters
 const getAllVentures = async (req, res) => {
   try {
     const {
@@ -66,6 +69,27 @@ const getAllVentures = async (req, res) => {
 
     if (search) {
       filter.title = { $regex: search, $options: "i" };
+    }
+
+    if (typeof isConvertible !== "undefined" && isConvertible !== "") {
+      filter.isConvertible = isConvertible === "true"; // Convert string to boolean
+    }
+
+    if (closingIn) {
+      const days = parseInt(closingIn.replace("d", ""));
+      const now = new Date();
+      const targetDate = new Date(now);
+      targetDate.setDate(now.getDate() + days);
+
+      filter.closingDate = { $lte: targetDate };
+    }
+
+    if (minInvestment) {
+      filter.minInvestment = { $gte: parseFloat(minInvestment) };
+    }
+
+    if (expectedReturn) {
+      filter.expectedReturn = { $gte: parseFloat(expectedReturn) };
     }
 
     const [ventures, total] = await Promise.all([

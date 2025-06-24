@@ -1,7 +1,6 @@
 // src/pages/User/UserWallet.jsx
 
 import { useBalance } from "../../contexts/BalanceContext";
-import addVentureImage from "../../../../express/src/controllers/venture/addVentureImage";
 
 export default function UserWallet() {
   const { balance, loading, error } = useBalance();

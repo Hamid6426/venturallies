@@ -102,3 +102,11 @@
 //     </div>
 //   );
 // }
+
+export default function ProjectInvest() {
+  return (
+    <div>
+      
+    </div>
+  )
+}

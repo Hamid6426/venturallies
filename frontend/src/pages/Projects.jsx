@@ -6,16 +6,23 @@ import axiosInstance from "../utils/axiosInstance";
 import Tooltip from "../components/common/Tooltip";
 
 export default function ProjectsPage() {
-  const [filters, setFilters] = useState({
+  const defaultFilters = {
     lifecycleStatus: "all",
     ventureType: "all",
+    riskLevel: "all",
+    isConvertible: "all",
     country: "all",
+    closingIn: "",
+    minInvestment: "",
+    expectedReturn: "",
     search: "",
     sortBy: "createdAt",
     order: "desc",
     page: 1,
     limit: 9,
-  });
+  };
+
+  const [filters, setFilters] = useState(defaultFilters);
 
   const [ventures, setVentures] = useState([]);
   const [pagination, setPagination] = useState(null);
@@ -41,35 +48,28 @@ export default function ProjectsPage() {
     fetchVentures();
   }, [filters]);
 
+  const buildFiltersFromForm = (form) => {
+    const result = { ...defaultFilters };
+
+    for (const key in defaultFilters) {
+      const value = form.get(key);
+      if (value !== null) {
+        result[key] = value;
+      }
+    }
+
+    result.page = 1;
+    return result;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-
-    const newFilters = {
-      lifecycleStatus: form.get("lifecycleStatus") || "",
-      ventureType: form.get("ventureType") || "",
-      country: form.get("country") || "",
-      search: form.get("search") || "",
-      sortBy: "createdAt",
-      order: "desc",
-      page: 1,
-      limit: 9,
-    };
-
+    const newFilters = buildFiltersFromForm(form);
     setFilters(newFilters);
   };
 
-  const handleReset = () =>
-    setFilters({
-      lifecycleStatus: "all",
-      ventureType: "all",
-      country: "all",
-      search: "",
-      sortBy: "createdAt",
-      order: "desc",
-      page: 1,
-      limit: 9,
-    });
+  const handleReset = () => setFilters(defaultFilters);
 
   return (
     <div className="flex flex-col max-w-7xl mx-auto w-full pb-32 px-6">
@@ -108,7 +108,10 @@ export default function ProjectsPage() {
               className="flex flex-col mt-12 lg:flex-row w-full h-full mb-12 border border-gray-200 rounded-lg overflow-hidden"
             >
               <img
-                src={`${import.meta.env.VITE_BACKEND_URL}`+project.images?.[0] || "/placeholder.jpg"}
+                src={
+                  `${import.meta.env.VITE_BACKEND_URL}` + project.images?.[0] ||
+                  "/placeholder.jpg"
+                }
                 alt={project.title}
                 className="border-r border-gray-200 object-cover w-full lg:w-5/12 aspect-video"
               />
@@ -172,19 +175,19 @@ export default function ProjectsPage() {
                   </div>
                 </div>
 
-<div className="flex flex-col md:flex-row gap-4 items-center justify-center w-full">
-                <Link
-                  to={`/projects/${project._id}`}
-                  className="w-full text-center py-4 bg-green-600 hover:-translate-y-1 transition-all text-white font-bold rounded"
-                >
-                  DETAILS
-                </Link>
-                <Link
-                  to={`/projects/${project._id}/invest`}
-                  className="w-full text-center py-4 bg-gray-800 hover:-translate-y-1 transition-all text-white font-bold rounded"
-                >
-                  INVEST
-                </Link>
+                <div className="flex flex-col md:flex-row gap-4 items-center justify-center w-full">
+                  <Link
+                    to={`/projects/${project._id}`}
+                    className="w-full text-center py-4 bg-green-600 hover:-translate-y-1 transition-all text-white font-bold rounded"
+                  >
+                    DETAILS
+                  </Link>
+                  <Link
+                    to={`/projects/${project._id}/invest`}
+                    className="w-full text-center py-4 bg-gray-800 hover:-translate-y-1 transition-all text-white font-bold rounded"
+                  >
+                    INVEST
+                  </Link>
                 </div>
               </div>
             </div>
