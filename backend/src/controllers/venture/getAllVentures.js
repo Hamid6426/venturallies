@@ -1,8 +1,6 @@
 import Venture from "../../models/Venture.js";
 
-// GET api/ventures
-// open to any role and public
-// Desc: Get All Ventures with filters
+// GET /api/ventures
 const getAllVentures = async (req, res) => {
   try {
     const {
@@ -10,88 +8,77 @@ const getAllVentures = async (req, res) => {
       limit = 10,
       lifecycleStatus,
       ventureType,
-      adminStatus,
-      visibility,
       riskLevel,
       country,
       tags,
       search,
+      closingIn,
+      minInvestment,
+      expectedReturn,
+      isConvertible,
       sortBy = "createdAt",
       order = "desc",
     } = req.query;
 
-    // Parse and sanitize
+    // ─── Pagination Setup ──────────────────────────────
     const numericPage = Math.max(parseInt(page, 10), 1);
     const numericLimit = Math.max(parseInt(limit, 10), 1);
     const skip = (numericPage - 1) * numericLimit;
     const sortOrder = order === "asc" ? 1 : -1;
-
-    const sortableFields = [
-      "createdAt",
-      "title",
-      "lifecycleStatus",
-      "targetAmount",
-    ];
+    const sortableFields = ["createdAt", "title", "lifecycleStatus", "targetAmount"];
     const sortField = sortableFields.includes(sortBy) ? sortBy : "createdAt";
 
-    // Build filter
+    // ─── Build Filters ────────────────────────────────
     const filter = {
       isDeleted: false,
       adminStatus: "approved",
       visibility: "public",
+      ...(lifecycleStatus && lifecycleStatus !== "all" && { lifecycleStatus }),
+      ...(ventureType && ventureType !== "all" && { ventureType }),
+      ...(riskLevel && riskLevel !== "all" && { riskLevel }),
+      ...(country && country !== "all" && { country }),
+      ...(minInvestment && !isNaN(minInvestment) && {
+        minInvestmentAmount: { $gte: parseFloat(minInvestment) },
+      }),
+      ...(expectedReturn && !isNaN(expectedReturn) && {
+        expectedReturn: { $gte: parseFloat(expectedReturn) },
+      }),
+      ...(typeof isConvertible !== "undefined" && isConvertible !== "" && {
+        isConvertible: isConvertible === "true",
+      }),
     };
 
-    if (lifecycleStatus && lifecycleStatus !== "all") {
-      filter.lifecycleStatus = lifecycleStatus;
-    }
-    if (ventureType && ventureType !== "all") {
-      filter.ventureType = ventureType;
-    }
-    if (adminStatus && adminStatus !== "all") {
-      filter.adminStatus = adminStatus;
-    }
-    if (visibility && visibility !== "all") {
-      filter.visibility = visibility;
-    }
-    if (riskLevel && riskLevel !== "all") {
-      filter.riskLevel = riskLevel;
-    }
-    if (country && country !== "all") {
-      filter.country = country;
-    }
-
+    // ─── Tags Filter ───────────────────────────────────
     if (tags) {
       const tagArray = Array.isArray(tags)
         ? tags
         : tags.split(",").map((tag) => tag.trim());
-      filter.tags = { $in: tagArray };
+      if (tagArray.length > 0) {
+        filter.tags = { $in: tagArray };
+      }
     }
 
+    // ─── Search Filter ─────────────────────────────────
     if (search) {
-      filter.title = { $regex: search, $options: "i" };
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { shortDescription: { $regex: search, $options: "i" } },
+        { longDescription: { $regex: search, $options: "i" } },
+      ];
     }
 
-    if (typeof isConvertible !== "undefined" && isConvertible !== "") {
-      filter.isConvertible = isConvertible === "true"; // Convert string to boolean
-    }
-
+    // ─── Closing Date Filter ───────────────────────────
     if (closingIn) {
       const days = parseInt(closingIn.replace("d", ""));
-      const now = new Date();
-      const targetDate = new Date(now);
-      targetDate.setDate(now.getDate() + days);
-
-      filter.closingDate = { $lte: targetDate };
+      if (!isNaN(days)) {
+        const now = new Date();
+        const targetDate = new Date(now);
+        targetDate.setDate(now.getDate() + days);
+        filter.closingDate = { $lte: targetDate };
+      }
     }
 
-    if (minInvestment) {
-      filter.minInvestment = { $gte: parseFloat(minInvestment) };
-    }
-
-    if (expectedReturn) {
-      filter.expectedReturn = { $gte: parseFloat(expectedReturn) };
-    }
-
+    // ─── Fetch Data ────────────────────────────────────
     const [ventures, total] = await Promise.all([
       Venture.find(filter)
         .sort({ [sortField]: sortOrder })
@@ -102,6 +89,7 @@ const getAllVentures = async (req, res) => {
 
     const totalPages = total === 0 ? 0 : Math.ceil(total / numericLimit);
 
+    // ─── Return Response ───────────────────────────────
     return res.status(200).json({
       data: ventures,
       pagination: {

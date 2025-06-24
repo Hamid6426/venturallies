@@ -14,7 +14,6 @@ import ResetPassword from "./pages/auth/ResetPassword";
 
 // Public Pages
 import Home from "./pages/Home";
-import Projects from "./pages/Projects";
 import Help from "./pages/Help";
 import About from "./pages/About";
 import Careers from "./pages/Careers";
@@ -24,11 +23,13 @@ import News from "./pages/News";
 import StyleGuide from "./pages/StyleGuide";
 import Support from "./pages/Support";
 import Contact from "./pages/Contact";
+import Ventures from "./pages/Ventures";
+import VentureDetails from "./pages/VentureDetails";
+import InvestmentForm from "./pages/InvestmentForm";
 
 // Dashboard Pages
 import UserDashboardOverview from "./pages/dashboard/UserDashboardOverview";
 import UserInvestments from "./pages/dashboard/UserInvestments";
-import AccountStatement from "./pages/dashboard/UserRepayments";
 import UserWallet from "./pages/dashboard/UserWallet";
 import UserProfile from "./pages/dashboard/UserProfile";
 import UserVentures from "./pages/dashboard/UserVentures";
@@ -36,6 +37,8 @@ import UserCreateVenture from "./pages/dashboard/UserCreateVenture";
 import UserEditVentureDetails from "./pages/dashboard/UserEditVentureDetails";
 import VentureImageUploader from "./components/VentureImageUploader";
 import UserVentureDetails from "./pages/dashboard/UserVentureDetail";
+import UserRepayments from "./pages/dashboard/UserRepayments";
+import UserKYCVerification from "./pages/dashboard/UserKYCVerification";
 
 import AdminDashboardOverview from "./pages/admin/AdminDashboardOverview";
 import AdminGetAllUsers from "./pages/admin/AdminGetAllUsers";
@@ -44,13 +47,9 @@ import AdminGetAllMails from "./pages/admin/AdminGetAllMails";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminGetVentureDetail from "./pages/admin/AdminGetVentureDetail";
-import UserRepayments from "./pages/dashboard/UserRepayments";
-import UserKYCVerification from "./pages/dashboard/UserKYCVerification";
 import AdminGetAllBalances from "./pages/admin/AdminGetAllBalances";
 import AdminGetAllBalanceHistories from "./pages/admin/AdminGetAllBalanceHistories";
 import AdminAddBalance from "./pages/admin/AdminAddBalance";
-import ProjectDetails from "./pages/ProjectDetails";
-import ProjectInvest from "./pages/ProjectInvest";
 import AdminGetAllInvestments from "./pages/admin/AdminGetAllInvestments";
 
 function App() {
@@ -66,9 +65,9 @@ function App() {
         <Route path="verify-email" element={<VerifyEmail />} />
         <Route path="reset-password" element={<ResetPassword />} />
 
-        <Route path="projects" element={<Projects />} />
-        <Route path="projects/:ventureId" element={<ProjectDetails />} />
-        <Route path="projects/:ventureId/invest" element={<ProjectInvest />} />
+        <Route path="projects" element={<Ventures />} />
+        <Route path="projects/:ventureId" element={<VentureDetails />} />
+        <Route path="projects/:ventureId/invest" element={<InvestmentForm />} />
         <Route path="about" element={<About />} />
         <Route path="careers" element={<Careers />} />
         <Route path="statistics" element={<Statistics />} />
@@ -78,6 +77,7 @@ function App() {
         <Route path="style-guide" element={<StyleGuide />} />
         <Route path="support" element={<Support />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="" element={<Contact />} />
       </Route>
 
       {/* Dashboard Area */}
@@ -99,7 +99,7 @@ function App() {
           path="ventures/:ventureId/edit-venture-images"
           element={<VentureImageUploader />}
         />
-        <Route path="kyc-verification" element={<UserKYCVerification />} />
+        <Route path="verification" element={<UserKYCVerification />} />
 
         {/* Profile */}
         <Route path="profile" element={<UserProfile />} />

@@ -48,10 +48,10 @@ export default function Navbar() {
       path: "/dashboard/overview",
       className: "border-t-0",
     },
-    { label: "Wallet", path: "/dashboard/wallet" },
+    // { label: "Wallet", path: "/dashboard/wallet" },
     { label: "Investments", path: "/dashboard/investments" },
     { label: "Repayments", path: "/dashboard/repayments" },
-    { label: "Ventures", path: "/dashboard/ventures" },
+    { label: "My Ventures", path: "/dashboard/ventures" },
     { label: "Verification", path: "/dashboard/verification" },
     { label: "Profile", path: "/dashboard/profile" },
   ];

@@ -15,7 +15,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function ProjectDetails() {
+export default function VentureDetails() {
   const { ventureId } = useParams();
   const [venture, setVenture] = useState(null);
   const [loading, setLoading] = useState(true);

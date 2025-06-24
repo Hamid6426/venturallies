@@ -3,7 +3,7 @@ import Investment from "../../models/Investment.js";
 
 const getMyInvestments = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const investments = await Investment.find({
       investedBy: userId,
     })

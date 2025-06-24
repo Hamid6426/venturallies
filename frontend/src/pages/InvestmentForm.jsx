@@ -103,7 +103,7 @@
 //   );
 // }
 
-export default function ProjectInvest() {
+export default function InvestmentForm() {
   return (
     <div>
       

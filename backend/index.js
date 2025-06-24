@@ -22,6 +22,7 @@ import profileRoutes from "./src/routes/profileRoutes.js";
 import ventureRoutes from "./src/routes/ventureRoutes.js";
 import investmentRoutes from "./src/routes/investmentRoutes.js";
 import balanceRoutes from "./src/routes/balanceRoutes.js";
+import kycRoutes from "./src/routes/kycRoutes.js";
 
 import requestLogger from "./src/middleware/requestLogger.js";
 
@@ -63,7 +64,7 @@ const port = process.env.PORT || 4000;
 connectDB();
 
 // Global Middlewares
-app.use(express.json()); // Parse incoming JSON
+app.use(express.json());
 app.use(cors(corsOptions)); // Enable CORS with custom options
 app.use(cookieParser()); // Parse cookies from incoming requests
 
@@ -97,6 +98,7 @@ app.use("/api/profile", profileRoutes); // Profile management routes
 app.use("/api/ventures", ventureRoutes);
 app.use("/api/investments", investmentRoutes);
 app.use("/api/balances", balanceRoutes);
+app.use("/api/kyc", kycRoutes);
 
 // Production Frontend Serving
 if (NODE_ENV === "production") {

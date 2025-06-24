@@ -129,11 +129,10 @@ const Filters = ({ filters, setFilters, onSubmit, onReset }) => {
 
       {/* Investment Filters */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Min Investment */}
+        {/* Min Investment (Dropdown) */}
         <div>
-          <label className="font-semibold">Min Investment Amount (€)</label>
-          <input
-            type="number"
+          <label className="font-semibold">Minimum Investment (€)</label>
+          <select
             name="minInvestment"
             value={filters.minInvestment || ""}
             onChange={(e) =>
@@ -143,14 +142,20 @@ const Filters = ({ filters, setFilters, onSubmit, onReset }) => {
               }))
             }
             className="border-2 border-gray-400 w-full px-4 py-2 mt-2"
-          />
+          >
+            <option value="">Any</option>
+            <option value="100">€100+</option>
+            <option value="500">€500+</option>
+            <option value="1000">€1,000+</option>
+            <option value="5000">€5,000+</option>
+            <option value="10000">€10,000+</option>
+          </select>
         </div>
 
-        {/* Expected Return */}
+        {/* Expected Return (Dropdown) */}
         <div>
           <label className="font-semibold">Expected Return (%)</label>
-          <input
-            type="number"
+          <select
             name="expectedReturn"
             value={filters.expectedReturn || ""}
             onChange={(e) =>
@@ -160,7 +165,14 @@ const Filters = ({ filters, setFilters, onSubmit, onReset }) => {
               }))
             }
             className="border-2 border-gray-400 w-full px-4 py-2 mt-2"
-          />
+          >
+            <option value="">Any</option>
+            {[5, 10, 15, 20, 25, 30, 35, 40, 45, 50].map((val) => (
+              <option key={val} value={val}>
+                {val}%+
+              </option>
+            ))}
+          </select>
         </div>
       </section>
 

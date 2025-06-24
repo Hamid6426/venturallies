@@ -1,63 +1,66 @@
-import KYCVerification from "../models/KYCVerification.js";
+import KYCVerification from "../../models/KYCVerification.js";
+import User from "../../models/User.js";
 
-export const handleLemverifyWebhook = async (req, res) => {
+const handleLemVerifyWebhook = async (req, res) => {
   try {
+    const data = req.body;
+
     const {
-      id: systemId,
-      friendlyId,
+      id,               // lemverifySystemId
       type,
-      result,
+      friendlyId,       // this is your clientRef (userId)
       processedAt,
       startedAt,
       deletionAt,
+      result,
       balance,
       referMessage,
       person,
-      documents,
       liveperson,
+      documents,
       alerts,
-    } = req.body;
+    } = data;
 
-    // Extract clientRef (you used it as userId in initial request)
-    const clientRef = friendlyId;
+    // Convert timestamps to Date
+    const toDate = (ts) => (ts ? new Date(ts * 1000) : null);
 
-    // You might want to convert Unix timestamps to JS Dates
-    const processedDate = new Date(processedAt * 1000);
-    const startedDate = startedAt ? new Date(startedAt * 1000) : null;
-    const deletionDate = deletionAt ? new Date(deletionAt * 1000) : null;
+    // Optional: verify the clientRef is a valid ObjectId
+    const userId = friendlyId;
 
-    // Update existing KYC verification record
-    const updated = await KYCVerification.findOneAndUpdate(
-      { clientRefSent: clientRef },
-      {
-        lemverifySystemId: systemId,
-        lemverifyFriendlyId: friendlyId,
-        lemverifyType: type,
-        lemverifyResult: result,
-        lemverifyProcessedAt: processedDate,
-        lemverifyStartedAt: startedDate,
-        lemverifyDeletionAt: deletionDate,
-        lemverifyBalanceAtCheck: balance,
-        lemverifyReferMessage: referMessage || null,
-        lemverifyExtractedPerson: person || null,
-        lemverifyExtractedDocuments: documents || [],
-        lemverifyExtractedLivePerson: liveperson || null,
-        lemverifyAlerts: alerts || [],
-        statusInOurSystem: "verification_complete",
-        fullWebhookPayload: req.body,
-      },
-      { new: true }
-    );
+    const existing = await KYCVerification.findOne({ lemverifySystemId: id });
 
-    if (!updated) {
-      console.warn("⚠️ No matching KYC record found for clientRef:", clientRef);
+    if (existing) {
+      return res.status(200).json({ message: "Already handled." });
     }
 
-    // Respond with 200 as required by LEMVerify
-    return res.status(200).send(); // must be 200 with empty body
-  } catch (error) {
-    console.error("LEMVerify Webhook Error:", error.message);
-    return res.status(500).json({ error: "Webhook handling failed" });
+    const record = new KYCVerification({
+      userId,
+      lemverifySystemId: id,
+      lemverifyFriendlyId: friendlyId,
+      lemverifyType: type,
+      lemverifyResult: result,
+      lemverifyProcessedAt: toDate(processedAt),
+      lemverifyStartedAt: toDate(startedAt),
+      lemverifyDeletionAt: toDate(deletionAt),
+      lemverifyBalanceAtCheck: balance ?? null,
+      lemverifyReferMessage: referMessage || null,
+      lemverifyExtractedPerson: person || null,
+      lemverifyExtractedLivePerson: liveperson || null,
+      lemverifyExtractedDocuments: documents || [],
+      lemverifyAlerts: alerts || [],
+      clientRefSent: friendlyId,
+      statusInOurSystem: "verification_complete",
+      fullWebhookPayload: data,
+    });
+
+    await record.save();
+
+    return res.status(200).json({ message: "KYC verification saved." });
+
+  } catch (err) {
+    console.error("Webhook error:", err);
+    return res.status(500).json({ message: "Failed to process LEM Verify webhook" });
   }
 };
-  
+
+export default handleLemVerifyWebhook;

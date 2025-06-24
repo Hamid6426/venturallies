@@ -5,7 +5,7 @@ import Filters from "../components/project-page/Filters";
 import axiosInstance from "../utils/axiosInstance";
 import Tooltip from "../components/common/Tooltip";
 
-export default function ProjectsPage() {
+export default function Ventures() {
   const defaultFilters = {
     lifecycleStatus: "all",
     ventureType: "all",
@@ -28,16 +28,52 @@ export default function ProjectsPage() {
   const [pagination, setPagination] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  function generateCacheKey(base, filters) {
+    const sorted = Object.keys(filters)
+      .sort()
+      .reduce((obj, key) => {
+        obj[key] = filters[key];
+        return obj;
+      }, {});
+    return `${base}:${JSON.stringify(sorted)}`;
+  }
+
   useEffect(() => {
     const fetchVentures = async () => {
       setLoading(true);
+
+      const cacheKey = generateCacheKey("ventures", filters);
+      const cachedData = localStorage.getItem(cacheKey);
+      const cachedTime = localStorage.getItem(`${cacheKey}:time`);
+      const cacheDuration = 5 * 60 * 1000; // 5 minutes
+
+      if (
+        cachedData &&
+        cachedTime &&
+        Date.now() - parseInt(cachedTime) < cacheDuration
+      ) {
+        const parsed = JSON.parse(cachedData);
+        setVentures(parsed.ventures);
+        setPagination(parsed.pagination);
+        setLoading(false);
+        return;
+      }
+
       try {
         const query = new URLSearchParams(filters).toString();
         const res = await axiosInstance.get(`/ventures?${query}`);
         const data = res.data;
 
-        setVentures(data.data || []);
-        setPagination(data.pagination || null);
+        const payload = {
+          ventures: data.data || [],
+          pagination: data.pagination || null,
+        };
+
+        setVentures(payload.ventures);
+        setPagination(payload.pagination);
+
+        localStorage.setItem(cacheKey, JSON.stringify(payload));
+        localStorage.setItem(`${cacheKey}:time`, Date.now().toString());
       } catch (err) {
         console.error("Failed to fetch ventures:", err);
       } finally {
@@ -69,7 +105,16 @@ export default function ProjectsPage() {
     setFilters(newFilters);
   };
 
-  const handleReset = () => setFilters(defaultFilters);
+  const handleReset = () => {
+    // Optional: Clear venture cache
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("ventures:")) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    setFilters(defaultFilters);
+  };
 
   return (
     <div className="flex flex-col max-w-7xl mx-auto w-full pb-32 px-6">
@@ -194,9 +239,22 @@ export default function ProjectsPage() {
           );
         })
       ) : (
-        <p className="text-center col-span-full text-gray-600">
-          No ventures found.
-        </p>
+        <div className="border border-gray-300 py-12 flex flex-col items-center justify-center mt-16 text-center space-y-4">
+          <MdInfoOutline className="text-5xl text-gray-400" />
+          <h4 className="text-xl font-semibold text-gray-700">
+            No projects match your current filters.
+          </h4>
+          <p className="text-gray-600 max-w-md">
+            Try adjusting your filters or clearing them to see more available
+            investment opportunities.
+          </p>
+          <button
+            onClick={handleReset}
+            className="px-6 py-3 bg-green-600 text-white rounded hover:-translate-y-1 transition-all"
+          >
+            Reset Filters
+          </button>
+        </div>
       )}
 
       {pagination && pagination.totalPages > 1 && (

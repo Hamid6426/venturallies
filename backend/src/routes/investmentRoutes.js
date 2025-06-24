@@ -13,7 +13,7 @@ const router = express.Router();
 
 // Authenticated User
 router.post("/", authMiddleware, createInvestment);
-router.get("/", authMiddleware, getMyInvestments);
+router.get("/my-investments", authMiddleware, getMyInvestments);
 router.get("/admin", authMiddleware, getAllInvestments);
 router.get("/:id", authMiddleware, getMyInvestmentById);
 router.delete("/:id", authMiddleware, cancelInvestment);
