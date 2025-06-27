@@ -5,14 +5,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const connectDB = async () => {
-  const MONGO_URI = process.env.MONGO_URI;
+  const MONGO_URI = process.env.MONGO_URI;  
 
   if (!MONGO_URI) {
     logger.error("MONGODB_URI is not defined in .env");
     process.exit(1);
   }
-
-
 
   try {
     mongoose.set("strictQuery", false); // Optional: to silence strict warnings

@@ -4,6 +4,9 @@ These are the mongoose schemas of this venture - investment website controlled m
 
 ## List of Schemas
 
+// src/models/User.js
+import mongoose from "mongoose";
+
 const userSchema = new mongoose.Schema(
   {
     // Basic User Info

@@ -91,6 +91,19 @@ setInterval(() => {
 // Health Check Route (Keep this before API routes for quick monitoring)
 app.get("/health", (req, res) => res.send("Express server is up and running"));
 
+// Production Frontend Serving
+app.get("/*splat", (req, res, next) => {
+  if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
+    return next();
+  }
+
+  const indexPath = path.join(__dirname, "dist", "index.html");
+  if (!fs.existsSync(indexPath)) {
+    return res.status(404).send("index.html not found in dist");
+  }
+  res.sendFile(indexPath);
+});
+
 // API Routes
 app.use("/api/auth", authRoutes); // Authentication routes
 app.use("/api/users", userRoutes); // User management routes
@@ -99,17 +112,6 @@ app.use("/api/ventures", ventureRoutes);
 app.use("/api/investments", investmentRoutes);
 app.use("/api/balances", balanceRoutes);
 app.use("/api/kyc", kycRoutes);
-
-// Production Frontend Serving
-if (NODE_ENV === "production") {
-  const reactDistPath = path.join(process.cwd(), "dist");
-  app.use(express.static(reactDistPath));
-
-  // Handle client-side routing
-  app.get("*", (req, res) =>
-    res.sendFile(path.join(reactDistPath, "index.html"))
-  );
-}
 
 // Start listening BEFORE any other operations
 app.listen(port, () => {
