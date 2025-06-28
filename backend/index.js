@@ -52,6 +52,9 @@ const app = express();
 // Connect to Database
 connectDB();
 
+// Serve webhook before JSON/CORS/Cookies so it can avoid CORS
+app.use("/api/kyc/lemverify-webhook", express.raw({ type: "*/*" }));
+
 // Middleware
 app.use(express.json());
 app.use(cors(corsOptions));

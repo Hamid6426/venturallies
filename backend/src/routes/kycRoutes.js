@@ -11,7 +11,14 @@ const router = express.Router();
 router.post("/start-verification", authMiddleware, startKycVerification);
 
 // For lemverify comfirmation, same as webhook handler route
+// Webhook GET check
 router.get("/lemverify-webhook", (req, res) => {
+  console.log(
+    `[LEMVERIFY GET] Webhook verification ping received at ${new Date().toISOString()}`
+  );
+  console.log(`[LEMVERIFY GET] Headers:`, req.headers);
+  console.log(`[LEMVERIFY GET] IP: ${req.ip}`);
+
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("ETag", ""); // disables conditional GETs
   res.status(200).send("OK");
