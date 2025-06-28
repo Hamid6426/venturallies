@@ -30,6 +30,10 @@ const kycVerificationSchema = new mongoose.Schema(
     lemverifyExtractedDocuments: { type: [Object], default: [] },
     lemverifyAlerts: { type: [Object], default: [] },
 
+    lemId: { type: String, required: true, unique: true }, // Add this
+    friendlyId: { type: String, required: true }, // Add this
+    verificationUrl: { type: String, required: true }, // Add this
+
     clientRefSent: { type: String, required: true, maxlength: 255 },
     statusInOurSystem: {
       type: String,
