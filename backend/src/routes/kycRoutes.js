@@ -7,24 +7,25 @@ import fetchMyVerificationStatus from "../controllers/kyc/fetchMyVerificationSta
 const router = express.Router();
 
 function lemVerifyIpWhitelist(req, res, next) {
-  const allowedIPs = ["34.247.111.53"];
+  const allowedIPs = [
+    "34.247.111.53", // LEM EU
+    "54.171.65.120", // LEM Ireland (observed)
+    "54.216.62.43",  // LEM Ireland 2 (optional fallback)
+  ];
 
-  // This handles both IPv4 and IPv6 formats
-  const getIP = (req) => {
+  const getIP = () => {
     const forwarded = req.headers["x-forwarded-for"];
-    if (forwarded) {
-      return forwarded.split(",")[0].trim();
-    }
-    return req.ip || req.connection.remoteAddress;
+    if (forwarded) return forwarded.split(",")[0].trim();
+    return (req.ip || req.connection.remoteAddress || "").replace("::ffff:", "");
   };
 
-  const requestIP = getIP(req).replace("::ffff:", "");
-  console.log(`[LEMVERIFY IP CHECK] Incoming IP: ${requestIP}`);
+  const clientIP = getIP();
+  console.log(`[LEMVERIFY IP CHECK] Incoming IP: ${clientIP}`);
 
-  if (allowedIPs.includes(requestIP)) {
+  if (allowedIPs.includes(clientIP)) {
     next();
   } else {
-    console.warn(`[LEMVERIFY IP CHECK] Blocked IP: ${requestIP}`);
+    console.warn(`[LEMVERIFY IP CHECK] Blocked IP: ${clientIP}`);
     return res.status(403).json({ message: "Forbidden: Invalid IP address" });
   }
 }
