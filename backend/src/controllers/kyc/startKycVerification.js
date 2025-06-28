@@ -17,7 +17,7 @@ const startKycVerification = async (req, res) => {
 
     const existing = await KYCVerification.findOne({
       userId,
-      statusInOurSystem: "PENDING",
+      statusInOurSystem: "verification_pending",
     });
 
     if (existing) {

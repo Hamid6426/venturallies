@@ -13,14 +13,14 @@ const kycVerificationSchema = new mongoose.Schema(
     lemverifyType: {
       type: String,
       enum: ["COMBINATION", "DOCUMENT", "LIVENESS", "AML_ALERT"],
-      required: true,
+      default: null,
     },
     lemverifyResult: {
       type: String,
       enum: ["PASSED", "REFER", "ERROR", "ALERT"],
-      required: true,
+      default: null,
     },
-    lemverifyProcessedAt: { type: Date, required: true },
+    lemverifyProcessedAt: { type: Date, default: null },
     lemverifyStartedAt: { type: Date, default: null },
     lemverifyDeletionAt: { type: Date, default: null },
     lemverifyBalanceAtCheck: { type: Number, default: null },
