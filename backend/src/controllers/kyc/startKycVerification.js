@@ -9,7 +9,10 @@ const startKycVerification = async (req, res) => {
   }
 
   try {
+    console.log("StartKYC: Starting for user", userId);
+
     const user = await User.findById(userId).select("email");
+    console.log("StartKYC: User fetched", user);
 
     if (!user || !user.email) {
       return res.status(404).json({ message: "User or email not found" });
@@ -34,6 +37,8 @@ const startKycVerification = async (req, res) => {
       redactMe: true,
     };
 
+    console.log("StartKYC: Sending payload to LEM", payload);
+
     const lemRes = await fetch(
       `https://api.lemverify.io/api/v1/${process.env.LEM_ACCOUNT_ID}/combination`,
       {
@@ -46,28 +51,33 @@ const startKycVerification = async (req, res) => {
       }
     );
 
+    console.log("StartKYC: LEM status", lemRes.status);
+
+    const lemData = await lemRes.json().catch(async () => {
+      const raw = await lemRes.text();
+      console.log("LEM raw response", raw);
+      return { error: "Failed to parse JSON", raw };
+    });
+
     if (!lemRes.ok) {
-      let errorData;
-      try {
-        errorData = await lemRes.json();
-      } catch {
-        errorData = { raw: await lemRes.text() };
-      }
-      console.error("LEM error response:", errorData);
+      console.error("LEM Verify API error:", lemData);
       return res.status(lemRes.status).json({
         message: "LEM Verify API error",
-        details: errorData,
+        details: lemData,
       });
     }
 
-    const { url, id, friendlyId } = await lemRes.json();
+    console.log("StartKYC: LEM verify success", lemData);
+
+    const { url, id, friendlyId } = lemData; // ✅ Use already-parsed lemData
 
     await KYCVerification.create({
       userId,
       lemverifySystemId: id,
       lemverifyFriendlyId: friendlyId,
       statusInOurSystem: "verification_pending",
-      clientRefSent: userId.toString(), // Required field
+      clientRefSent: userId.toString(),
+      verificationUrl: url, // ← Add this if you're using it in your frontend re-use
     });
 
     return res.status(200).json({
