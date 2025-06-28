@@ -88,7 +88,7 @@ export default function About() {
             Learn More About Us
           </h2>
             <video
-              src="/hero-video.mp4"
+              src="/videos/hero-video.mp4"
               muted
               loop
               playsInline

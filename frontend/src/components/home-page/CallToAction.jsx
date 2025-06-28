@@ -5,7 +5,7 @@ export default function CallToAction() {
   return (
     <div className="relative flex flex-col justify-center items-center space-y-6 text-center py-52 px-6 overflow-hidden">
       <video
-        src="/hero-video.mp4"
+        src="/videos/hero-video.mp4"
         autoPlay
         muted
         loop

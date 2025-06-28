@@ -68,7 +68,7 @@ export default function Navbar() {
       <div className="container w-full mx-auto flex justify-between items-center py-4 px-8">
         {/* Logo */}
         <Link to="/" className="text-xl font-bold">
-          <img src="/logo.png" alt="Logo" className="h-6" />
+          <img src="/logos/logo.png" alt="Logo" className="h-6" />
         </Link>
 
         <div className="flex items-center space-x-6">
