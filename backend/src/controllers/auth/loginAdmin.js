@@ -10,7 +10,9 @@ const loginAdmin = async (req, res) => {
     const { email, password, rememberMe } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required." });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required." });
     }
 
     const normalizedEmail = email.toLowerCase();
@@ -21,7 +23,9 @@ const loginAdmin = async (req, res) => {
     }
 
     if (!user.emailVerifiedAt) {
-      return res.status(401).json({ message: "Please verify your email first." });
+      return res
+        .status(401)
+        .json({ message: "Please verify your email first." });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -43,11 +47,13 @@ const loginAdmin = async (req, res) => {
     const expiresIn = rememberMe ? "7d" : "1d";
     const authToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("authToken", authToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      maxAge: rememberMe ? 24 * 60 * 60 * 1000 : 60 * 60 * 1000,
     });
 
     user.lastLoginAt = new Date();

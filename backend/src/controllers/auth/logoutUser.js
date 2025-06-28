@@ -1,9 +1,11 @@
 const logoutUser = (req, res) => {
   try {
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("authToken", "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       expires: new Date(0),
     });
 

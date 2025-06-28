@@ -75,19 +75,6 @@ app.use("/api/ventures", ventureRoutes);
 app.use("/api/investments", investmentRoutes);
 app.use("/api/balances", balanceRoutes);
 
-// Static Assets and SPA Catch-all for Production
-// if (NODE_ENV === "production") {
-//   const reactDistPath = path.join(process.cwd(), "dist");
-
-//   // Serve static files like JS, CSS, images
-//   app.use(express.static(reactDistPath));
-
-//   // Catch-all route for React Router or other SPA routers
-//   app.get("/*", (req, res) =>
-//     res.sendFile(path.join(reactDistPath, "index.html"))
-//   );
-// }
-
 // Define port
 const port = process.env.PORT;
 

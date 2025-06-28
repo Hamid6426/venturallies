@@ -42,11 +42,13 @@ const loginUser = async (req, res) => {
     const expiresIn = rememberMe ? "7d" : "1d";
     const authToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("authToken", authToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // HTTPS required when sameSite=None
-      sameSite: "lax", // "lax" for samesite+localhost or "none" if cross-site cookie is needed
-      maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      maxAge: rememberMe ? 24 * 60 * 60 * 1000 : 60 * 60 * 1000, // 1 day or 1 hour
     });
 
     // Modern browsers treat cookies without SameSite specified as Lax. If you need cross-site cookies (e.g., for third-party embed or SSR), you must explicitly set SameSite="None" and secure: true under HTTPS, or the cookie will be rejected
