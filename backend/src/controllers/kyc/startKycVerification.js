@@ -73,11 +73,13 @@ const startKycVerification = async (req, res) => {
 
     await KYCVerification.create({
       userId,
+      lemId: id,
+      friendlyId: friendlyId,
       lemverifySystemId: id,
       lemverifyFriendlyId: friendlyId,
-      statusInOurSystem: "verification_pending",
+      verificationUrl: url,
       clientRefSent: userId.toString(),
-      verificationUrl: url, // ← Add this if you're using it in your frontend re-use
+      statusInOurSystem: "verification_pending",
     });
 
     return res.status(200).json({
