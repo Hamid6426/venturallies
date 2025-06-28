@@ -21,6 +21,7 @@ import profileRoutes from "./src/routes/profileRoutes.js";
 import ventureRoutes from "./src/routes/ventureRoutes.js";
 import investmentRoutes from "./src/routes/investmentRoutes.js";
 import balanceRoutes from "./src/routes/balanceRoutes.js";
+import kycRoutes from "./src/routes/kycRoutes.js";
 
 import requestLogger from "./src/middleware/requestLogger.js";
 
@@ -74,6 +75,7 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/ventures", ventureRoutes);
 app.use("/api/investments", investmentRoutes);
 app.use("/api/balances", balanceRoutes);
+app.use("/api/kyc", kycRoutes);
 
 // Define port
 const port = process.env.PORT;
