@@ -12,7 +12,9 @@ router.post("/start-verification", authMiddleware, startKycVerification);
 
 // For lemverify comfirmation, same as webhook handler route
 router.get("/lemverify-webhook", (req, res) => {
-  res.sendStatus(200);
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("ETag", ""); // disables conditional GETs
+  res.status(200).send("OK");
 });
 
 // Webhook for receiving LEM verification updates
