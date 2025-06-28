@@ -1,5 +1,5 @@
-// controllers/lemVerifyController.js
 import User from "../../models/User.js";
+import KYCVerification from "../../models/KYCVerification.js";
 
 const startKycVerification = async (req, res) => {
   const userId = req.user?.id;
@@ -15,11 +15,23 @@ const startKycVerification = async (req, res) => {
       return res.status(404).json({ message: "User or email not found" });
     }
 
+    const existing = await KYCVerification.findOne({
+      userId,
+      statusInOurSystem: "PENDING",
+    });
+
+    if (existing) {
+      return res.status(429).json({
+        message: "Verification already in progress",
+        verificationUrl: existing.verificationUrl,
+      });
+    }
+
     const payload = {
       clientRef: userId,
       sendEmail: user.email,
-      // redactMe: true,
-      // amlRequired: true,
+      amlRequired: true,
+      redactMe: true,
     };
 
     const lemRes = await fetch(
@@ -35,7 +47,12 @@ const startKycVerification = async (req, res) => {
     );
 
     if (!lemRes.ok) {
-      const errorData = await lemRes.json();
+      let errorData;
+      try {
+        errorData = await lemRes.json();
+      } catch {
+        errorData = { raw: await lemRes.text() };
+      }
       console.error("LEM error response:", errorData);
       return res.status(lemRes.status).json({
         message: "LEM Verify API error",
@@ -43,11 +60,19 @@ const startKycVerification = async (req, res) => {
       });
     }
 
-    const data = await lemRes.json();
+    const { url, id, friendlyId } = await lemRes.json();
+
+    await KYCVerification.create({
+      userId,
+      lemId: id,
+      friendlyId,
+      verificationUrl: url,
+      statusInOurSystem: "PENDING",
+    });
 
     return res.status(200).json({
       success: true,
-      verificationUrl: data.url,
+      verificationUrl: url,
     });
   } catch (err) {
     console.error("LEM Verify request failed:", err);

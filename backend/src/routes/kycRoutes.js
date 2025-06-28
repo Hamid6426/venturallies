@@ -10,6 +10,11 @@ const router = express.Router();
 // Authenticated user starts a KYC verification
 router.post("/start-verification", authMiddleware, startKycVerification);
 
+// For lemverify comfirmation, same as webhook handler route
+router.get("/lemverify-webhook", (req, res) => {
+  res.sendStatus(200);
+});
+
 // Webhook for receiving LEM verification updates
 router.post(
   "/lemverify-webhook",
