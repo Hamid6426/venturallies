@@ -47,7 +47,6 @@ const corsOptions = {
 
 // Initialize Express App
 const app = express();
-const port = process.env.PORT || 4000;
 
 // Connect to Database
 connectDB();
@@ -89,9 +88,12 @@ if (NODE_ENV === "production") {
   );
 }
 
+// Define port
+const port = process.env.PORT;
+
 // Start Server
-app.listen(port, () => {
-  console.log(`🚀 Server started on port ${port}`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on http://0.0.0.0:${port}`);
 });
 
 // Graceful Error Handling
