@@ -3,6 +3,7 @@ import KYCVerification from "../../models/KYCVerification.js";
 const handleLemVerifyWebhook = async (req, res) => {
   try {
     const data = req.body;
+
     const {
       id,
       type,
@@ -21,9 +22,7 @@ const handleLemVerifyWebhook = async (req, res) => {
 
     const toDate = (ts) => (ts ? new Date(ts * 1000) : null);
 
-    const existing = await KYCVerification.findOne({ lemverifySystemId: id });
-    if (existing) return res.status(200).json({ message: "Already handled." });
-
+    // Step 1: Find the original request by friendlyId
     const original = await KYCVerification.findOne({
       lemverifyFriendlyId: friendlyId,
     });
@@ -33,34 +32,39 @@ const handleLemVerifyWebhook = async (req, res) => {
       return res.status(404).json({ message: "KYC base record not found" });
     }
 
-    const record = new KYCVerification({
-      userId: original.userId,
-      lemverifySystemId: id,
-      lemverifyFriendlyId: friendlyId,
-      lemverifyType: type,
-      lemverifyResult: result,
-      lemverifyProcessedAt: toDate(processedAt),
-      lemverifyStartedAt: toDate(startedAt),
-      lemverifyDeletionAt: toDate(deletionAt),
-      lemverifyBalanceAtCheck: balance ?? null,
-      lemverifyReferMessage: referMessage || null,
-      lemverifyExtractedPerson: person || null,
-      lemverifyExtractedLivePerson: liveperson || null,
-      lemverifyExtractedDocuments: documents || [],
-      lemverifyAlerts: alerts || [],
-      clientRefSent: friendlyId,
-      statusInOurSystem: "verification_complete",
-      fullWebhookPayload: data,
-    });
+    // Step 2: Upsert the webhook data (idempotent and atomic)
+    await KYCVerification.findOneAndUpdate(
+      { lemverifySystemId: id }, // Unique identifier from LEM
+      {
+        $set: {
+          userId: original.userId,
+          lemverifyFriendlyId: friendlyId,
+          lemverifyType: type,
+          lemverifyResult: result,
+          lemverifyProcessedAt: toDate(processedAt),
+          lemverifyStartedAt: toDate(startedAt),
+          lemverifyDeletionAt: toDate(deletionAt),
+          lemverifyBalanceAtCheck: balance ?? null,
+          lemverifyReferMessage: referMessage || null,
+          lemverifyExtractedPerson: person || null,
+          lemverifyExtractedLivePerson: liveperson || null,
+          lemverifyExtractedDocuments: documents || [],
+          lemverifyAlerts: alerts || [],
+          clientRefSent: friendlyId,
+          statusInOurSystem: "verification_complete", // Optional: make dynamic
+          fullWebhookPayload: data,
+        },
+      },
+      { upsert: true, new: true }
+    );
 
-    await record.save();
+    return res.status(200).json({ message: "KYC verification saved/updated." });
 
-    return res.status(200).json({ message: "KYC verification saved." });
   } catch (err) {
     console.error("Webhook error:", err);
-    return res
-      .status(500)
-      .json({ message: "Failed to process LEM Verify webhook" });
+    return res.status(500).json({
+      message: "Failed to process LEM Verify webhook",
+    });
   }
 };
 
