@@ -14,6 +14,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import placeholder from "./../assets/logos/logo.png"
 
 export default function VentureDetails() {
   const { ventureId } = useParams();
@@ -151,7 +152,7 @@ export default function VentureDetails() {
             src={
               venture.images?.[0]
                 ? `${import.meta.env.VITE_BACKEND_URL}${venture.images[0]}`
-                : "/placeholder.jpg"
+                : placeholder
             }
             alt="Venture"
             className="object-cover w-full h-full"

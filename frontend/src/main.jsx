@@ -10,6 +10,15 @@ import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { BalanceProvider } from "./contexts/BalanceContext.jsx";
 
+// Make the init function globally available
+window.googleTranslateElementInit = function () {
+  new window.google.translate.TranslateElement(
+    { pageLanguage: "en" },
+    "google_translate_element"
+  );
+};
+
+
 // Create a wrapper component to use useLoader hook inside context
 const AppWrapper = () => {
   const { loading } = useLoader();
@@ -35,7 +44,9 @@ const AppWrapper = () => {
 };
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+<StrictMode>
+  <>
+    <div id="google_translate_element" style={{ display: "none" }}></div>
     <Router>
       <AuthProvider>
         <BalanceProvider>
@@ -45,5 +56,7 @@ createRoot(document.getElementById("root")).render(
         </BalanceProvider>
       </AuthProvider>
     </Router>
-  </StrictMode>
+  </>
+</StrictMode>
+
 );

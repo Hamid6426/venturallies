@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
+import logo from "./../assets/logos/logo.png";
 
 export default function Footer() {
   return (
     <main className="bg-[#001E0E] w-full ">
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-16 text-white max-w-[96rem] mx-auto px-12 py-24 ">
         <section className="w-full max-w-[48rem] mx-auto">
-          <img src="/logos/logo.png" alt="Logo" className="h-9 mb-4" />
+          <img src={logo} alt="Logo" className="h-9 mb-4" />
           <p>
             We empower entrepreneurs, artists, and innovators to launch their
             projects and connect with a passionate audience. From intuitive

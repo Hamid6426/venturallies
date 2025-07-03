@@ -1,11 +1,12 @@
 import { MdHelpCenter, MdWork } from "react-icons/md";
 import { Link } from "react-router-dom";
+import heroVideo from "./../../assets/videos/hero-video.mp4"
 
 export default function CallToAction() {
   return (
     <div className="relative flex flex-col justify-center items-center space-y-6 text-center py-52 px-6 overflow-hidden">
       <video
-        src="/videos/hero-video.mp4"
+        src={heroVideo}
         autoPlay
         muted
         loop

@@ -1,159 +1,8 @@
-// import { Link } from "react-router-dom";
-// import { MdInfoOutline } from "react-icons/md";
-
-// // Sample project data
-// const projects = [
-//   {
-//     id: 1,
-//     title: "Solar Energy Farm",
-//     description: "Invest in a clean energy project powering 500+ homes.",
-//     expectedReturn: "7.5%",
-//     termPeriod: "24 months",
-//     timeLeft: "5 days",
-//     invested: 60, // percent
-//     minimumGoal: 20, // percent
-//     isConvertible: true,
-//     image: "/solar.jpg",
-//   },
-//   {
-//     id: 2,
-//     title: "Smart Housing Units",
-//     description: "Modern housing with green tech in suburban areas.",
-//     expectedReturn: "6.2%",
-//     termPeriod: "18 months",
-//     timeLeft: "2 days",
-//     invested: 45,
-//     minimumGoal: 25,
-//     isConvertible: false,
-//     image: "/housing.jpg",
-//   },
-//   {
-//     id: 3,
-//     title: "Agricultural Robotics",
-//     description: "Next-gen robotic equipment for efficient farming.",
-//     expectedReturn: "8.0%",
-//     termPeriod: "12 months",
-//     timeLeft: "7 days",
-//     invested: 30,
-//     minimumGoal: 15,
-//     isConvertible: true,
-//     image: "/agri.jpg",
-//   },
-// ];
-
-// export default function ProjectsTeaser() {
-//   return (
-//     <div className="flex flex-col max-w-7xl mx-auto w-full pb-32 px-6">
-//       <div className="text-2xl font-bold pb-8">New Projects</div>
-
-//       {projects.map((project) => {
-//         const remaining = 100 - (project.invested + project.minimumGoal);
-
-//         return (
-//           <div
-//             key={project.id}
-//             className="flex flex-col lg:flex-row w-full h-full mb-12 border border-gray-200 rounded-lg overflow-hidden"
-//           >
-//             <img
-//               src={project.image}
-//               alt={project.title}
-//               className="border-r border-gray-200 object-cover w-full lg:w-5/12 aspect-video"
-//             />
-//             <div className="p-8 w-full lg:w-7/12 h-full flex flex-col justify-between items-center">
-//               <div className="w-full">
-//                 <div className="flex items-center justify-between w-full">
-//                   <h3 className="text-xl font-semibold mb-2">
-//                     {project.title}
-//                   </h3>
-//                   {project.isConvertible === true ? (
-//                     <>
-//                       <div className="relative text-nowrap">
-//                         <MdInfoOutline />
-//                         &nbsp;Convertible
-//                       </div>
-//                       <div className="p-2 absolute mt-2 bg-gray-700 text-white text-xs">
-//                         Investors have the opportunity to convert their loan
-//                         either partially or fully at a specified time into
-//                         equity, allowing them to share in the company's future
-//                         growth and success.
-//                       </div>
-//                     </>
-//                   ) : (
-//                     <>
-//                       <div className="relative text-nowrap">
-//                         <MdInfoOutline />
-//                         &nbsp;Non-Convertible
-//                       </div>
-
-//                       <div className="p-2 absolute mt-2 bg-gray-700 text-white text-xs">
-//                         Do not offer the option to convert into equity shares at
-//                         any point in time. Consequently, they generally carry
-//                         higher interest rates compared to convertible loans.
-//                       </div>
-//                     </>
-//                   )}
-//                 </div>
-//                 <p className="text-gray-700 mb-4">{project.description}</p>
-//                 <table className="w-full text-left mb-4">
-//                   <thead>
-//                     <tr className="text-sm text-gray-600">
-//                       <th className="pb-1">Expected Return</th>
-//                       <th className="pb-1">Term Period</th>
-//                       <th className="pb-1">Time Left</th>
-//                     </tr>
-//                   </thead>
-//                   <tbody>
-//                     <tr className="text-md font-medium">
-//                       <td>{project.expectedReturn}</td>
-//                       <td>{project.termPeriod}</td>
-//                       <td>{project.timeLeft}</td>
-//                     </tr>
-//                   </tbody>
-//                 </table>
-
-//                 {/* Progress Bar */}
-//                 <div className="flex h-4 w-full rounded-full overflow-hidden mb-6">
-//                   <div
-//                     className="bg-green-500"
-//                     style={{ width: `${project.invested}%` }}
-//                   />
-//                   <div
-//                     className="bg-yellow-200"
-//                     style={{ width: `${project.minimumGoal}%` }}
-//                   />
-//                   <div
-//                     className="bg-gray-300"
-//                     style={{ width: `${remaining}%` }}
-//                   />
-//                 </div>
-//               </div>
-
-//               <Link
-//                 to={`/projects/${project.id}`}
-//                 className="w-full text-center py-4 bg-green-500 hover:-translate-y-1 transition-all text-white font-bold rounded"
-//               >
-//                 DETAILS
-//               </Link>
-//             </div>
-//           </div>
-//         );
-//       })}
-//       <div className="mx-auto">
-//         <Link
-//           to="/projects"
-//           className="w-full py-4 px-8 bg-gray-800 mt-12 hover:-translate-y-1 transition-all text-white text-center font-bold rounded"
-//         >
-//           BROWSE MORE PROJECTS
-//         </Link>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MdInfoOutline } from "react-icons/md";
 import axiosInstance from "../../utils/axiosInstance";
+import placeHolder from "./../../assets/logos/logo.png";
 
 export default function ProjectsTeaser() {
   const [projects, setProjects] = useState([]);
@@ -227,8 +76,9 @@ export default function ProjectsTeaser() {
             >
               <img
                 src={
-                  `${import.meta.env.VITE_BACKEND_URL}` + project.images?.[0] ||
-                  "/placeholder.jpg"
+                  project.images?.[0]
+                    ? `${import.meta.env.VITE_BACKEND_URL}${project.images[0]}`
+                    : placeHolder
                 }
                 alt={project.title}
                 className="border-r border-gray-200 object-cover w-full lg:w-5/12 aspect-video"

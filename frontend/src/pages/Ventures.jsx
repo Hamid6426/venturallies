@@ -4,6 +4,7 @@ import { MdInfoOutline } from "react-icons/md";
 import Filters from "../components/project-page/Filters";
 import axiosInstance from "../utils/axiosInstance";
 import Tooltip from "../components/common/Tooltip";
+import placeholder from "./../assets/logos/logo.png"
 
 export default function Ventures() {
   const defaultFilters = {
@@ -155,7 +156,7 @@ export default function Ventures() {
               <img
                 src={
                   `${import.meta.env.VITE_BACKEND_URL}` + project.images?.[0] ||
-                  "/placeholder.jpg"
+                  placeholder
                 }
                 alt={project.title}
                 className="border-r border-gray-200 object-cover w-full lg:w-5/12 aspect-video"

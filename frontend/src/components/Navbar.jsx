@@ -5,6 +5,7 @@ import { useBalance } from "../contexts/BalanceContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 import LogoutButton from "./LogoutButton";
 import { MdChevronRight } from "react-icons/md";
+import logo from "./../assets/logos/logo.png";
 
 export default function Navbar() {
   const { currentUser, isUserLoading } = useAuth();
@@ -68,7 +69,7 @@ export default function Navbar() {
       <div className="container w-full mx-auto flex justify-between items-center py-4 px-8">
         {/* Logo */}
         <Link to="/" className="text-xl font-bold">
-          <img src="/logos/logo.png" alt="Logo" className="h-6" />
+          <img src={logo} alt="Logo" className="h-6" />
         </Link>
 
         <div className="flex items-center space-x-6">

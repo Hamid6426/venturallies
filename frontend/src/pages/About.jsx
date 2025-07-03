@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Values, { values } from "../components/home-page/Values";
 import TeamGrid from "../components/about-page/TeamGrid";
-
+import heroVideo from "./../assets/videos/hero-video.mp4"
 export default function About() {
   return (
     <div>
@@ -88,7 +88,7 @@ export default function About() {
             Learn More About Us
           </h2>
             <video
-              src="/videos/hero-video.mp4"
+              src={hero-video}
               muted
               loop
               playsInline
