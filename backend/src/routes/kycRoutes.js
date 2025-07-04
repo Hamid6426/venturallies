@@ -11,13 +11,16 @@ function lemVerifyIpWhitelist(req, res, next) {
   const allowedIPs = [
     "34.247.111.53", // LEM EU
     "54.171.65.120", // LEM Ireland
-    "54.216.62.43",  // Optional fallback
+    "54.216.62.43", // Optional fallback
   ];
 
   const getIP = () => {
     const forwarded = req.headers["x-forwarded-for"];
     if (forwarded) return forwarded.split(",")[0].trim();
-    return (req.ip || req.connection.remoteAddress || "").replace("::ffff:", "");
+    return (req.ip || req.connection.remoteAddress || "").replace(
+      "::ffff:",
+      ""
+    );
   };
 
   const clientIP = getIP();
@@ -32,10 +35,10 @@ function lemVerifyIpWhitelist(req, res, next) {
 router.post("/start-verification", authMiddleware, startKycVerification);
 
 // LEMVerify webhook "ping" route (keep for initial handshake)
-router.get("/lemverify-webhook", (req, res) => {
+router.get("/lemverify-webhook", lemVerifyIpWhitelist, (req, res) => {
   res.setHeader("Cache-Control", "no-store");
-  res.setHeader("ETag", ""); // disables conditional GETs
-  res.status(200).send("OK");
+  res.setHeader("ETag", "");
+  res.sendStatus(200); // Empty 200
 });
 
 // LEMVerify webhook listener
