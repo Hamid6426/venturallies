@@ -1,16 +1,21 @@
 // Importing React and specific chart components from 'recharts'
 import React from "react";
 import {
-  PieChart,         // Chart container for Pie
-  Pie,              // Actual Pie representation
-  BarChart,         // Chart container for Bar
-  Bar,              // Actual Bar representation
-  XAxis,            // Horizontal axis
-  YAxis,            // Vertical axis
-  Cell,             // Used to color individual chart items
-  Tooltip as RechartsTooltip,  // Tooltip component for charts (renamed)
-  ResponsiveContainer,         // Makes charts responsive
+  PieChart, // Chart container for Pie
+  Pie, // Actual Pie representation
+  BarChart, // Chart container for Bar
+  Bar, // Actual Bar representation
+  XAxis, // Horizontal axis
+  YAxis, // Vertical axis
+  Cell, // Used to color individual chart items
+  Tooltip as RechartsTooltip, // Tooltip component for charts (renamed)
+  ResponsiveContainer, // Makes charts responsive
 } from "recharts";
+
+const formatCurrency = (val) => {
+  const num = Number(val);
+  return !isNaN(num) ? `€${num.toFixed(2)}` : "—";
+};
 
 // Predefined color palette for chart segments
 const COLORS = ["#34d399", "#60a5fa", "#fbbf24", "#f87171", "#a78bfa"];
@@ -20,17 +25,17 @@ const POSITIVE_COLOR = "#34d399"; // Green for positive values (profits, returns
 const AccountSummary = () => {
   // Core financial data summary object
   const summary = {
-    account_balance: 3319.0,         // Total balance in the account
-    available_funds: 320.5,          // Unallocated funds available
-    invested_funds: 2998.5,          // Funds currently invested
-    pending_funds: 0,                // Funds pending allocation
-    in_recovery: 0,                  // Funds in recovery process
-    net_annual_return: 47.04,        // Annualized return percentage
-    profit: 1599.39,                 // Profit made to date
-    late_fees: 2.38,                 // Earnings from late fees
-    bad_debt: 0,                     // Amount lost to bad debts
-    service_fees: -19.95,           // Service fees paid (increased from -11.72)
-    portfolio_count: 3,              // Number of active portfolios
+    account_balance: 3319.0, // Total balance in the account
+    available_funds: 320.5, // Unallocated funds available
+    invested_funds: 2998.5, // Funds currently invested
+    pending_funds: 0, // Funds pending allocation
+    in_recovery: 0, // Funds in recovery process
+    net_annual_return: 47.04, // Annualized return percentage
+    profit: 1599.39, // Profit made to date
+    late_fees: 2.38, // Earnings from late fees
+    bad_debt: 0, // Amount lost to bad debts
+    service_fees: -19.95, // Service fees paid (increased from -11.72)
+    portfolio_count: 3, // Number of active portfolios
   };
 
   // Data for the donut chart showing fund distribution
@@ -53,11 +58,10 @@ const AccountSummary = () => {
     <main className="py-10">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
           {/* Box 1: Displays account balance and pie chart for fund distribution */}
           <SummaryBox
             title="Account balance"
-            value={`€${summary.account_balance.toFixed(2)}`}
+            value={formatCurrency(summary.account_balance)}
             buttonLabel="Add funds"
           >
             <div className="h-48 w-full mb-4">
@@ -65,21 +69,21 @@ const AccountSummary = () => {
                 <PieChart>
                   <Pie
                     data={balanceChartData}
-                    dataKey="value"      // Value field in data
-                    nameKey="name"      // Label field in data
+                    dataKey="value" // Value field in data
+                    nameKey="name" // Label field in data
                     innerRadius={50}
                     outerRadius={80}
                     paddingAngle={3}
                   >
                     {balanceChartData.map((entry, index) => (
                       <Cell
-                        key={`cell-balance-${index}`}      // Unique key
-                        fill={COLORS[index % COLORS.length]}  // Color from palette
+                        key={`cell-balance-${index}`} // Unique key
+                        fill={COLORS[index % COLORS.length]} // Color from palette
                       />
                     ))}
                   </Pie>
                   <RechartsTooltip
-                    formatter={(value, name) => [`€${value.toFixed(2)}`, name]} // Tooltip format
+                    formatter={(value, name) => [formatCurrency(value), name]}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -89,7 +93,7 @@ const AccountSummary = () => {
               <SummaryItem
                 key={i}
                 label={item.name}
-                value={`€${item.value.toFixed(2)}`}
+                value={formatCurrency(item.value)}
               />
             ))}
           </SummaryBox>
@@ -104,10 +108,10 @@ const AccountSummary = () => {
             <div className="h-48 w-full mb-4">
               <ResponsiveContainer>
                 <BarChart data={returnChartData}>
-                  <XAxis dataKey="name" />  {/* X-axis shows metric names */}
-                  <YAxis />                  {/* Y-axis shows value scale */}
+                  <XAxis dataKey="name" /> {/* X-axis shows metric names */}
+                  <YAxis /> {/* Y-axis shows value scale */}
                   <RechartsTooltip
-                    formatter={(value) => `€${value.toFixed(2)}`}
+                    formatter={(value) => formatCurrency(value)}
                   />
                   <Bar dataKey="value">
                     {returnChartData.map((entry, index) => (
@@ -125,7 +129,7 @@ const AccountSummary = () => {
               <SummaryItem
                 key={i}
                 label={item.name}
-                value={`€${item.value.toFixed(2)}`}
+                value={formatCurrency(item.value)}
               />
             ))}
           </SummaryBox>

@@ -51,10 +51,21 @@ export default function AdminGetAllBalanceHistories() {
                 </td>
                 <td className="p-3">{h.user?.email}</td>
                 <td className="p-3 text-green-600 font-medium">
-                  € {h.amount.toFixed(2)}
+                  € {typeof h.amount === "number" ? h.amount.toFixed(2) : "—"}
                 </td>
-                <td className="p-3">€ {h.balanceBefore.toFixed(2)}</td>
-                <td className="p-3">€ {h.balanceAfter.toFixed(2)}</td>
+                <td className="p-3">
+                  €{" "}
+                  {typeof h.balanceBefore === "number"
+                    ? h.balanceBefore.toFixed(2)
+                    : "—"}
+                </td>
+                <td className="p-3">
+                  €{" "}
+                  {typeof h.balanceAfter === "number"
+                    ? h.balanceAfter.toFixed(2)
+                    : "—"}
+                </td>
+
                 <td className="p-3">{h.note || "—"}</td>
                 <td className="p-3">{formatDate(h.history?.[0]?.at)}</td>
                 <td className="p-3">

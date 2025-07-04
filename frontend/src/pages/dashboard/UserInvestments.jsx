@@ -14,6 +14,9 @@ function getStatusColor(status) {
   }
 }
 
+const formatCurrency = (val) =>
+  typeof val === "number" && !isNaN(val) ? `€ ${val.toFixed(2)}` : "—";
+
 function Section({ title, children }) {
   return (
     <div className="my-8 w-full max-w-4xl mx-auto px-4">
@@ -57,10 +60,18 @@ export default function UserInvestments() {
             <table className="w-full text-sm text-left border-collapse">
               <thead className="bg-gray-100 border-b border-gray-200">
                 <tr>
-                  <th className="py-3 px-4 text-gray-600 font-semibold">Venture</th>
-                  <th className="py-3 px-4 text-gray-600 font-semibold">Amount</th>
-                  <th className="py-3 px-4 text-gray-600 font-semibold">Profit Paid</th>
-                  <th className="py-3 px-4 text-gray-600 font-semibold">Status</th>
+                  <th className="py-3 px-4 text-gray-600 font-semibold">
+                    Venture
+                  </th>
+                  <th className="py-3 px-4 text-gray-600 font-semibold">
+                    Amount
+                  </th>
+                  <th className="py-3 px-4 text-gray-600 font-semibold">
+                    Profit Paid
+                  </th>
+                  <th className="py-3 px-4 text-gray-600 font-semibold">
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -69,8 +80,13 @@ export default function UserInvestments() {
                     <td className="py-3 px-4 text-gray-800 font-medium">
                       {inv.venture?.title || "Untitled Venture"}
                     </td>
-                    <td className="py-3 px-4 text-gray-700">€{inv.amount.toFixed(2)}</td>
-                    <td className="py-3 px-4 text-gray-700">€{inv.profitPaid.toFixed(2)}</td>
+                    <td className="py-3 px-4 text-gray-700">
+                      {formatCurrency(inv.amount)}
+                    </td>
+                    <td className="py-3 px-4 text-gray-700">
+                      {formatCurrency(inv.profitPaid)}
+                    </td>
+
                     <td className="py-3 px-4">
                       <span
                         className={`inline-block rounded-full px-3 py-1 text-xs font-medium capitalize ${getStatusColor(

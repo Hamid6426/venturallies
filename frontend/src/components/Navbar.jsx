@@ -130,13 +130,14 @@ export default function Navbar() {
           >
             {loading ? (
               <p>Loading balance...</p>
-            ) : balance ? (
+            ) : balance && typeof balance.balance === "number" ? (
               <p className="text-green-700 font-semibold">
                 € {balance.balance.toFixed(2)}
               </p>
             ) : (
-              <p className="text-xs text-red-500"></p>
+              <p className="text-xs text-red-500">Balance unavailable</p>
             )}
+
             {isUserLoading ? (
               <span>Loading...</span>
             ) : currentUser ? (

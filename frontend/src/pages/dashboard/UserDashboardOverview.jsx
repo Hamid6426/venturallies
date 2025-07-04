@@ -11,6 +11,12 @@ const user = {
   newsletterFrequency: "weekly",
 };
 
+function formatCurrency(value) {
+  return typeof value === "number" && !isNaN(value)
+    ? `€ ${value.toFixed(2)}`
+    : "—";
+}
+
 const balance = 320.5;
 
 const investments = [
@@ -109,7 +115,7 @@ export default function UserDashboardOverview() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <SummaryCard
           title="Balance"
-          value={`€ ${balance.toFixed(2)}`}
+          value={formatCurrency(balance)}
           link="/dashboard/funding"
         />
         <SummaryCard
@@ -119,11 +125,11 @@ export default function UserDashboardOverview() {
         />
         <SummaryCard
           title="Expected Returns"
-          value={`€ ${expectedReturns.toFixed(2)}`}
+          value={formatCurrency(expectedReturns)}
         />
         <SummaryCard
           title="Profit Earned"
-          value={`€ ${totalProfitPaid.toFixed(2)}`}
+          value={formatCurrency(totalProfitPaid)}
         />
         <SummaryCard
           title="Repaid Ventures"
@@ -168,11 +174,12 @@ export default function UserDashboardOverview() {
                       {inv.ventureTitle}
                     </td>
                     <td className="py-3 px-4 text-gray-700">
-                      €{inv.amount.toFixed(2)}
+                      {formatCurrency(inv.amount)}
                     </td>
                     <td className="py-3 px-4 text-gray-700">
-                      €{inv.profitPaid.toFixed(2)}
+                      {formatCurrency(inv.profitPaid)}
                     </td>
+
                     <td className="py-3 px-4">
                       <span
                         className={`inline-block rounded-full px-3 py-1 text-xs font-medium capitalize ${getStatusColor(
@@ -208,7 +215,7 @@ export default function UserDashboardOverview() {
                     <span className="font-medium text-gray-800">{tx.note}</span>
                     <span className="text-xs text-gray-500 mt-1">
                       {new Date(tx.changedAt).toLocaleDateString()} • Balance
-                      Before: €{tx.balanceBefore.toFixed(2)}
+                      Before: {formatCurrency(tx.balanceBefore)}
                     </span>
                   </div>
 
@@ -219,7 +226,8 @@ export default function UserDashboardOverview() {
                         : "text-green-600 bg-green-100"
                     }`}
                   >
-                    {tx.amount < 0 ? "-" : "+"}€{Math.abs(tx.amount).toFixed(2)}
+                    {tx.amount < 0 ? "-" : "+"}
+                    {formatCurrency(Math.abs(tx.amount))}
                   </span>
                 </li>
               ))}

@@ -2,6 +2,11 @@
 
 import { useBalance } from "../../contexts/BalanceContext";
 
+const formatCurrency = (val) => {
+  const num = Number(val);
+  return !isNaN(num) ? `€ ${num.toFixed(2)}` : "—";
+};
+
 export default function UserWallet() {
   const { balance, loading, error } = useBalance();
 
@@ -17,7 +22,7 @@ export default function UserWallet() {
         <div className="bg-white shadow-md p-6 rounded-md">
           <h2 className="text-lg text-gray-600 mb-2">Available Balance</h2>
           <p className="text-3xl font-bold text-green-600">
-            € {balance.balance.toFixed(2)}
+            {formatCurrency(balance.balance)}
           </p>
         </div>
       ) : (

@@ -100,7 +100,11 @@ export default function AdminGetAllBalances() {
                   </td>
                   <td className="p-3">{b.user?.email}</td>
                   <td className="p-3 capitalize">{b.user?.role || "N/A"}</td>
-                  <td className="p-3 text-right">€ {b.balance?.toFixed(2)}</td>
+                  <td className="p-3 text-right">
+                    €{" "}
+                    {typeof b.balance === "number" ? b.balance.toFixed(2) : "—"}
+                  </td>
+
                   <td className="p-3 text-right">
                     {b.createdAt
                       ? new Date(b.createdAt).toLocaleDateString()
