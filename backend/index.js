@@ -29,16 +29,18 @@ import requestLogger from "./src/middleware/requestLogger.js";
 const NODE_ENV = process.env.NODE_ENV || "development";
 const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL;
+const LOCAL_URL = process.env.LOCAL_URL;
+
 
 // CORS Configuration
-const whitelist = [FRONTEND_BASE_URL, BACKEND_BASE_URL].filter(Boolean);
+const whitelist = [FRONTEND_BASE_URL, BACKEND_BASE_URL, LOCAL_URL].filter(Boolean);
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true); // allow curl/postman
     if (whitelist.includes(origin)) {
       return callback(null, true);
     }
-    callback(new Error("Not allowed by CORS"));
+    callback(new Error(`CORS Error: Origin ${origin} not allowed`));
   },
   credentials: true,
 };
@@ -66,7 +68,7 @@ const __dirname = dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Health Check Route
-app.get("/health", (req, res) => res.send("Express server is up and running"));
+app.get("/api/health", (req, res) => res.send("Express server is up and running"));
 
 // API Routes
 app.use("/api/auth", authRoutes);
