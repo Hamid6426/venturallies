@@ -34,11 +34,8 @@ const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL;
 const whitelist = [FRONTEND_BASE_URL, BACKEND_BASE_URL].filter(Boolean);
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (NODE_ENV === "development" && whitelist.includes(origin)) {
-      return callback(null, true);
-    }
-    if (NODE_ENV === "production") {
+    if (!origin) return callback(null, true); // allow curl/postman
+    if (whitelist.includes(origin)) {
       return callback(null, true);
     }
     callback(new Error("Not allowed by CORS"));

@@ -39,7 +39,7 @@ const loginUser = async (req, res) => {
       email: user.email,
     };
 
-    const expiresIn = rememberMe ? "7d" : "1d";
+    const expiresIn = rememberMe ? "24h" : "1h";
     const authToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 
     const isProd = process.env.NODE_ENV === "production";
