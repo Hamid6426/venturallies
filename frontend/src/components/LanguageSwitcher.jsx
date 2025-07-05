@@ -26,41 +26,59 @@ const getLanguageFromCookie = () => {
 const setLanguageCookie = (lang) => {
   const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString();
   document.cookie = `googtrans=/en/${lang}; path=/; expires=${expires}; SameSite=Lax`;
+
+  // Store lang
+  localStorage.setItem("lang", lang);
+
+  // Full page reload
   window.location.reload();
 };
 
 // ----- Subcomponents -----
-const LanguageButton = ({ lang, open, toggle }) => (
+const LanguageButton = ({ lang, open, toggle, translating }) => (
   <button
     onClick={toggle}
-    className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded hover:bg-gray-100 focus:outline-none"
+    disabled={translating}
+    className={`flex items-center gap-2 px-3 py-2 border border-gray-300 rounded focus:outline-none
+      ${translating ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"}`}
   >
-    <img
-      src={flagMap[lang] || flagMap.en}
-      alt={`${lang} flag`}
-      className="w-6 h-4 object-cover"
-    />
-    <svg
-      className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-    >
-      <path d="M19 9l-7 7-7-7" />
-    </svg>
+    {translating ? (
+      <div className="flex items-center gap-1">
+        <span className="dot-loader" />
+        <span className="dot-loader" />
+        <span className="dot-loader" />
+      </div>
+    ) : (
+      <>
+        <img
+          src={flagMap[lang] || flagMap.en}
+          alt={`${lang} flag`}
+          className="w-6 h-4 object-cover"
+        />
+        <svg
+          className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path d="M19 9l-7 7-7-7" />
+        </svg>
+      </>
+    )}
   </button>
 );
 
-const LanguageDropdown = ({ selectedLang, onSelect }) => (
+const LanguageDropdown = ({ selectedLang, onSelect, translating }) => (
   <ul className="absolute mt-2 right-0 w-28 bg-white border border-gray-200 rounded shadow z-50">
     {LANGUAGES.map(({ code, label }) => (
       <li key={code}>
         <button
+          disabled={translating}
           onClick={() => onSelect(code)}
           className={`w-full flex items-center justify-between text-left px-4 py-2 text-sm hover:bg-gray-100 ${
             selectedLang === code ? "font-bold text-gray-600" : ""
-          }`}
+          } ${translating ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           <span className="text-xs">{label}</span>
           <img
@@ -78,6 +96,7 @@ const LanguageDropdown = ({ selectedLang, onSelect }) => (
 export default function LanguageSwitcher() {
   const [lang, setLang] = useState("en");
   const [open, setOpen] = useState(false);
+  const [translating, setTranslating] = useState(false);
 
   useEffect(() => {
     const savedLang = getLanguageFromCookie();
@@ -86,7 +105,13 @@ export default function LanguageSwitcher() {
   }, []);
 
   const handleSelectLanguage = (code) => {
-    setLanguageCookie(code);
+    if (code === lang) return;
+    setTranslating(true);
+
+    // Brief delay to show loader before reload
+    setTimeout(() => {
+      setLanguageCookie(code);
+    }, 500);
   };
 
   return (
@@ -95,9 +120,14 @@ export default function LanguageSwitcher() {
         lang={lang}
         open={open}
         toggle={() => setOpen((prev) => !prev)}
+        translating={translating}
       />
-      {open && (
-        <LanguageDropdown selectedLang={lang} onSelect={handleSelectLanguage} />
+      {open && !translating && (
+        <LanguageDropdown
+          selectedLang={lang}
+          onSelect={handleSelectLanguage}
+          translating={translating}
+        />
       )}
     </div>
   );

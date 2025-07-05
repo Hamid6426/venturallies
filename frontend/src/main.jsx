@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 import App from "./App.jsx";
@@ -10,18 +10,28 @@ import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { BalanceProvider } from "./contexts/BalanceContext.jsx";
 
-// Make the init function globally available
-window.googleTranslateElementInit = function () {
-  new window.google.translate.TranslateElement(
-    { pageLanguage: "en" },
-    "google_translate_element"
-  );
-};
-
-
-// Create a wrapper component to use useLoader hook inside context
 const AppWrapper = () => {
   const { loading } = useLoader();
+
+  // Google Translate init
+  useEffect(() => {
+    window.googleTranslateElementInit = function () {
+      new window.google.translate.TranslateElement(
+        { pageLanguage: "en" },
+        "google_translate_element"
+      );
+    };
+
+    if (!window.google?.translate) {
+      const script = document.createElement("script");
+      script.src =
+        "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.async = true;
+      document.body.appendChild(script);
+    } else {
+      window.googleTranslateElementInit();
+    }
+  }, []);
 
   return (
     <>
@@ -44,19 +54,18 @@ const AppWrapper = () => {
 };
 
 createRoot(document.getElementById("root")).render(
-<StrictMode>
-  <>
-    <div id="google_translate_element" style={{ display: "none" }}></div>
-    <Router>
-      <AuthProvider>
-        <BalanceProvider>
-          <LoaderProvider>
-            <AppWrapper />
-          </LoaderProvider>
-        </BalanceProvider>
-      </AuthProvider>
-    </Router>
-  </>
-</StrictMode>
-
+  <StrictMode>
+    <>
+      <div id="google_translate_element" className="hidden-widget"></div>
+      <Router>
+        <AuthProvider>
+          <BalanceProvider>
+            <LoaderProvider>
+              <AppWrapper />
+            </LoaderProvider>
+          </BalanceProvider>
+        </AuthProvider>
+      </Router>
+    </>
+  </StrictMode>
 );

@@ -31,34 +31,16 @@ function lemVerifyIpWhitelist(req, res, next) {
 // Start KYC for authenticated users
 router.post("/start-verification", authMiddleware, startKycVerification);
 
-// LEMVerify webhook "ping" route (keep for initial handshake)
-// router.get("/lemverify-webhook", (req, res) => {
-//   res.setHeader("Cache-Control", "no-store");
-//   res.setHeader("ETag", ""); // disables conditional GETs
-//   res.status(200).send("OK");
-// });
-
-// For lemverify comfirmation, same as webhook handler route
-// Webhook GET check
-router.get("/lemverify-webhook", (req, res) => {
-  console.log(
-    `[LEMVERIFY GET] Webhook verification ping received at ${new Date().toISOString()}`
-  );
-  console.log(`[LEMVERIFY GET] Headers:`, req.headers);
-  console.log(`[LEMVERIFY GET] IP: ${req.ip}`);
-
-  res.setHeader("Cache-Control", "no-store");
-  res.setHeader("ETag", ""); // disables conditional GETs
-  res.status(200);
-});
-
-// LEMVerify webhook listener
 router.post(
   "/lemverify-webhook",
-  express.raw({ type: "*/*" }), // Needed for signature parsing
   lemVerifyIpWhitelist,
   handleLemVerifyWebhook
 );
+
+// ONLY USE THIS DURING INTEGRATION STEP, COMMNET OUT THE ONE ABOVE AT THAT TIME
+// router.post("/lemverify-webhook", function (req, res) {
+//   res.sendStatus(200);
+// });
 
 // Fetch user's own verification status
 router.get("/my-verification", authMiddleware, fetchMyVerificationStatus);

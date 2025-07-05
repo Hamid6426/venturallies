@@ -60,6 +60,12 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(requestLogger);
 
+app.use((req, res, next) => {
+  console.log("➡️ Incoming webhook:", req.method, req.url);
+  next();
+});
+
+
 // Static File Paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
